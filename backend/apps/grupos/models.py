@@ -14,7 +14,7 @@ class Grupos(NameModel):
     estado = models.ForeignKey("grupos.EstadosGrupo", on_delete=models.CASCADE)
     lider = models.ForeignKey("users.Usuarios", on_delete=models.CASCADE)
     resolucion = models.CharField(max_length=100)
-    
+
 class UsuariosGrupo(BaseModel):
     usuario = models.ForeignKey("users.Usuarios", on_delete=models.CASCADE)
     grupo = models.ForeignKey("grupos.Grupos", on_delete=models.DO_NOTHING)

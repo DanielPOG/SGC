@@ -7,7 +7,7 @@ from core.models import BaseModel, NameModel # pylint: disable=import-error
 from ckeditor.fields import RichTextField
 
 class Bitacoras(BaseModel):
-    usuario = models.ForeignKey("users.Usuarios", verbose_name=("admin"), on_delete=models.CASCADE)
+    usuario = models.ForeignKey("users.Usuarios", verbose_name=("autor"), on_delete=models.CASCADE)
     accion = RichTextField(("bitacora"), max_length=50)
 
 class Red(NameModel):
