@@ -28,9 +28,9 @@ class Generos(NameModel):
 class Usuarios(NameModel):
     apellido = models.CharField(max_length=255)
     num_doc = models.CharField(max_length=30, blank=False)
-    tipo_doc = models.ForeignKey('user.TiposDoc', on_delete=models.DO_NOTHING)
-    genero = models.ForeignKey('user.Generos', on_delete=models.DO_NOTHING)
+    tipo_doc = models.ForeignKey('users.TiposDoc', on_delete=models.DO_NOTHING)
+    genero = models.ForeignKey('users.Generos', on_delete=models.DO_NOTHING)
     correo = models.EmailField(blank=False, unique=True)
     cargo = models.ForeignKey('cargos.Cargos', on_delete=models.DO_NOTHING)
     estudio_formal = models.ForeignKey('formacion.EstudioFormal', on_delete=models.DO_NOTHING)
-    fecha_ingreso = models.DateField(auto_now=True, auto_now_add=True)
+    fecha_ingreso = models.DateField(auto_now=True)
