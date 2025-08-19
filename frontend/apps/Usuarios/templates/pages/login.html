@@ -1,1 +1,61 @@
-login
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SGC - Sistema de Gestión de Cargos</title>
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+  <div class="container">
+    <div class="left-bg"></div>
+    <div class="left-section">
+      <div class="welcome-content">
+        <div class="chart-icon">
+          <div class="bar bar1"></div>
+          <div class="bar bar2"></div>
+          <div class="bar bar3"></div>
+          <div class="people-icons">
+            <div class="person person1"></div>
+            <div class="person person2"></div>
+            <div class="person person3"></div>
+          </div>
+        </div>
+        <h1 class="welcome-text">BIENVENIDO!</h1>
+      </div>
+    </div>
+    <div class="right-section">
+      <div class="login-card">
+        <div class="logo-section">
+          <div class="logo-icon">
+            <div class="chart-bars">
+              <div class="mini-bar"></div>
+              <div class="mini-bar"></div>
+              <div class="mini-bar"></div>
+            </div>
+          </div>
+          <div class="logo-text">
+            <h2>SGC</h2>
+            <p>Sistema de Gestión de Cargos</p>
+          </div>
+        </div>
+        <form class="login-form">
+          <div class="form-group">
+            <label for="usuario">Usuario</label>
+            <input type="text" id="usuario" placeholder="Ingrese usuario">
+          </div>
+          <div class="form-group">
+            <label for="password">Contraseña</label>
+            <input type="password" id="password" placeholder="Ingrese contraseña">
+          </div>
+          <button type="submit" class="login-button">Iniciar Sesión</button>
+          <div class="forgot-password">
+            <a href="#">¿Olvidé Contraseña?</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
