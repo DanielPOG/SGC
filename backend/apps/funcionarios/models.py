@@ -3,8 +3,8 @@
     (Admin y el otro q no me acuerdoxd)
 """
 from django.db import models
-from core.models import BaseModel, NameModel # pylint: disable=import-error
 from ckeditor.fields import RichTextField
+from apps.core.models import BaseModel, NameModel # pylint: disable=import-error
 
 class Bitacoras(BaseModel):
     usuario = models.ForeignKey("users.Usuarios", verbose_name=("autor"), on_delete=models.CASCADE)

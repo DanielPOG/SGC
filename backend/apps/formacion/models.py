@@ -3,7 +3,7 @@
     formacion de funcionario
 """
 from django.db import models
-from core.models import BaseModel, NameModel # pylint: disable=import-error
+from apps.core.models import BaseModel, NameModel # pylint: disable=import-error
 
 class EstudioFormal(BaseModel):
     nombre = models.CharField(max_length=50)

@@ -2,7 +2,7 @@
     Modelos app cargos
 """
 from django.db import models
-from core.models import BaseModel # pylint: disable=import-error
+from apps.core.models import BaseModel # pylint: disable=import-error
 
 class NombresCargo(BaseModel):
     nombre = models.CharField(max_length=100, unique=True)

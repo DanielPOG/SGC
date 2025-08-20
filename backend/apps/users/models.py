@@ -2,7 +2,7 @@
    Users app models
 """
 from django.db import models
-from core.models import BaseModel, NameModel # pylint: disable=import-error
+from apps.core.models import BaseModel, NameModel # pylint: disable=import-error
 
 
 class TiposDoc(BaseModel):
