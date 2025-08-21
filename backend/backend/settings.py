@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'apps.grupos',
     'apps.users',
     'apps.cargos',
-    'apps.peticiones'
+    'apps.peticiones',
+    'django_extensions'
 ]
 
 MIDDLEWARE = [

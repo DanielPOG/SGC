@@ -2,7 +2,7 @@
     core models serializers
 """
 from rest_framework import serializers
-from core.models import Estados, Regionales, Centros #pylint:disable=import-error
+from apps.core.models import Estados, Regionales, Centros #pylint:disable=import-error
 
 class EstadosSerializer(serializers.ModelSerializer):
     class Meta:

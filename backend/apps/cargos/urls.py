@@ -1,12 +1,12 @@
 from django.urls import path, include
 from rest_framework_nested import routers
-from views import CargosViewSet, NombresViewSet, UsuarioCargoViewSet
+from .views import CargosViewSet, NombresViewSet, UsuarioCargoViewSet #pylint: disable=relative-beyond-top-level
 
 router = routers.DefaultRouter()
 router.register(r'cargos', CargosViewSet)
+router.register(r'cargo-nombre', NombresViewSet)
 
 cargos_router = routers.NestedDefaultRouter(router, r'cargos', lookup='cargo')
-cargos_router.register(r'nombres', NombresViewSet, basename='cargo-nombres')
 cargos_router.register(r'usuario', UsuarioCargoViewSet, basename='cargo-usuarios')
 
 urlpatterns = [

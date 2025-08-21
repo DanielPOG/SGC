@@ -1,6 +1,6 @@
 from rest_framework import viewsets
-from models import NombresCargo, Cargos, UsuariosCargo
-from serializers import NombresSerializer, CargosSerializer, UsuariosCargoSerializer
+from .models import NombresCargo, Cargos, UsuariosCargo#pylint: disable=relative-beyond-top-level
+from .serializers import NombresSerializer, CargosSerializer, UsuariosCargoSerializer#pylint: disable=relative-beyond-top-level
 
 class CargosViewSet(viewsets.ModelViewSet):
     queryset = Cargos.objects.all()
