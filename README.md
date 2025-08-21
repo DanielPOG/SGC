@@ -4,7 +4,6 @@ FRONTEND
     # Crear entorno virtual (Solo una vez en local )
         python -m venv venv
         venv\Scripts\activate      #SIEMPRE UTILIZAR 
-        
     # Descargar dependencias
     pip install django
 
