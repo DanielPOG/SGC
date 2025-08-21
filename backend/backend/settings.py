@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders', # Para validar cors
     'rest_framework', #Framework
-    'coreapi', #Documentacion
+    #'coreapi', #Documentacion TODO: MIRAR LA VERSION DEL PYTHON 
     # apps
     'core_apps.usuarios_api',
     'core_apps.cargos_api',

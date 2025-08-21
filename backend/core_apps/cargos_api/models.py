@@ -27,7 +27,7 @@ class CargoUsuario(models.Model):
     cargo = models.ForeignKey('Cargo', on_delete=models.CASCADE)
 
     # Usamos apps.get_model para evitar la importación circular
-    usuario = models.ForeignKey(apps.get_model('usuarios_api', 'Usuario'), on_delete=models.CASCADE)
+    usuario = models.ForeignKey('usuarios_api.Usuario', on_delete=models.CASCADE)
     fechaAsignacion = models.DateTimeField(auto_now_add=True)
     fechaFin = models.DateTimeField(auto_now=True)
     salario = models.DecimalField(max_digits=10, decimal_places=2)
