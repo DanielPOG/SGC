@@ -1,1 +1,81 @@
-estructura / plantilla 
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Principal</title>
+    <link rel="stylesheet" href="{% static 'css/example.css' %}">
+</head>
+<body>
+    <div class="container">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="user">
+        <div class="avatar"></div>
+        <span class="username">USERNAME</span>
+    </div>
+
+        <nav class="menu">
+            <a href="#" title="Principal">Principal</a>
+            <a href="#" title="Funcionario">Funcionario</a>
+            <a href="#" title="Cargo">Cargo</a>
+            <a href="#" title="Grupos SENA">Grupos SENA</a>
+            <a href="#" title="Reportes">Reportes</a>
+            <a href="#" title="ID Planta">ID Planta</a>
+            <a href="#" title="Solicitudes">Solicitudes</a>
+        </nav>
+
+        <div class="logout">
+        <a href="#"title="Boton Salir" >Salir</a>
+        </div>
+    </aside>
+
+    <!-- Contenido principal -->
+    <main class="main">
+        <h1>Panel Principal</h1>
+        <p class="welcome">¡Bienvenido, _______!</p>
+        <p class="last-session">Última Sesión:___________</p>
+
+        <div class="cards">
+        <div class="card">
+            <div class="icon">👤</div>
+            <div>
+            <p class="number">48</p>
+            <p>Funcionarios Activos</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="icon">✉</div>
+            <div>
+            <p class="number">12</p>
+            <p>Cargos Registrados</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="icon">👥</div>
+            <div>
+            <p class="number">7</p>
+            <p>Grupos Sena</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="icon">📁</div>
+            <div>
+            <p class="number">2</p>
+            <p>Reportes Recientes</p>
+            </div>
+        </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+        </footer>
+    </main>
+    </div>
+</body>
+</html>
