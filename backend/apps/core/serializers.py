@@ -7,7 +7,7 @@ from apps.core.models import Estados, Regionales, Centros #pylint:disable=import
 class EstadosSerializer(serializers.ModelSerializer):
     class Meta:
         model = Estados
-        fields = ['id', 'nombre']
+        fields = '__all__'
 
 class RegionalesSerializer(serializers.ModelSerializer):
     class Meta:

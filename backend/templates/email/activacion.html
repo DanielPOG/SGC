@@ -1,0 +1,38 @@
+<html style="width:100%;">
+    <body style="display:grid; width: 100%; justify-content: center; margin: 0 auto;">
+            <img style="position: absolute; top: 0rem; left:-80%; justify-self: start;" src="cid:logo" alt="Logo" width="200"/>
+
+        <div class="d-flex" >
+            <h2>
+                <strong>SGC</strong>
+            </h2>
+        </div>
+        <div class="mail-content">
+            <p>
+                Estimado(a) Usuario</br>
+                Nos complace informarle que su usuario ha sido</br>
+                Activado. A continuación, encontrara sus credenciales</br>
+                de acceso:</br></br>
+                <strong>
+                    &nbsp;&nbsp;Usuario:&nbsp;{{usuario}}</br>
+                    &nbsp;&nbsp;Contraseña:&nbsp;{{password}}</br>
+                </strong></br>
+                Le recomendamos cambiar su contraseña </br>
+                Después de ingresar.
+            </p>
+        </div>
+        
+    </body>
+</html>
+
+<style>
+    .d-flex {
+        display:flex;
+        gap:3px;
+        align-items: end;
+    }
+    .mail-content {
+        display:grid;
+        margin: 0 auto;
+    }
+</style>

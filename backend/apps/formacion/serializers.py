@@ -2,8 +2,8 @@
     Serializadores modelos de app "formacion"
 """
 from rest_framework import serializers
-from models import EstudioFormal, Complementaria
-from users.models import Usuarios # pylint: disable=import-error
+from .models import EstudioFormal, Complementaria #pylint:disable=relative-beyond-top-level
+from apps.users.models import Usuarios # pylint: disable=import-error
 
 class FormalSerializer(serializers.ModelSerializer):
     class Meta:
