@@ -1,6 +1,7 @@
 from django.db import models
 from core_apps.general.models import Area
-from core_apps.usuarios_api.models import Usuario
+from django.apps import apps
+
 # Create your models here.
 
 class CargoNombre(models.Model):
@@ -24,7 +25,9 @@ class CargoFuncion(models.Model):
 
 class CargoUsuario(models.Model):
     cargo = models.ForeignKey('Cargo', on_delete=models.CASCADE)
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+
+    # Usamos apps.get_model para evitar la importación circular
+    usuario = models.ForeignKey(apps.get_model('usuarios_api', 'Usuario'), on_delete=models.CASCADE)
     fechaAsignacion = models.DateTimeField(auto_now_add=True)
     fechaFin = models.DateTimeField(auto_now=True)
     salario = models.DecimalField(max_digits=10, decimal_places=2)

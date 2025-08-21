@@ -1,7 +1,7 @@
 from django.db import models
-from core_apps.cargos_api.models import Cargo
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.utils import timezone
+from django.apps import apps
 # Create your models here.
 class TipoDocumento(models.Model):
     nombre = models.CharField(max_length=100)
@@ -31,6 +31,10 @@ class UsuarioManager(BaseUserManager):
         return user
 
 # Modelo de Usuario personalizado
+def get_cargo_model():
+    return apps.get_model('cargos_api', 'Cargo')
+
+# Modelo de Usuario personalizado
 class Usuario(AbstractBaseUser, PermissionsMixin):
     nombre = models.CharField(max_length=100)
     apellido = models.CharField(max_length=100)
@@ -38,7 +42,10 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     tipo_doc = models.ForeignKey('TipoDocumento', on_delete=models.CASCADE)
     correo = models.EmailField(max_length=254, unique=True)
     genero = models.ForeignKey('Genero', on_delete=models.CASCADE)
-    cargo = models.ForeignKey(Cargo, on_delete=models.CASCADE)  
+
+    # Usar la función get_cargo_model() para evitar el ciclo de importación circular
+    cargo = models.ForeignKey(get_cargo_model(), on_delete=models.CASCADE) 
+    
     estudioF = models.ForeignKey('EstudioFormal', on_delete=models.CASCADE)
     
     # Campos adicionales necesarios para la autenticación
@@ -62,7 +69,6 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     
     def has_module_perms(self, app_label):
         return self.is_superuser or self.is_staff
-    
 
 class FormacionComplementaria(models.Model):
     nombre = models.CharField(max_length=100)

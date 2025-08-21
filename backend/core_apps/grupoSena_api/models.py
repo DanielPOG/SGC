@@ -1,6 +1,7 @@
 from django.db import models
 from core_apps.general.models import Centro
 from core_apps.usuarios_api.models import Usuario
+
 # Create your models here.
 class EstadoGrupo(models.Model):
     estado = models.CharField(max_length=100)
