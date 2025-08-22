@@ -32,7 +32,7 @@ body {
   height: 100%;
   border-top-right-radius: 180vh;
   border-bottom-right-radius: 180vh;
-  background: linear-gradient(135deg, #1e3a5f 0%, #2c5282 100%);
+  background: linear-gradient(135deg, #00304D 0%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -49,22 +49,38 @@ body {
   display: inline-block;
 }
 .welcome-text {
-  color: white;
-  font-size: 48px;
+  color: white;                /* ✅ letras blancas */
+  font-size: 38px;
   font-weight: 700;
   letter-spacing: 2px;
   text-shadow: 0 2px 4px rgba(0,0,0,0.3);
   position: relative;
+  text-align: left;
+   margin-left: 10%; 
 }
+.linea-vertical { 
+  border-top: 3px solid black; /* grosor y color */
+  width: 150%; /* ancho de la línea */
+  margin: 20px auto; /* espacio alrededor y centrado */
+  margin-left: -90px;  
+}
+.title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 2px;
+}
+
 .welcome-text::after {
   content: '';
   position: absolute;
-  bottom: -8px;
+  bottom: -7px;
   left: 0;
   right: 0;
+  width: 300px;
   height: 4px;
-  background: white;
-  border-radius: 2px;
+  background: white;           /* ✅ línea blanca debajo */
+  
 }
 .right-section {
    margin-right: 60px;
@@ -93,17 +109,7 @@ body {
   gap: 15px;
 }
 
-.logo-icon {
-  width: 50px;
-  height: 40px;
-  background: #3b82f6;
-  border-radius: 8px;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  gap: 3px;
-  padding: 8px;
-}
+
 .logo-text h2 {
   font-size: 32px;
   font-weight: 700;
@@ -206,16 +212,12 @@ body {
     flex: 0.6;
     padding: 20px;
   }
-  
-  .welcome-text {
-    font-size: 32px;
-  }
+
   
   .login-card {
     padding: 30px 25px;
   }
   .left-group {
-
   position: relative;
   width: 41%;         /* puedes usar % o px */
   min-width: 320px;
@@ -224,6 +226,23 @@ body {
   align-items: stretch;
   justify-content: center;
 
+}
+@media (max-width: 900px) {
+  .left-group {
+    display: none; /* 🔹 oculta toda la parte izquierda */
+  }
+
+  .right-section {
+    flex: 1;             /* ahora ocupa todo el espacio */
+    justify-content: center;
+    padding: 20px;
+    margin-right: 0;     /* quita el margen derecho extra */
+  }
+
+  .login-card {
+    max-width: 90%; /* para que se adapte en móviles */
+  }
+  
 }
 
 }
