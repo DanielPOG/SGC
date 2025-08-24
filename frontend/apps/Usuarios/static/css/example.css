@@ -9,18 +9,19 @@
 /* Layout general */
 .container {
     display: flex;
-    min-height: 100vh;
+    min-height: 100vh; /* ocupa toda la altura de la pantalla */
 }
 
 /* Sidebar */
 .sidebar {
-    width: 240px;
+    width: 240px; /* ancho fijo para la barra lateral */
     background-color: #00304D;
     color: white;
     display: flex;
-    flex-direction: column;
+    flex-direction: column; /* organiza el contenido en columna */
     align-items: center;
     padding: 20px 10px;
+    box-shadow: inset -5px 0 15px rgba(0, 0, 0, 0.5);  /* sombra interna */
 }
 
 .user {
@@ -33,31 +34,37 @@
 .avatar {
     width: 130px;
     height: 130px;
-    border-radius: 50%;
+    border-radius: 50%;  /* hace que la imagen sea circular */
     background: white;
+    border: 2px solid black;  /* borde negro */
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: center;   /* centra verticalmente el contenido */
+    justify-content: center;  /* centra horizontalmente el contenido/icono */
+}
+
+.user-icon {
+    font-size: 60px;
+    color: black;
 }
 
 .username {
     margin-top: 10px;
-    font-weight: bold;
-    background: black;  
+    font-weight: bold; 
+    background: black;  /* fondo negro */
     padding: 6px 16px;
-    border-radius: 15px;
+    border-radius: 15px;  /* bordes redondeados */
 }
 
 .menu {
-    display: flex;
+    display: flex; 
     flex-direction: column;
-    gap: 12px;
+    gap: 12px;  /* espacio entre los elementos del menú */
     width: 100%;
     padding: 0 15px;
 }
 
 .menu a {
-    display: block;
+    display: block;  /* hace que los enlaces ocupen todo el ancho disponible */
     background: white;
     color: black;
     text-align: center;
@@ -66,16 +73,17 @@
     border-radius: 12px;
     border: 1px solid #444;
     text-decoration: none;
+    box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.4); /* sombra del menú */
 }
 
 .logout {   
     margin-top: auto;
     width: 100%;
-    padding: 0 15px;
+    padding: 0 15px;  /* padding horizontal */
 }
 
 .logout a {
-    display: block;
+    display: block;  /* hace que los enlaces ocupen todo el ancho disponible */
     background: white;
     color: black;
     text-align: center;
@@ -84,20 +92,23 @@
     border-radius: 12px;
     border: 1px solid #444;
     text-decoration: none;
+    box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.4);
 }
 
 /* Main */
 .main {
     flex: 1;
-    background: white;
-    border-left: 4px solid #ccc;
-    display: flex;
+    background: white;  /* fondo blanco */
+    border-left: 4px solid #ccc;  /* borde izquierdo */
+    border-top: 4px solid #ccc;  /* borde superior */
+    border-right: 4px solid #ccc;  /* borde derecho */
+    display: flex; 
     flex-direction: column;
     padding: 40px;
 }
 
 .main h1 {
-    font-size: 70px;  
+    font-size: 70px;
     margin-bottom: 10px;
 }
 
@@ -114,22 +125,22 @@
 .cards {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 25px;
+    gap: 65px;
     max-width: 800px;
 }
 
 .card {
     display: flex;
-    align-items: center;
-    gap: 20px;
+    align-items: center;  /* centra verticalmente el contenido */
+    gap: 20px;  /* espacio entre el icono y el texto */
     background: #e5e5e5;
     border: 1px solid #aaa;
-    border-radius: 15px;
+    border-radius: 15px; /* bordes redondeados */
     padding: 30px 30px;
 }
 
 .icon {
-    width: 65px;
+    width: 65px; 
     height: 65px;
     border-radius: 50%;
     background: white;
@@ -142,18 +153,16 @@
 .number {
     font-size: 25px;
     font-weight: bold;
-    margin-bottom: 5px;
+    margin-bottom: 5px;  /* espacio debajo del número */
 }
 
 /* Footer */
 .footer {
-    position: fixed;      
-    left: 240px;          
-    bottom: 0;            
+    position: fixed;  /* posición fija */
+    left: 240px;
+    bottom: 0;  /* alinea el pie de página en la parte inferior */
     width: calc(100% - 240px);
-    padding: 30px;        
-    text-align: center;
-    background: #9a9999;  
+    padding: 25px; 
+    background: #ccc;  /* fondo gris */
     box-sizing: border-box;
 }
-

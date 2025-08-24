@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Panel Principal{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/example.css' %}">
+</head>
+<body>
+    <div class="container">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="user">
+            <div class="avatar">
+                <!-- Ícono de usuario -->
+                <span class="user-icon">👤</span>
+            </div>
+
+            <!-- Aquí iría el nombre del usuario -->
+            <span class="username">USERNAME</span>
+        </div>
+
+        <!-- Botones de Navegación con enlaces a cada sección -->
+        <nav class="menu">
+            <div><a href="{% url 'index' %}" title="Ir a la página principal">Principal</a></div>
+            <div><a href="{% url 'funcionario' %}" title="Funcionario">Funcionario</a></div>
+            <div><a href="{% url 'cargo' %}" title="Cargo">Cargo</a></div>
+            <div><a href="{% url 'grupo_sena' %}" title="Grupos SENA">Grupos SENA</a></div>
+            <div><a href="{% url 'reportes' %}" title="Reportes">Reportes</a></div>
+            <div><a href="{% url 'id_planta' %}" title="ID Planta">ID Planta</a></div>
+            <div><a href="{% url 'solicitudes' %}" title="Solicitudes">Solicitudes</a></div>
+        </nav>
+
+        <div class="logout">
+            <a href="">Salir</a>
+        </div>
+    </aside>
+
+    <!-- Contenido dinámico -->
+    <main class="main">
+        {% block content %}
+        {% endblock %}
+
+        <!-- Footer -->
+        <footer class="footer"></footer>
+    </main>
+    </div>
+</body>
+</html>
