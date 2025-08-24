@@ -63,12 +63,14 @@ body {
   width: 150%; /* ancho de la línea */
   margin: 20px auto; /* espacio alrededor y centrado */
   margin-left: -90px;  
+  margin-top: -4px;
 }
-.title {
+.title_login {
   font-size: 32px;
   font-weight: 700;
   color: #ffffff;
-  margin-bottom: 2px;
+  margin-top: 20px;
+  
 }
 
 .welcome-text::after {
