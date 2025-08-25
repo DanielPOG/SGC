@@ -5,83 +5,154 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  
+  <!-- Normalize para resetear estilos -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+  
+  <!-- Fuente Inter desde Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
   <title>SGC - Sistema de Gestión de Cargos</title>
+  
+  <!-- Estilos propios -->
   <link rel="stylesheet" href="{% static 'css/login.css' %}">
 </head>
 <body>
-  <div class="container"> <div class="left-group"> 
-  <div class="left-bg"> 
-  <div class="left-section"> 
-    <div class="welcome-content">
-      <div class="chart-icon">
-        <div class="people-icons"></div>
-      </div> 
+  <!--  INICIO CONTENEDOR PRINCIPAL -->
+  <div class="container">
+    <!--  INICIO GRUPO IZQUIERDO -->
+    <div class="left-group">
+      <!-- Fondo decorativo gris claro -->
+      <div class="left-bg">
+        <!--INICIO SECCIÓN IZQUIERDA CON DEGRADADO -->
+        <div class="left-section">
 
-    <!-- 👇 Imagen dentro del círculo -->
-    <img src="{% static 'img/logoSGC.png' %}" alt="Logo"
-     style="width:500px;display:block;margin:0 auto 14px;">
+          <!-- INICIO CONTENIDO DE BIENVENIDA -->
+          <div class="welcome-content">
 
-    <h1 class="welcome-text">BIENVENIDO!</h1>
-  </div>
-</div> 
-  </div>
- </div>
+            <!-- Ícono decorativo  -->
+            <div class="chart-icon">
+              <div class="people-icons"></div>
+            </div>
+
+            <!-- Logo dentro del círculo -->
+            <img src="{% static 'img/logoSGC.png' %}" alt="Logo"
+                 style="width:500px;display:block;margin:0 auto 14px;">
+
+            <!-- Texto de bienvenida -->
+            <h1 class="welcome-text">BIENVENIDO!</h1>
+          
+          </div>
+          <!-- FIN CONTENIDO DE BIENVENIDA -->
+
+        </div>
+        <!--FIN SECCIÓN IZQUIERDA -->
+
+      </div>
+      <!-- FIN FONDO -->
+
+    </div>
+    <!-- FIN GRUPO IZQUIERDO -->
+
+    <!-- INICIO SECCIÓN DERECHA -->
     <div class="right-section">
+
+      <!-- INICIO TARJETA DE LOGIN -->
       <div class="login-card">
+
+        <!-- INICIO SECCIÓN DE LOGO Y TEXTO -->
         <div class="logo-section">
-        <img src="{% static 'img/logoSGC.png' %}" alt="Logo"
-        style="width:110px; margin-top:-70px;">
-           
-         
+
+          <!-- Logo del sistema -->
+          <img src="{% static 'img/logoSGC.png' %}" alt="Logo"
+               style="width:110px; margin-top:-70px;">
+          
+          <!-- INICIO TEXTO DEL LOGO -->
           <div class="logo-text">
             <h2 class="title_login">SGC</h2>
-          <div class="linea-vertical"></div>
+
+            <!-- Línea decorativa debajo del texto -->
+            <div class="linea-vertical"></div>
+
+            <!-- Descripción del sistema -->
             <p>Sistema de Gestión de Cargos</p>
           </div>
+          <!-- FIN TEXTO DEL LOGO -->
+
         </div>
+        <!-- FIN SECCIÓN DE LOGO -->
+
+        <!--  INICIO FORMULARIO DE LOGIN -->
         <form class="login-form">
+          <!-- Campo de usuario -->
           <div class="form-group">
             <label for="usuario">Usuario</label>
             <input type="text" id="usuario" placeholder="Ingrese usuario">
           </div>
+
+          <!-- Campo de contraseña -->
           <div class="form-group">
             <label for="password">Contraseña</label>
             <input type="password" id="password" placeholder="Ingrese contraseña">
           </div>
+
+          <!-- Botón de inicio de sesión -->
           <button type="submit" class="login-button" title="boton inicio sesion">Iniciar Sesión</button>
-        <div class="forgot-password">
-         <a href="#" id="openModal">¿Olvidé Contraseña?</a>
+
+          <!-- Enlace para recuperar contraseña -->
+          <div class="forgot-password">
+            <a href="#" id="openModal">¿Olvidé Contraseña?</a>
           </div>
         </form>
-      </div>
-    </div>
-  </div>
+        <!-- FIN FORMULARIO DE LOGIN -->
 
-  <!-- Modal -->
-  <div id="modalRecuperar" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:1000; align-items:center; justify-content:center;">
+      </div>
+      <!-- FIN TARJETA DE LOGIN -->
+
+    </div>
+    <!-- FIN SECCIÓN DERECHA -->
+
+  </div>
+  <!-- FIN CONTENEDOR PRINCIPAL -->
+
+  <!-- INICIO MODAL PARA RECUPERAR CONTRASEÑA -->
+  <div id="modalRecuperar"
+       style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:1000; align-items:center; justify-content:center;">
+    
     <div style="background:#fff; border-radius:16px; padding:32px 24px; max-width:350px; width:90%; text-align:center; position:relative; box-shadow:0 8px 32px rgba(0,0,0,0.2); margin:auto;">
-      <button id="closeModal" style="position:absolute; top:10px; right:15px; font-size:22px; color:#888; cursor:pointer; border:none; background:none;">&times;</button>
-       <h3 style="font-size:20px; font-weight:bold; margin-bottom:3px; text-align:left; margin-top:30px;">Usuario</h3>   
+      
+      <!-- Botón para cerrar modal -->
+      <button id="closeModal"
+              style="position:absolute; top:10px; right:15px; font-size:22px; color:#888; cursor:pointer; border:none; background:none;">&times;</button>
+      
+      <!-- Título del modal -->
+      <h3 style="font-size:20px; font-weight:bold; margin-bottom:3px; text-align:left; margin-top:30px;">Usuario</h3>   
+
+      <!-- Formulario dentro del modal -->
       <form>
-        <input type="email" placeholder="Ingrese Usuario" required style="width:90%; padding:10px; margin:15px 0; border-radius:6px; border:1px solid #ccc;">
-        <button type="submit" style="background:#1e3a5f; color:#fff; border:none; border-radius:6px; padding:10px 20px; cursor:pointer; font-weight:600;">Enviar</button>
+        <input type="email" placeholder="Ingrese Usuario" required
+               style="width:90%; padding:10px; margin:15px 0; border-radius:6px; border:1px solid #ccc;">
+        <button type="submit"
+                style="background:#1e3a5f; color:#fff; border:none; border-radius:6px; padding:10px 20px; cursor:pointer; font-weight:600;">Enviar</button>
       </form>
     </div>
   </div>
+  <!-- FIN MODAL -->
 
+  <!--  SCRIPT PARA ABRIR/CERRAR MODAL -->
   <script>
     // Abrir modal
     document.getElementById('openModal').onclick = function(e) {
       e.preventDefault();
       document.getElementById('modalRecuperar').style.display = 'flex';
     };
-    // Cerrar modal
+
+    // Cerrar modal con botón
     document.getElementById('closeModal').onclick = function() {
       document.getElementById('modalRecuperar').style.display = 'none';
     };
-    // Cerrar modal al hacer click fuera del contenido
+
+    // Cerrar modal haciendo clic fuera del contenido
     window.onclick = function(event) {
       var modal = document.getElementById('modalRecuperar');
       if (event.target == modal) {
