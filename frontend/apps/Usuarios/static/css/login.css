@@ -11,36 +11,30 @@ body {
 }
 /* contenedor principal  */
 .container {
-  position: relative;
-  border-radius: 1px;
   display: flex;
   height: 100vh;
-  overflow: hidden; /* Importante para que el fondo gris no sobresalga */
+  overflow: hidden;
 }
 /* fondo curvado izquierdo color gris  */
 .left-bg {
-  position: relative;
+  position: absolute;
   top: 0;
   left: 0;
-  width: 41%;
+  width: 40%;        /* ocupa todo el left-group */
   height: 100%;
   border-top-right-radius: 180vh;
   border-bottom-right-radius: 180vh;
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-  background: #d1d5db; /* Gris claro */
+  background: #d1d5db;
   z-index: 0;
 } 
 /* seccion izquierda */
 .left-section {
-  position: absolute;
+  position: relative; /* ya no absolute */
+  width: 96%;
+  height: 100%;
   border-top-right-radius: 180vh;
   border-bottom-right-radius: 180vh;
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-  width: 600px;
-  height: 100vh;
-  background: linear-gradient(135deg, #1e3a5f 0%, #2c5282 100%);
+  background: linear-gradient(135deg, #00304D 0%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -65,6 +59,8 @@ body {
   letter-spacing: 2px;
   text-shadow: 0 2px 4px rgba(0,0,0,0.3);
   position: relative;
+  text-align: left;
+   margin-left: 10%; 
 }
 /* Línea decorativa horizontal en login  */
 .linea-vertical { 
@@ -79,21 +75,23 @@ body {
 .welcome-text::after {
   content: '';
   position: absolute;
-  bottom: -8px;
+  bottom: -7px;
   left: 0;
   right: 0;
+  width: 300px;
   height: 4px;
-  background: white;
-  border-radius: 2px;
+  background: white;           /* ✅ línea blanca debajo */
+  
 }
 /* Contenedor del formulario de login (lado derecho). */
 .right-section {
+   margin-right: 60px;
   flex: 1;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   background: #ffffff;
-  padding: 40px;
+  padding: 80px;
 }
 /* Tarjeta visual del formulario de login. */
 .login-card {

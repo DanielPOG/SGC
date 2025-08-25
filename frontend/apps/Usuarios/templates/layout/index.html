@@ -1,1 +1,43 @@
-pagina principal
+{% extends "layout/sidebar.html" %} 
+
+{% block title %}Panel Principal{% endblock %}
+
+{% block content %}
+    <h1>Panel Principal</h1>
+    <p class="welcome">¡Bienvenido, _______!</p>
+    <p class="last-session">Última Sesión:_________</p>
+
+    <div class="cards">
+        <div class="card">
+            <div class="icon">👤</div>
+            <div>
+                <p class="number">48</p>
+                <p>Funcionarios Activos</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="icon">✉</div>
+            <div>
+                <p class="number">12</p>
+                <p>Cargos Registrados</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="icon">👥</div>
+            <div>
+                <p class="number">7</p>
+                <p>Grupos Sena</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="icon">📁</div>
+            <div>
+                <p class="number">2</p>
+                <p>Reportes Recientes</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
