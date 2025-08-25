@@ -16,7 +16,7 @@
 .sidebar {
     width: 240px; /* ancho fijo para la barra lateral */
     background-color: #00304D;
-    color: white;
+    color: white; /*Color nombre del usuario*/
     display: flex;
     flex-direction: column; /* organiza el contenido en columna */
     align-items: center;
@@ -69,9 +69,9 @@
     color: black;
     text-align: center;
     font-weight: 500;
-    padding: 8px 0;
-    border-radius: 12px;
-    border: 1px solid #444;
+    padding: 10px;
+    border-radius: 12px; /*estaba en 8px 0 se cambio a 12px*/
+    border: 3px solid #444;
     text-decoration: none;
     box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.4); /* sombra del menú */
 }
@@ -98,7 +98,7 @@
 /* Main */
 .main {
     flex: 1;
-    background: white;  /* fondo blanco */
+    background: rgb(255, 255, 255);  /* fondo blanco */
     border-left: 4px solid #ccc;  /* borde izquierdo */
     border-top: 4px solid #ccc;  /* borde superior */
     border-right: 4px solid #ccc;  /* borde derecho */
