@@ -9,6 +9,77 @@ body {
   min-height: 100vh;
   overflow: auto;
 }
+/* estilos modal  */
+/* Fondo oscuro del modal */
+.modal {
+  display: none;                 /* oculto por defecto */
+  position: fixed;
+  inset: 0;                      /* ocupa toda la pantalla */
+  background: rgba(0,0,0,0.4);   /* fondo semi-transparente */
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Contenedor del modal */
+.modal-content {
+  background: #fff;
+  border-radius: 16px;
+  padding: 32px 24px;
+  max-width: 350px;
+  width: 90%;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  margin: auto;
+}
+
+/* Botón cerrar */
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 22px;
+  color: #888;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+/* Título */
+.modal-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 3px;
+  text-align: left;
+  margin-top: 30px;
+}
+
+/* Input */
+.modal-input {
+  width: 90%;
+  padding: 10px;
+  margin: 15px 0;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+/* Botón enviar */
+.modal-button {
+  background: #1e3a5f;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+.modal-button:hover {
+  background: #2c5282;
+}
+
 /* contenedor principal  */
 .container {
   display: flex;

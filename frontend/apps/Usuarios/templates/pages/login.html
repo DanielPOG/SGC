@@ -124,49 +124,23 @@
   <!-- FIN CONTENEDOR PRINCIPAL -->
 
   <!-- INICIO MODAL PARA RECUPERAR CONTRASEÑA -->
-  <div id="modalRecuperar"
-       style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:1000; align-items:center; justify-content:center;">
+<div id="modalRecuperar" class="modal">
+  <div class="modal-content">
     
-    <div style="background:#fff; border-radius:16px; padding:32px 24px; max-width:350px; width:90%; text-align:center; position:relative; box-shadow:0 8px 32px rgba(0,0,0,0.2); margin:auto;">
-      
-      <!-- Botón para cerrar modal -->
-      <button id="closeModal"
-              style="position:absolute; top:10px; right:15px; font-size:22px; color:#888; cursor:pointer; border:none; background:none;">&times;</button>
-      
-      <!-- Título del modal -->
-      <h3 style="font-size:20px; font-weight:bold; margin-bottom:3px; text-align:left; margin-top:30px;">Usuario</h3>   
+    <!-- Botón para cerrar modal -->
+    <button id="closeModal" class="close-btn">&times;</button>
+    
+    <!-- Título del modal -->
+    <h3 class="modal-title">Usuario</h3>   
 
-      <!-- Formulario dentro del modal -->
-      <form>
-        <input type="email" placeholder="Ingrese Usuario" required
-               style="width:90%; padding:10px; margin:15px 0; border-radius:6px; border:1px solid #ccc;">
-        <button type="submit"
-                style="background:#1e3a5f; color:#fff; border:none; border-radius:6px; padding:10px 20px; cursor:pointer; font-weight:600;">Enviar</button>
-      </form>
-    </div>
+    <!-- Formulario dentro del modal -->
+    <form>
+      <input type="email" placeholder="Ingrese Usuario" required class="modal-input">
+      <button type="submit" class="modal-button">Enviar</button>
+    </form>
   </div>
-  <!-- FIN MODAL -->
-
-  <!--  SCRIPT PARA ABRIR/CERRAR MODAL -->
-  <script>
-    // Abrir modal
-    document.getElementById('openModal').onclick = function(e) {
-      e.preventDefault();
-      document.getElementById('modalRecuperar').style.display = 'flex';
-    };
-
-    // Cerrar modal con botón
-    document.getElementById('closeModal').onclick = function() {
-      document.getElementById('modalRecuperar').style.display = 'none';
-    };
-
-    // Cerrar modal haciendo clic fuera del contenido
-    window.onclick = function(event) {
-      var modal = document.getElementById('modalRecuperar');
-      if (event.target == modal) {
-        modal.style.display = "none";
-      }
-    }
-  </script>
+</div>
+<!-- FIN MODAL -->
+  <script src="{% static 'js/modal.js' %}"></script>
 </body>
 </html>
