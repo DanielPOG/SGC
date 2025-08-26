@@ -6,8 +6,8 @@
 
 body {
   font-family: 'Inter', sans-serif;
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100vh;
+  overflow: auto;
 }
 /* contenedor principal  */
 .container {
@@ -83,25 +83,27 @@ body {
   background: white;           /* ✅ línea blanca debajo */
   
 }
+
 /* Contenedor del formulario de login (lado derecho). */
 .right-section {
-   margin-right: 60px;
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: flex-end;
   background: #ffffff;
   padding: 80px;
+  margin-right: 60px; /* margen para separar del lado izquierdo */
 }
 /* Tarjeta visual del formulario de login. */
 .login-card {
-  background: white;
+ background: white;
   padding: 40px;
   border-radius: 20px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.1);
   width: 100%;
   max-width: 400px;
   border: 8px solid #d1d5db;
+  transition: all 0.3s ease;
 }
 /* Contenedor del logo e información del sistema. */
 .logo-section {
@@ -113,16 +115,21 @@ body {
 
 /* Título del sistema junto al logo. */
 .logo-text h2 {
-  font-size: 32px;
-  font-weight: 700;
-  color: #1f2937;
-  margin-bottom: 2px;
+  display: flex;
+  flex-direction: column;  /* texto arriba, imagen debajo */
+  align-items: center; 
+  text-align: center;
+  gap: 10px; /* espacio entre elementos */
 }
+
 /* Subtítulo o descripción corta bajo el título. */
-.logo-text p {
-  font-size: 14px;
-  color: #6b7280;
-  font-weight: 500;
+.descripcion_sistema{
+  color: #000000;
+   white-space: nowrap;
+  font-size: 20px;
+  font-weight: bold;
+  margin-left: -90px;
+
 }
 /* Contenedor del formulario de login. */
 .login-form {
@@ -159,6 +166,15 @@ body {
 /* Placeholder de los inputs. */
 .form-group input::placeholder {
   color: #9ca3af;
+}
+.title_login {
+    font-size: 3rem; /* Tamaño de la fuente */
+    font-weight: bold; /* Negrita */
+    color: #000000; /* Color de texto */
+    margin: 20px 0; /* Márgenes arriba y abajo */
+    text-transform: uppercase; /* Texto en mayúsculas */
+    letter-spacing: 1px; /* Espaciado entre letras */
+    margin-left:4px;
 }
 /* Botón para iniciar sesión. */
 .login-button {
@@ -198,6 +214,28 @@ body {
   text-decoration: underline;
 }
 
+/* estilos de imagenes de login logo sena y sgc */
+.logosgc {
+  transition: filter 0.3s ease;
+}
+
+.logosgc:hover {
+  filter: saturate(1) brightness(1.5); /* Aumenta la saturación y el brillo */
+}
+/* Estilo por defecto */
+.logosena {
+  transition: filter 0.3s ease, opacity 0.3s ease;
+  opacity: 0.6; /* Imagen opaca al principio */
+}
+
+/* Estilo al hacer hover */
+.logosena:hover {
+  filter: saturate(1.5) brightness(1.5); /* Colores más vivos y brillantes */
+  opacity: 1; /* Restaurar opacidad al 100% */
+}
+
+
+ /* !TODO: DISEÑO RESPONSIVO TODO */
 /* RESPONSIVE (Diseño adaptable) */
 @media (max-width: 768px) {
 
@@ -213,11 +251,15 @@ body {
     border-bottom-right-radius: 250px;
   }
   /* ocupa más espacio vertical. */
-  .right-section {
-    flex: 0.6;
-    padding: 20px;
-  }
-
+ .right-section {
+  flex: 1;
+  display: flex;
+  align-items: center;      /* centra vertical */
+  justify-content: center;  /* centra horizontal */
+  background: #ffffff;
+  padding: 80px;
+  margin-right: 0;          /* quitamos margen derecho */
+}
   /* reduce su padding para pantallas pequeñas. */
   .login-card {
     padding: 30px 25px;
@@ -236,7 +278,7 @@ body {
 }
 @media (max-width: 900px) {
   .left-group {
-    display: none; /* 🔹 oculta toda la parte izquierda */
+    display: none; /*  oculta toda la parte izquierda */
   }
 
   /* se centra completamente y elimina margen. */
@@ -251,6 +293,34 @@ body {
     max-width: 90%; /* para que se adapte en móviles */
   }
   
+  
+}
+/* ----------- PANTALLAS GRANDES ----------- */
+@media (min-width: 1200px) {
+  .login-card {
+    max-width: 500px; /* se agranda un poco */
+    padding: 50px;
+  }
+}
+
+/* ----------- PANTALLAS MEDIANAS ----------- */
+@media (max-width: 900px) {
+  .left-group {
+    display: none; /* oculta el lado izquierdo */
+  }
+
+  .right-section {
+    flex: 1;
+    justify-content: center;  /* ahora se centra */
+    align-items: center;
+    padding: 40px;
+    margin-right: 0; /* quita el margen extra */
+  }
+
+  .login-card {
+    max-width: 90%; /* ocupa casi toda la pantalla */
+    padding: 30px;
+  }
 }
 
 }
