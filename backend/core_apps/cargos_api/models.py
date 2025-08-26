@@ -1,5 +1,5 @@
 from django.db import models
-from core_apps.general.models import Area
+from general.models import Area
 from django.apps import apps
 
 # Create your models here.

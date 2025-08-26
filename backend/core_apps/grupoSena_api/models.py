@@ -1,6 +1,6 @@
 from django.db import models
-from core_apps.general.models import Centro
-from core_apps.usuarios_api.models import Usuario
+from general.models import Centro
+from usuarios_api.models import Usuario
 
 # Create your models here.
 class EstadoGrupo(models.Model):
