@@ -2,7 +2,7 @@ from rest_framework import viewsets, permissions
 from .models import Usuario, FormacionComplementaria, Bitacora, Solicitud
 from .serializers import UsuarioSerializer, FormacionComplementariaSerializer, BitacoraSerializer, SolicitudSerializer
 
-
+#APIVIEW PENDIENTE
 class UsuarioViewSet(viewsets.ModelViewSet):
     queryset = Usuario.objects.all()
     serializer_class = UsuarioSerializer
