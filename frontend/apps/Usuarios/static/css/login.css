@@ -134,14 +134,11 @@ body {
    margin-left: 10%; 
 }
 /* Línea decorativa horizontal en login  */
-.linea-vertical { 
-  border-top: 3px solid black; /* grosor y color */
-  width: 150%; /* ancho de la línea */
-  margin: 20px auto; /* espacio alrededor y centrado */
-  margin-left: -90px;  
-  margin-top: -4px;
+.linea-vertical {
+  border-top: 2px solid #000;
+  width: 60%;
+  margin: 5px auto;
 }
-
 /* Línea decorativa blanca debajo del texto de bienvenida */
 .welcome-text::after {
   content: '';
@@ -179,29 +176,29 @@ body {
 /* Contenedor del logo e información del sistema. */
 .logo-section {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  margin-bottom: 40px;
-  gap: 15px;
+  gap: 10px;
+  margin-bottom: 30px;
 }
 
 /* Título del sistema junto al logo. */
-.logo-text h2 {
+.logo-text {
   display: flex;
-  flex-direction: column;  /* texto arriba, imagen debajo */
-  align-items: center; 
+  flex-direction: column;
+  align-items: center;
   text-align: center;
-  gap: 10px; /* espacio entre elementos */
+  gap: 8px;
+  width: 100%;
 }
 
 /* Subtítulo o descripción corta bajo el título. */
-.descripcion_sistema{
-  color: #000000;
-   white-space: nowrap;
-  font-size: 20px;
-  font-weight: bold;
-  margin-left: -90px;
-
-}
+.descripcion_sistema {
+   font-size: 1rem; 
+   font-weight: bold; 
+   color: #000;
+    white-space: nowrap;
+   }
 /* Contenedor del formulario de login. */
 .login-form {
   width: 100%;
@@ -239,13 +236,12 @@ body {
   color: #9ca3af;
 }
 .title_login {
-    font-size: 3rem; /* Tamaño de la fuente */
-    font-weight: bold; /* Negrita */
-    color: #000000; /* Color de texto */
-    margin: 20px 0; /* Márgenes arriba y abajo */
-    text-transform: uppercase; /* Texto en mayúsculas */
-    letter-spacing: 1px; /* Espaciado entre letras */
-    margin-left:4px;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #000;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0;
 }
 /* Botón para iniciar sesión. */
 .login-button {
@@ -393,5 +389,12 @@ body {
     padding: 30px;
   }
 }
-
+ /* responsivo de pantalla  */
+ @media (min-width: 1200px) {
+  .login-card {
+    max-width: 550px;     /* más grande */
+    padding: 50px;        /* más espacio interno */
+    transform: translateX(-40px); /* lo mueve un poco a la izquierda */
+  }
+}
 }
