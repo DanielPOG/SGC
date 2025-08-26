@@ -1,0 +1,49 @@
+[MASTER]
+load-plugins=pylint_django, pylint_django.checkers.migrations
+jobs=1
+persistent=yes
+py-version=3.13
+
+[MESSAGES CONTROL]
+disable=no-member,missing-docstring,invalid-name
+disable=
+    C0114,  ; missing-module-docstring
+    C0115,  ; missing-class-docstring
+    C0116,  ; missing-function-docstring
+    E1101,  ; no-member (útil en Django ORM)
+    W0613,  ; unused-argument
+    W0511,  ; todo
+    R0903,  ; too-few-public-methods (útil en Models)
+    R0201,  ; no-self-use
+
+[DESIGN]
+max-args=10
+max-locals=20
+max-branches=15
+max-statements=100
+max-parents=13
+max-attributes=15
+max-public-methods=50
+
+[FORMAT]
+max-line-length=100
+indent-string='    '
+
+[TYPECHECK]
+django-settings-module=backend.settings
+ignore-mixin-members=yes
+generated-members=
+    objects,
+    doesnotexist,
+    save,
+    delete,
+    queryset,
+    get,
+    filter,
+    pk
+
+[VARIABLES]
+additional-builtins=
+
+[pylint_django]
+django-settings-module=backend.settings

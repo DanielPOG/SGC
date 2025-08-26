@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+<<<<<<< Updated upstream
     'rest_framework',
     'apps.core',
     'apps.funcionarios',
@@ -45,6 +46,16 @@ INSTALLED_APPS = [
     'apps.users',
     'apps.cargos',
     'apps.peticiones'
+=======
+    'corsheaders', # Para validar cors
+    'rest_framework', #Framework
+    #'coreapi'
+    # apps
+    'core_apps.usuarios_api',
+    'core_apps.cargos_api',
+    'core_apps.reportes_api',
+    'core_apps.general'
+>>>>>>> Stashed changes
 ]
 
 MIDDLEWARE = [
