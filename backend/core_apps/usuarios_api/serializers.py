@@ -27,7 +27,7 @@ class UsuarioSerializer(serializers.ModelSerializer):
         return user
 
 class FormacionComplementariaSerializer(serializers.ModelSerializer):
-    tipo = serializers.PrimaryKeyRelatedField(queryset=TipoCertificado.objects.all()) #pylint:disable=no-member
+    tipo = serializers.PrimaryKeyRelatedField(queryset=TipoCertificado.objects.all()) 
     usuario = serializers.PrimaryKeyRelatedField(queryset=Usuario.objects.all())
 
     class Meta:
@@ -50,8 +50,8 @@ class BitacoraSerializer(serializers.ModelSerializer):
 class SolicitudSerializer(serializers.ModelSerializer):
     emisor = serializers.PrimaryKeyRelatedField(queryset=Usuario.objects.all())
     receptor = serializers.PrimaryKeyRelatedField(queryset=Usuario.objects.all())
-    tipo = serializers.PrimaryKeyRelatedField(queryset=TipoSolicitud.objects.all())#pylint:disable=no-member
-    estado = serializers.PrimaryKeyRelatedField(queryset=EstadoSolicitud.objects.all())#pylint:disable=no-member
+    tipo = serializers.PrimaryKeyRelatedField(queryset=TipoSolicitud.objects.all())
+    estado = serializers.PrimaryKeyRelatedField(queryset=EstadoSolicitud.objects.all())
 
     class Meta:
         model = Solicitud

@@ -16,8 +16,8 @@ class EstadoGrupoSerializer(serializers.ModelSerializer):
 
 
 class GrupoSenaSerializer(serializers.ModelSerializer):
-    centro = serializers.PrimaryKeyRelatedField(queryset=Centro.objects.all())#pylint:disable=no-member
-    estadoGrupo = serializers.PrimaryKeyRelatedField(queryset=EstadoGrupo.objects.all())#pylint:disable=no-member
+    centro = serializers.PrimaryKeyRelatedField(queryset=Centro.objects.all())
+    estadoGrupo = serializers.PrimaryKeyRelatedField(queryset=EstadoGrupo.objects.all())
     lider = serializers.PrimaryKeyRelatedField(queryset=Usuario.objects.all())
 
     class Meta:
@@ -28,8 +28,8 @@ class GrupoSenaSerializer(serializers.ModelSerializer):
 
 class UsuarioGrupoSerializer(serializers.ModelSerializer):
     usuario = serializers.PrimaryKeyRelatedField(queryset=Usuario.objects.all())
-    grupo = serializers.PrimaryKeyRelatedField(queryset=GrupoSena.objects.all())#pylint:disable=no-member
-    usuarioxcargo = serializers.PrimaryKeyRelatedField(queryset=CargoUsuario.objects.all())#pylint:disable=no-member
+    grupo = serializers.PrimaryKeyRelatedField(queryset=GrupoSena.objects.all())
+    usuarioxcargo = serializers.PrimaryKeyRelatedField(queryset=CargoUsuario.objects.all())
 
     class Meta:
         model = UsuarioGrupo

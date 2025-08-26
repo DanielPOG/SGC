@@ -20,9 +20,9 @@ class EstadoCargoSerializer(serializers.ModelSerializer):
 
 
 class CargoSerializer(serializers.ModelSerializer):
-    cargoNombre = serializers.PrimaryKeyRelatedField(queryset=CargoNombre.objects.all())#pylint:disable=no-member
-    estadoCargo = serializers.PrimaryKeyRelatedField(queryset=EstadoCargo.objects.all())#pylint:disable=no-member
-    centro = serializers.PrimaryKeyRelatedField(queryset=Centro.objects.all())#pylint:disable=no-member
+    cargoNombre = serializers.PrimaryKeyRelatedField(queryset=CargoNombre.objects.all())
+    estadoCargo = serializers.PrimaryKeyRelatedField(queryset=EstadoCargo.objects.all())
+    centro = serializers.PrimaryKeyRelatedField(queryset=Centro.objects.all())
 
     class Meta:
         model = Cargo
@@ -30,7 +30,7 @@ class CargoSerializer(serializers.ModelSerializer):
 
 
 class CargoFuncionSerializer(serializers.ModelSerializer):
-    cargo = serializers.PrimaryKeyRelatedField(queryset=Cargo.objects.all())#pylint:disable=no-member
+    cargo = serializers.PrimaryKeyRelatedField(queryset=Cargo.objects.all())
 
     class Meta:
         model = CargoFuncion
@@ -38,7 +38,7 @@ class CargoFuncionSerializer(serializers.ModelSerializer):
 
 
 class CargoUsuarioSerializer(serializers.ModelSerializer):
-    cargo = serializers.PrimaryKeyRelatedField(queryset=Cargo.objects.all())#pylint:disable=no-member
+    cargo = serializers.PrimaryKeyRelatedField(queryset=Cargo.objects.all())
     usuario = serializers.PrimaryKeyRelatedField(queryset=Usuario.objects.all())
 
     class Meta:

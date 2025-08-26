@@ -9,7 +9,7 @@ class RegionalSerializer(serializers.ModelSerializer):
 
 
 class CentroSerializer(serializers.ModelSerializer):
-    regional = serializers.PrimaryKeyRelatedField(queryset=Regional.objects.all())#pylint:disable=no-member
+    regional = serializers.PrimaryKeyRelatedField(queryset=Regional.objects.all())
 
     class Meta:
         model = Centro
@@ -17,7 +17,7 @@ class CentroSerializer(serializers.ModelSerializer):
 
 
 class RedSerializer(serializers.ModelSerializer):
-    centro = serializers.PrimaryKeyRelatedField(queryset=Centro.objects.all())#pylint:disable=no-member
+    centro = serializers.PrimaryKeyRelatedField(queryset=Centro.objects.all())
 
     class Meta:
         model = Red
@@ -25,7 +25,7 @@ class RedSerializer(serializers.ModelSerializer):
 
 
 class AreaSerializer(serializers.ModelSerializer):
-    red = serializers.PrimaryKeyRelatedField(queryset=Red.objects.all())#pylint:disable=no-member
+    red = serializers.PrimaryKeyRelatedField(queryset=Red.objects.all())
 
     class Meta:
         model = Area
