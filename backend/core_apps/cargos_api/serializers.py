@@ -2,8 +2,8 @@
     Serializadores de los modelos app cargos_api
 """
 from rest_framework import serializers
-from general.models import Centro
-from usuarios_api.models import Usuario
+from core_apps.general.models import Centro
+from core_apps.usuarios_api.models import Usuario
 from .models import CargoNombre, EstadoCargo, Cargo, CargoFuncion, CargoUsuario
 
 

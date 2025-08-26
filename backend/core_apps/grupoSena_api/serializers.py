@@ -1,9 +1,9 @@
 """
     Serializers
 """
-from general.models import Centro
-from usuarios_api.models import Usuario
-from cargos_api.models import CargoUsuario
+from core_apps.general.models import Centro
+from core_apps.usuarios_api.models import Usuario
+from core_apps.cargos_api.models import CargoUsuario
 from rest_framework import serializers
 from .models import EstadoGrupo, GrupoSena, UsuarioGrupo
 
