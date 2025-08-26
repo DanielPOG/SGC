@@ -1,47 +1,9 @@
 from rest_framework import serializers
 from .models import (
-    TipoDocumento, Genero, EstudioFormal, Rol, Estado,
     Usuario, TipoCertificado, FormacionComplementaria,
     Bitacora, EstadoSolicitud, TipoSolicitud, Solicitud
 )
 
-
-# ===========================
-# TIPOS Y CATÁLOGOS
-# ===========================
-class TipoDocumentoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TipoDocumento
-        fields = ('id', 'nombre', 'sigla')
-
-
-class GeneroSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Genero
-        fields = ('id', 'nombre', 'sigla')
-
-
-class EstudioFormalSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = EstudioFormal
-        fields = ('id', 'nombre')
-
-
-class RolSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Rol
-        fields = ('id', 'nombre')
-
-
-class EstadoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Estado
-        fields = ('id', 'nombre')
-
-
-# ===========================
-# USUARIO
-# ===========================
 class UsuarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Usuario
@@ -64,16 +26,6 @@ class UsuarioSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
-
-# ===========================
-# CERTIFICADOS Y FORMACIÓN
-# ===========================
-class TipoCertificadoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TipoCertificado
-        fields = ('id', 'nombre')
-
-
 class FormacionComplementariaSerializer(serializers.ModelSerializer):
     tipo = serializers.PrimaryKeyRelatedField(queryset=TipoCertificado.objects.all()) #pylint:disable=no-member
     usuario = serializers.PrimaryKeyRelatedField(queryset=Usuario.objects.all())
@@ -86,9 +38,6 @@ class FormacionComplementariaSerializer(serializers.ModelSerializer):
         )
 
 
-# ===========================
-# BITÁCORA
-# ===========================
 class BitacoraSerializer(serializers.ModelSerializer):
     usuario = serializers.PrimaryKeyRelatedField(queryset=Usuario.objects.all())
 
@@ -96,21 +45,6 @@ class BitacoraSerializer(serializers.ModelSerializer):
         model = Bitacora
         fields = ('id', 'usuario', 'accion', 'fecha')
         read_only_fields = ('fecha',)
-
-
-# ===========================
-# SOLICITUDES
-# ===========================
-class EstadoSolicitudSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = EstadoSolicitud
-        fields = ('id', 'nombre')
-
-
-class TipoSolicitudSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TipoSolicitud
-        fields = ('id', 'nombre')
 
 
 class SolicitudSerializer(serializers.ModelSerializer):

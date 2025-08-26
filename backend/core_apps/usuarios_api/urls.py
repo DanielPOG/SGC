@@ -1,11 +1,10 @@
-from django.urls import path, include
-# from rest_framework.documentation import include_docs_urls
-from rest_framework import routers
-from .views import UsuarioViewSet
-router = routers.DefaultRouter()
-router.register(r'usuarios', UsuarioViewSet, 'usuarios')
+from rest_framework.routers import DefaultRouter
+from .views import UsuarioViewSet, FormacionComplementariaViewSet, BitacoraViewSet, SolicitudViewSet
 
-urlpatterns = [
-    path('api/v1/', include(router.urls)),
-    # path('docs/', include_docs_urls(title='Task API'))
-]
+router = DefaultRouter()
+router.register(r'usuarios', UsuarioViewSet)
+router.register(r'formaciones', FormacionComplementariaViewSet)
+router.register(r'bitacoras', BitacoraViewSet)
+router.register(r'solicitudes', SolicitudViewSet)
+
+urlpatterns = router.urls
