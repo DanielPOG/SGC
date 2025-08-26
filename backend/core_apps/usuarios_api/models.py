@@ -17,6 +17,14 @@ class EstudioFormal(models.Model):
     nombre = models.CharField(max_length=50)
     def __str__(self):
         return self.nombre
+class Rol(models.Model):
+    nombre = models.CharField(max_length=50)
+    def __str__(self):
+        return self.nombre
+class Estado(models.Model):
+    nombre = models.CharField(max_length=50)
+    def __str__(self):
+        return self.nombre
 # Gestor de usuarios personalizado
 class UsuarioManager(BaseUserManager):
     def create_user(self, correo, nombre, apellido, num_doc, password=None, **extra_fields):
@@ -58,11 +66,16 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     genero = models.ForeignKey('Genero', on_delete=models.CASCADE, null=True, blank=True)
     cargo = models.ForeignKey('cargos_api.Cargo', on_delete=models.CASCADE,null=True, blank=True)
     estudioF = models.ForeignKey('EstudioFormal', on_delete=models.CASCADE,null=True, blank=True)
-    #grupo sena
-    #grado pero toca ponerlo en cargo x funcionario
-    #resolucion
-    #fecha de nacimiento
-    #fecha de ingreso al sena
+    fechaInicio = models.DateField(auto_now_add=True)
+    fechaActualizacion = models.DateField(auto_now=True)
+    fechaRetiro=models.DateField(null=True, blank=True)
+    rol = models.ForeignKey('Rol', on_delete=models.CASCADE)
+    fecha_n= models.DateField()
+    resolucion= models.CharField(max_length=100)
+    estado= models.ForeignKey('Estado', on_delete=models.CASCADE)
+    dependencia = models.ForeignKey('general.Dependencia', on_delete=models.CASCADE)
+    software= models.IntegerField()
+
     
      
     # Campos de autenticación
@@ -85,10 +98,13 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     def has_module_perms(self, app_label):
         return self.is_superuser or self.is_staff
 
-
+class TipoCertificado(models.Model):
+    nombre= models.CharField(max_length=100)
+    def __str__(self):
+        return self.nombre
 class FormacionComplementaria(models.Model):
     nombre = models.CharField(max_length=100)
-    tipo = models.CharField(max_length=100)
+    tipo = models.ForeignKey('TipoCertificado', on_delete=models.CASCADE)
     institucion = models.CharField(max_length=100)
     fechaInicio = models.DateField()
     fechaFin = models.DateField()
@@ -100,3 +116,21 @@ class Bitacora(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     accion = models.CharField(max_length=255) #TODO : MANEJAR EN LOGICA PARA AGREGAR A BITACORA
     fecha = models.DateTimeField(auto_now_add=True)
+
+class EstadoSolicitud(models.Model):
+    nombre = models.CharField(max_length=100)
+    def __str__(self):
+        return self.nombre
+class TipoSolicitud(models.Model):
+    nombre= models.CharField(max_length=100)
+    def __str__(self):
+        return self.nombre
+    
+class Solicitud(models.Model):
+    emisor = models.ForeignKey('Usuario', on_delete=models.CASCADE, related_name='solicitudes_enviadas')
+    receptor = models.ForeignKey('Usuario', on_delete=models.CASCADE, related_name='solicitudes_recibidas')
+    descripcion = models.TextField()
+    tipo = models.ForeignKey('TipoSolicitud', on_delete=models.CASCADE)
+    fechaCreacion = models.DateTimeField(auto_now_add=True)
+    fechaAprovada = models.DateTimeField(null=True, blank=True)
+    estado = models.ForeignKey('EstadoSolicitud', on_delete=models.CASCADE)

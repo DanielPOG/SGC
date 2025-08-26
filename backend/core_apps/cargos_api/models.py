@@ -10,12 +10,12 @@ class CargoNombre(models.Model):
 class EstadoCargo(models.Model):
     estado = models.CharField(max_length=100, unique=True)
 class Cargo(models.Model):
-    codigoCargo = models.CharField(max_length=10, unique=True)
-    cargo_nombre = models.ForeignKey('CargoNombre', on_delete=models.CASCADE)
+    codigoCargo = models.CharField(max_length=10, unique=True) #TODO:REVISAR ATRIBUTO
+    cargoNombre = models.ForeignKey('CargoNombre', on_delete=models.CASCADE)
     idp = models.CharField(max_length=10)
     estadoCargo = models.ForeignKey('EstadoCargo', on_delete=models.CASCADE) 
     resolucion = models.CharField(max_length=200)
-    area = models.ForeignKey(Area, on_delete=models.CASCADE)
+    centro = models.ForeignKey('general.Centro', on_delete=models.CASCADE)
     fechaCreacion = models.DateTimeField(auto_now_add=True)
     fechaActualizacion = models.DateTimeField(auto_now=True)
     observacion = models.TextField(blank=True, null=True)
@@ -25,10 +25,9 @@ class CargoFuncion(models.Model):
 
 class CargoUsuario(models.Model):
     cargo = models.ForeignKey('Cargo', on_delete=models.CASCADE)
-
-    # Usamos apps.get_model para evitar la importación circular
     usuario = models.ForeignKey('usuarios_api.Usuario', on_delete=models.CASCADE)
-    fechaAsignacion = models.DateTimeField(auto_now_add=True)
-    fechaFin = models.DateTimeField(auto_now=True)
+    fechaInicio = models.DateTimeField(auto_now_add=True)
+    fechaRetiro = models.DateTimeField(auto_now=True)
     salario = models.DecimalField(max_digits=10, decimal_places=2)
     grado = models.CharField(max_length=100)
+    resolucion= models.CharField(max_length=100)

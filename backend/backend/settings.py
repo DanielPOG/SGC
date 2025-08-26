@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     # apps
     'core_apps.usuarios_api',
     'core_apps.cargos_api',
-    'core_apps.grupoSena_api',
     'core_apps.reportes_api',
     'core_apps.general'
 ]
