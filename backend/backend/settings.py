@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework', #Framework
     #'coreapi', #Documentacion TODO: MIRAR LA VERSION DEL PYTHON 
     # apps
+    'core_apps.grupoSena_api',
     'core_apps.usuarios_api',
     'core_apps.cargos_api',
     'core_apps.reportes_api',
