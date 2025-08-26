@@ -303,6 +303,41 @@ body {
 
 
  /* !TODO: DISEÑO RESPONSIVO TODO */
+ @media (min-width: 1920px) {
+  .right-section {
+    justify-content: center;
+  }
+
+  .login-card {
+    max-width: 700px;           /* Más ancho */
+    padding: 60px 70px;         /* Más espacio interno */
+    transform: translateX(-15%); /* Moverlo un poco a la izquierda */
+  }
+
+  .login-button {
+    font-size: 18px;            /* Botón más grande */
+    padding: 16px;
+  }
+
+  .form-group input {
+    font-size: 16px;
+    padding: 16px 20px;         /* Inputs más altos y cómodos */
+  }
+
+  .title_login {
+    font-size: 3rem;            /* Título más grande */
+  }
+}
+ @media (min-width: 1920px) {
+  .right-section {
+    justify-content: center;
+  }
+
+  .login-card {
+    transform: translateX(50%);
+  }
+}
+
 /* RESPONSIVE (Diseño adaptable) */
 @media (max-width: 768px) {
 
