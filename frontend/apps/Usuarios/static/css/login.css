@@ -1,0 +1,256 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  height: 100vh;
+  overflow: hidden;
+}
+/* contenedor principal  */
+.container {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+/* fondo curvado izquierdo color gris  */
+.left-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40%;        /* ocupa todo el left-group */
+  height: 100%;
+  border-top-right-radius: 180vh;
+  border-bottom-right-radius: 180vh;
+  background: #d1d5db;
+  z-index: 0;
+} 
+/* seccion izquierda */
+.left-section {
+  position: relative; /* ya no absolute */
+  width: 96%;
+  height: 100%;
+  border-top-right-radius: 180vh;
+  border-bottom-right-radius: 180vh;
+  background: linear-gradient(135deg, #00304D 0%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+/* texto "bienvenido" */
+.welcome-content {
+  text-align: center;
+  z-index: 2;
+}
+/* Contenedor para íconos o gráficos decorativos */
+.chart-icon {
+  position: relative;
+  margin-bottom: 30px;
+  display: inline-block;
+}
+/* Texto de bienvenida principal. */
+.welcome-text {
+  color: white;              
+  font-size: 38px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  position: relative;
+  text-align: left;
+   margin-left: 10%; 
+}
+/* Línea decorativa horizontal en login  */
+.linea-vertical { 
+  border-top: 3px solid black; /* grosor y color */
+  width: 150%; /* ancho de la línea */
+  margin: 20px auto; /* espacio alrededor y centrado */
+  margin-left: -90px;  
+  margin-top: -4px;
+}
+
+/* Línea decorativa blanca debajo del texto de bienvenida */
+.welcome-text::after {
+  content: '';
+  position: absolute;
+  bottom: -7px;
+  left: 0;
+  right: 0;
+  width: 300px;
+  height: 4px;
+  background: white;           /* ✅ línea blanca debajo */
+  
+}
+/* Contenedor del formulario de login (lado derecho). */
+.right-section {
+   margin-right: 60px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  background: #ffffff;
+  padding: 80px;
+}
+/* Tarjeta visual del formulario de login. */
+.login-card {
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 400px;
+  border: 8px solid #d1d5db;
+}
+/* Contenedor del logo e información del sistema. */
+.logo-section {
+  display: flex;
+  align-items: center;
+  margin-bottom: 40px;
+  gap: 15px;
+}
+
+/* Título del sistema junto al logo. */
+.logo-text h2 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 2px;
+}
+/* Subtítulo o descripción corta bajo el título. */
+.logo-text p {
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 500;
+}
+/* Contenedor del formulario de login. */
+.login-form {
+  width: 100%;
+}
+/* Agrupa cada campo individual (etiqueta + input). */
+.form-group {
+  margin-bottom: 25px;
+}
+/* Etiquetas de los campos (ej: "Usuario y conttraseña"). */
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #374151;
+  font-size: 14px;
+}
+/* Campos de entrada del formulario. */
+.form-group input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 25px;
+  font-size: 14px;
+  background: #f9fafb;
+  transition: all 0.3s ease;
+}
+/* Estado enfocado del input. */
+.form-group input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background: white;
+}
+/* Placeholder de los inputs. */
+.form-group input::placeholder {
+  color: #9ca3af;
+}
+/* Botón para iniciar sesión. */
+.login-button {
+  width: 100%;
+  background: #1e3a5f;
+  color: white;
+  padding: 14px;
+  border: none;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 20px;
+}
+/* Efecto visual cuando el mouse pasa sobre el botón. */
+.login-button:hover {
+  background: #2c5282;
+  transform: translateY(-1px);
+}
+/* Contenedor del enlace "¿Olvidaste tu contraseña?". */
+.forgot-password {
+  text-align: center;
+  padding-top: 15px;
+  border-top: 1px solid #e5e7eb;
+}
+/* Enlace de recuperación. */
+.forgot-password a {
+  color: #6b7280;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+}
+/* Estilo al pasar el mouse sobre el enlace. */
+.forgot-password a:hover {
+  color: #3b82f6;
+  text-decoration: underline;
+}
+
+/* RESPONSIVE (Diseño adaptable) */
+@media (max-width: 768px) {
+
+  /* se apila verticalmente. */
+  .container {
+    flex-direction: column;
+  }
+  /* se vuelve más pequeña y se adapta a ancho completo. */
+  .left-section {
+    width: 100vw;
+    height: 250px;
+    border-top-right-radius: 250px;
+    border-bottom-right-radius: 250px;
+  }
+  /* ocupa más espacio vertical. */
+  .right-section {
+    flex: 0.6;
+    padding: 20px;
+  }
+
+  /* reduce su padding para pantallas pequeñas. */
+  .login-card {
+    padding: 30px 25px;
+  }
+  
+  /* se oculta totalmente para dar más espacio al login. */
+  .left-group {
+  position: relative;
+  width: 41%;         /* puedes usar % o px */
+  min-width: 320px;
+  height: 100vh;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+
+}
+@media (max-width: 900px) {
+  .left-group {
+    display: none; /* 🔹 oculta toda la parte izquierda */
+  }
+
+  /* se centra completamente y elimina margen. */
+  .right-section {
+    flex: 1;             /* ahora ocupa todo el espacio */
+    justify-content: center;
+    padding: 20px;
+    margin-right: 0;     /* quita el margen derecho extra */
+  }
+  /* se adapta al 90% del ancho disponible. */
+  .login-card {
+    max-width: 90%; /* para que se adapte en móviles */
+  }
+  
+}
+
+}

@@ -6,24 +6,24 @@ from django.apps import apps
 class TipoDocumento(models.Model):
     nombre = models.CharField(max_length=100)
     sigla = models.CharField(max_length=10)
-    def __str__(self): #pylint:disable=invalid-str-returned
+    def __str__(self):
         return self.nombre
 class Genero(models.Model):
     nombre = models.CharField(max_length=50)
     sigla = models.CharField(max_length=10)
-    def __str__(self): #pylint:disable=invalid-str-returned
+    def __str__(self):
         return self.nombre
 class EstudioFormal(models.Model):
     nombre = models.CharField(max_length=50)
-    def __str__(self): #pylint:disable=invalid-str-returned
+    def __str__(self):
         return self.nombre
 class Rol(models.Model):
     nombre = models.CharField(max_length=50)
-    def __str__(self): #pylint:disable=invalid-str-returned
+    def __str__(self):
         return self.nombre
 class Estado(models.Model):
     nombre = models.CharField(max_length=50)
-    def __str__(self): #pylint:disable=invalid-str-returned
+    def __str__(self):
         return self.nombre
 # Gestor de usuarios personalizado
 class UsuarioManager(BaseUserManager):
@@ -76,6 +76,8 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     dependencia = models.ForeignKey('general.Dependencia', on_delete=models.CASCADE)
     software= models.IntegerField()
 
+    
+     
     # Campos de autenticación
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -87,7 +89,7 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
 
     objects = UsuarioManager()
 
-    def __str__(self): #pylint:disable=invalid-str-returned
+    def __str__(self):
         return self.correo
 
     def has_perm(self, perm, obj=None):
@@ -98,8 +100,8 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
 
 class TipoCertificado(models.Model):
     nombre= models.CharField(max_length=100)
-    def __str__(self): #pylint:disable=invalid-str-returned
-        return self.nombre 
+    def __str__(self):
+        return self.nombre
 class FormacionComplementaria(models.Model):
     nombre = models.CharField(max_length=100)
     tipo = models.ForeignKey('TipoCertificado', on_delete=models.CASCADE)
@@ -112,16 +114,16 @@ class FormacionComplementaria(models.Model):
 
 class Bitacora(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
-    accion = models.CharField(max_length=255) #  MANEJAR EN LOGICA PARA AGREGAR A BITACORA
+    accion = models.CharField(max_length=255) #TODO : MANEJAR EN LOGICA PARA AGREGAR A BITACORA
     fecha = models.DateTimeField(auto_now_add=True)
 
 class EstadoSolicitud(models.Model):
     nombre = models.CharField(max_length=100)
-    def __str__(self): #pylint:disable=invalid-str-returned
+    def __str__(self):
         return self.nombre
 class TipoSolicitud(models.Model):
     nombre= models.CharField(max_length=100)
-    def __str__(self): #pylint:disable=invalid-str-returned
+    def __str__(self):
         return self.nombre
     
 class Solicitud(models.Model):

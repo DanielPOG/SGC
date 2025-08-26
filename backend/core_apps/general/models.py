@@ -18,5 +18,5 @@ class Area(models.Model):
     red= models.ForeignKey('Red', on_delete=models.CASCADE)
 
 class Dependencia(models.Model):
-    codigoDependencia = models.CharField(max_length=10, unique=True)
+    codigoDependencia= models.CharField(max_length=10, unique=True)
     nombre = models.CharField(max_length=100, unique= True)

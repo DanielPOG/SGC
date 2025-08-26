@@ -5,3 +5,27 @@ def index(request):
     return render(request, 'layout/index.html')
 def login_view(request):
     return render(request, 'pages/login.html')
+def sidebar(request):
+    return render(request, 'layout/sidebar.html')
+
+# DEF usuario paginas
+def funcionario(request):
+    return render(request, 'pages/funcionario.html')
+
+def cargo(request):
+    return render(request, 'pages/cargo.html')
+
+def grupo_sena(request):
+    return render(request, 'pages/grupo_sena.html')
+
+def reportes(request):
+    return render(request, 'pages/reportes.html')
+
+def id_planta(request):
+    return render(request, 'pages/id_planta.html')
+
+def solicitudes(request):
+    return render(request, 'pages/solicitudes.html')
+
+
+

@@ -37,30 +37,20 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-<<<<<<< Updated upstream
-    'rest_framework',
-    'apps.core',
-    'apps.funcionarios',
-    'apps.formacion',
-    'apps.grupos',
-    'apps.users',
-    'apps.cargos',
-    'apps.peticiones'
-=======
     'corsheaders', # Para validar cors
     'rest_framework', #Framework
-    #'coreapi'
+    #'coreapi', #Documentacion TODO: MIRAR LA VERSION DEL PYTHON 
     # apps
     'core_apps.usuarios_api',
     'core_apps.cargos_api',
     'core_apps.reportes_api',
     'core_apps.general'
->>>>>>> Stashed changes
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -73,7 +63,7 @@ ROOT_URLCONF = 'backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['./'],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -94,17 +84,20 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'sgc',
-        'USER': 'exampleuser',
-        'PASSWORD': 'examplepass',
-        'HOST' : 'localhost',
-        'PORT':'5432'
+        'NAME': 'SGC',
+        'USER': 'postgres',
+        'PASSWORD': 'root',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
 
+
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
+
+AUTH_USER_MODEL = 'usuarios_api.Usuario'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -143,3 +136,11 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# CORS settings TODO:PONER URL AUTORIZADAS
+CORS_ALLOWED_ORIGINS = [
+]
+
+REST_FRAMEWORK = {
+    "DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.coreapi.AutoSchema",
+}
