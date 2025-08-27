@@ -315,7 +315,30 @@ body {
   .right-section {
     justify-content: center;
   }
+ .logosgc{
+   width:90px;
+    position: relative; 
+     top: 60px;
+      margin-right:11rem
 
+ }    
+ 
+ .logosena{
+ width:80px;
+ position: relative;
+  margin-left:60px; 
+  float: right;
+   margin-top:-70px;
+    margin-left:11rem
+ }
+  .descripcion_sistema{
+    font-size: 29px;
+  }           
+.linea-vertical{
+  width: 80%;
+  margin: 5px auto;
+}
+  
  #openModal {
   font-size: 29px; /* o el tamaño que quieras */
 }
