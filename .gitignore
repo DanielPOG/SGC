@@ -10,7 +10,7 @@ __pycache__/
 .Python
 build/
 develop-eggs/
-dist/
+
 downloads/
 eggs/
 .eggs/
@@ -193,3 +193,9 @@ theme/static_src/.cache/
 
 # Opcional: si usas editorconfig de tailwindcss
 .postcssrc
+# Ignorar cualquier dist
+/dist/
+
+# Pero NO ignorar el CSS de Tailwind en theme
+!theme/static/css/dist/
+
