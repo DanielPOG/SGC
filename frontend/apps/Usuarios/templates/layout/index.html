@@ -1,43 +1,43 @@
-{% extends "layout/sidebar.html" %} 
+{% extends "layout/sidebar.html" %}
 
 {% block title %}Panel Principal{% endblock %}
 
 {% block content %}
-    <h1>Panel Principal</h1>
-    <p class="welcome">¡Bienvenido, _______!</p>
-    <p class="last-session">Última Sesión:_________</p>
+    <h1 class="text-[70px] mb-2">Panel Principal</h1>
+    <p class="text-[25px] mb-8">¡Bienvenido, _________!</p>
+    <p class="text-gray-600 mb-16">Última Sesión: _________</p>
 
-    <div class="cards">
-        <div class="card">
-            <div class="icon">👤</div>
-            <div>
-                <p class="number">48</p>
-                <p>Funcionarios Activos</p>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="icon">✉</div>
-            <div>
-                <p class="number">12</p>
-                <p>Cargos Registrados</p>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="icon">👥</div>
-            <div>
-                <p class="number">7</p>
-                <p>Grupos Sena</p>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="icon">📁</div>
-            <div>
-                <p class="number">2</p>
-                <p>Reportes Recientes</p>
-            </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-16 max-w-5xl w-full">
+    <div class="flex items-center gap-5 bg-gray-200 rounded-xl p-8 transition-transform duration-200 cursor-pointer border-2 border-gray-400 hover:scale-105 hover:border-[#00f0ff] hover:shadow-[0_0_15px_#00f0ff]">
+        <div class="w-[65px] h-[65px] rounded-full bg-white flex items-center justify-center text-[28px]">👤</div>
+        <div>
+        <p class="text-[25px] font-bold mb-1">48</p>
+        <p>Funcionarios Activos</p>
         </div>
     </div>
+
+<div class="flex items-center gap-5 bg-gray-200 rounded-xl p-8 transition-transform duration-200 cursor-pointer border-2 border-gray-400 hover:scale-105 hover:border-[#00f0ff] hover:shadow-[0_0_15px_#00f0ff]">
+    <div class="w-[65px] h-[65px] rounded-full bg-white flex items-center justify-center text-[28px]">✉</div>
+    <div>
+        <p class="text-[25px] font-bold mb-1">12</p>
+        <p>Cargos Registrados</p>
+    </div>
+</div>
+
+<div class="flex items-center gap-5 bg-gray-200 rounded-xl p-8 transition-transform duration-200 cursor-pointer border-2 border-gray-400 hover:scale-105 hover:border-[#00f0ff] hover:shadow-[0_0_15px_#00f0ff]">
+    <div class="w-[65px] h-[65px] rounded-full bg-white flex items-center justify-center text-[28px]">👥</div>
+    <div>
+        <p class="text-[25px] font-bold mb-1">7</p>
+        <p>Grupos Sena</p>
+    </div>
+</div>
+
+<div class="flex items-center gap-5 bg-gray-200 rounded-xl p-8 transition-transform duration-200 cursor-pointer border-2 border-gray-400 hover:scale-105 hover:border-[#00f0ff] hover:shadow-[0_0_15px_#00f0ff]">
+    <div class="w-[65px] h-[65px] rounded-full bg-white flex items-center justify-center text-[28px]">📁</div>
+    <div>
+        <p class="text-[25px] font-bold mb-1">2</p>
+        <p>Reportes Recientes</p>
+    </div>
+    </div>
+</div>
 {% endblock %}

@@ -7,7 +7,8 @@ def login_view(request):
     return render(request, 'pages/login.html')
 def sidebar(request):
     return render(request, 'layout/sidebar.html')
-
+def pr(request):
+    return render(request, 'layout/pr.html')
 # DEF usuario paginas
 def funcionario(request):
     return render(request, 'pages/funcionario.html')
