@@ -10,7 +10,7 @@ class CargoNombre(models.Model):
 class EstadoCargo(models.Model):
     estado = models.CharField(max_length=100, unique=True)
 class Cargo(models.Model):
-    codigoCargo = models.CharField(max_length=10, unique=True) #TODO:REVISAR ATRIBUTO
+    codigoCargo = models.CharField(max_length=10, unique=True)
     cargoNombre = models.ForeignKey('CargoNombre', on_delete=models.CASCADE)
     idp = models.CharField(max_length=10)
     estadoCargo = models.ForeignKey('EstadoCargo', on_delete=models.CASCADE) 
