@@ -28,5 +28,13 @@ def id_planta(request):
 def solicitudes(request):
     return render(request, 'pages/solicitudes.html')
 
+def newcargo(request):
+    return render(request, 'pages/newcargo.html')
+
+def cargohistorial(request):
+    return render(request, 'pages/cargohistorial.html')
+def nuevo_fc(request):
+    return render(request, 'pages/nuevo_fc.html')
+
 
 
