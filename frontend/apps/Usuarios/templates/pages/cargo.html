@@ -11,7 +11,7 @@
   <title>Cargos</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-white p-8">
+<body class="bg-white p-8 scrollbar">
 
   <!-- Título -->
   <h1 class="text-4xl font-bold mb-6">Cargos</h1>
@@ -29,7 +29,7 @@
     <label class="block text-lg font-medium text-gray-700 mb-1">Cargo</label>
     <div class="w-64 border-b-2 border-green-500"></div>
   </div>
-
+   
   <!-- Botones -->
   <div class="flex justify-end gap-3 mb-5 -mt-6">
     <button id="openModal" class="px-4 py-2 border border-green-600 text-green-600 rounded-full hover:bg-green-600 hover:text-white transition">
@@ -42,10 +42,58 @@
     Crear Nuevo
   </button>
 </form>
-
-
-    
   </div>
+  
+  <!-- Tabla -->
+  <table class="min-w-full">
+    <thead>
+      <tr class="text-white bg-blue-900">
+        <th class="px-4 py-2 border">Nombre</th>
+        <th class="px-4 py-2 border">Cenntro</th>
+        <th class="px-4 py-2 border">IDP</th>
+        <th class="px-4 py-2 border">Estado</th>
+        <th class="px-4 py-2 border">Funcionario</th>
+        <th class="px-4 py-2 border">Fecha de Ingreso</th>
+        <th class="px-4 py-2 border">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="hover:bg-gray-100">
+        <td class="px-4 py-2 border text-center">1234567890</td>
+        <td class="px-4 py-2 border text-center">Instructor de Planta</td>
+        <td class="px-4 py-2 border text-center">G12</td>
+        <td class="px-4 py-2 border text-center">Coordinación Académica</td>
+        <td class="px-4 py-2 border text-center">Activo</td>
+        <td class="px-4 py-2 border text-center">2023-01-15</td>
+      <td class="px-4 py-2 border text-center relative">
+  <!-- Botón del Dropdown -->
+  <button id="dropdownMenuIconHorizontalButton" data-dropdown-toggle="dropdownDotsHorizontal" class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600" type="button"> 
+    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 3">
+      <path d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z"/>
+    </svg>
+  </button>
+
+  <!-- Menú desplegable -->
+<div id="dropdownDotsHorizontal" class="z-10 hidden absolute bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700 dark:divide-gray-600 mt-2 transform -translate-x-full" style="transform: translateX(-76px);">
+      <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownMenuIconHorizontalButton">
+        <li>
+          <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Historial</a>
+        </li>
+        <li>
+          <a href="#"   id="openNuevoModal" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Añadir Funcionario</a>
+        </li>
+        <li>
+          <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Editar</a>
+        </li>
+      </ul>
+      <div class="py-2">
+      </div>
+  </div>
+</td>
+
+    </tbody>
+  </table>
+  <!-- fin tabla -->
 
   <!-- Modal -->
   <div id="modalExcel" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50">
@@ -57,14 +105,15 @@
 
       <!-- Input archivo -->
       <label class="flex items-center cursor-pointer">
-  <span class="px-4 py-2 bg-blue-900 text-white rounded">Subir Excel</span>
-  <input type="file" accept=".xlsx,.xls" class="hidden" id="fileInput">
-  <span id="fileName" class="text-gray-600 bg-gray-200 px-1 py-1 rounded w-48">Ningún archivo</span>
-</label>
+        <span class="px-4 py-2 bg-blue-900 text-white rounded">Subir Excel</span>
+        <input type="file" accept=".xlsx,.xls" class="hidden" id="fileInput">
+        <span id="fileName" class="text-gray-600 bg-gray-200 px-1 py-1 rounded w-48">Ningún archivo</span>
+      </label>
 
     </div>
   </div>
 
+  <!-- Script para abrir el modal -->
   <script>
     const openModal = document.getElementById('openModal');
     const closeModal = document.getElementById('closeModal');
@@ -86,6 +135,95 @@
       fileName.textContent = e.target.files[0]?.name || "Ningún archivo";
     });
   </script>
+
+  <!-- Script para manejar el menú desplegable -->
+  <script>
+    document.querySelectorAll('[data-dropdown-toggle]').forEach(button => {
+      button.addEventListener('click', function() {
+        const menu = document.querySelector(`#${this.dataset.dropdownToggle}`);
+        menu.classList.toggle('hidden');  // Alterna la visibilidad del menú
+      });
+    });
+
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('[data-dropdown-toggle]') && !e.target.closest('#dropdownDotsHorizontal')) {
+        document.querySelectorAll('.z-10').forEach(menu => {
+          menu.classList.add('hidden');
+        });
+      }
+    });
+  </script>
+
+
+  <!-- segundo modal para agregar nuevo funcionario   -->
+<div id="nuevoModal" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50">
+  <div class="bg-white rounded-lg w-96 p-6 relative">
+    <!-- Botón para cerrar el nuevo modal -->
+    <button id="closeNuevoModal" class="absolute top-2 right-3 text-gray-600 hover:text-black text-xl font-bold">×</button>
+    <form action=""></form>
+      <div>
+          <label class="font-semibold block mb-1">Número Documento</label>
+            <input type="text" value="1098765432"
+            class="w-full border rounded-full px-3 py-2" />
+      </div>
+
+      <div>
+            <label class="font-semibold block mb-1">Grado</label>
+            <input type="text" value="1098765432"
+            class="w-full border rounded-full px-3 py-2" />
+      </div>
+
+      <div>
+          <label class="font-semibold block mb-1">Resolución</label>
+          <input type="file" class="w-full border rounded-full px-3 py-2" />
+      <div>
+
+      
+      <div>
+            <label class="font-semibold block mb-1">Estado</label>
+            <input type="text" value="1098765432"
+            class="w-full border rounded-full px-3 py-2" />
+      </div>
+
+      <div class="mb-6">
+         <label class="font-semibold block mb-1">Observaciones</label>
+         <textarea rows=""
+          class="w-full border rounded-md px-3 py-2"></textarea>
+      </div>
+      
+    </form>
+    <div class="flex justify-end mt-6">
+      <button id="submitNuevoModal" class="px-4 py-2 bg-green-600 text-white rounded-2xl hover:bg-green-700">
+        Aceptar
+      </button>
+    </div>
+ 
+</div>
+
+<script>
+  // Abrir el nuevo modal
+  const openNuevoModal = document.getElementById('openNuevoModal');
+  const nuevoModal = document.getElementById('nuevoModal');
+  const closeNuevoModal = document.getElementById('closeNuevoModal');
+
+  openNuevoModal.addEventListener('click', () => {
+    nuevoModal.classList.remove('hidden');
+    nuevoModal.classList.add('flex');
+  });
+
+  // Cerrar el nuevo modal
+  closeNuevoModal.addEventListener('click', () => {
+    nuevoModal.classList.add('hidden');
+  });
+
+  // Cerrar el modal si se hace clic fuera del contenido
+  window.addEventListener('click', (e) => {
+    if (e.target === nuevoModal) {
+      nuevoModal.classList.add('hidden');
+    }
+  });
+</script>
+   
 
 </body>
 </html>
