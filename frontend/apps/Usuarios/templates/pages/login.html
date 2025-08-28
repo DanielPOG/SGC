@@ -1,3 +1,4 @@
+
 {% load static %}
 <!DOCTYPE html>
 <html lang="es">
@@ -36,11 +37,10 @@
             </div>
 
             <!-- Logo dentro del círculo -->
-            <img src="{% static 'img/logoSGC.png' %}" alt="Logo"
-                 style="width:500px;display:block;margin:0 auto 14px;">
+            <img src="{% static 'img/logoSGC.png' %}" alt="Logo" class="logo-circle">
 
             <!-- Texto de bienvenida -->
-            <h1 class="welcome-text">BIENVENIDO!</h1>
+            <h1 class="welcome-text" style="font-size: clamp(60px, 2vw, 74px) !important;">BIENVENIDO!</h1>
           
           </div>
           <!-- FIN CONTENIDO DE BIENVENIDA -->
@@ -64,18 +64,18 @@
         <div class="logo-section">
 
           <!-- Logo del sistema -->
-          <img src="{% static 'img/logoSGC.png' %}" alt="Logo"
-               style="width:110px; margin-top:-70px;">
-          
+       <img src="{% static 'img/logoSGC-SVG.svg' %}" alt="Logosgc" class="logosgc">
+
           <!-- INICIO TEXTO DEL LOGO -->
           <div class="logo-text">
-            <h2 class="title_login">SGC</h2>
+            <div class="title_login">SGC</div> 
 
+            <img src="{% static 'img/logoSENA.svg' %}" alt="Logo" class="logosena">
             <!-- Línea decorativa debajo del texto -->
             <div class="linea-vertical"></div>
 
             <!-- Descripción del sistema -->
-            <p>Sistema de Gestión de Cargos</p>
+            <div class="descripcion_sistema">Sistema de Gestión de Cargos</div>
           </div>
           <!-- FIN TEXTO DEL LOGO -->
 
@@ -85,12 +85,12 @@
         <!--  INICIO FORMULARIO DE LOGIN -->
         <form class="login-form">
           <!-- Campo de usuario -->
-          <div class="form-group" style="position:relative;">
+          <div class="form-group" style="position:relative; margin-bottom: 40px;">
             <label for="usuario">Usuario</label>
             <input type="text" id="usuario" placeholder="Ingrese usuario">
             <div style="position: absolute; top: 90%; left: 52%; transform: translate(-50%, 50%); width:100%;">
               <span id="olvideContraseñaResponse" style="color:#b50000; white-space: nowrap; overflow: 
-              hidden; text-overflow: ellipsis; font-size: clamp(12px, 2vw, 14px); "
+              hidden; text-overflow: ellipsis; font-size: clamp(22px, 2vw, 24px); "
               {% comment "" %}no permite saltos de línea, oculta el exceso si no cabe, agrega "..." si se corta, achica letra si es necesario{% endcomment %}
               > 
               </span>
@@ -108,10 +108,8 @@
 
           <!-- Enlace para recuperar contraseña -->
           <div class="forgot-password">
-            <a href="#" id="olvideContraseña">¿Olvidé Contraseña?</a>
-              
+            <a href="#" id="olvideContraseña" style="font-size: clamp(22px, 2vw, 24px);">¿Olvidé Contraseña?</a>
           </div>
-       
         </form>
         <!-- FIN FORMULARIO DE LOGIN -->
 
@@ -122,54 +120,13 @@
     <!-- FIN SECCIÓN DERECHA -->
 
   </div>
+
   <!-- FIN CONTENEDOR PRINCIPAL -->
-{% comment %} 
+
   <!-- INICIO MODAL PARA RECUPERAR CONTRASEÑA -->
-  <div id="modalRecuperar"
-       style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:1000; align-items:center; justify-content:center;">
-    
-    <div style="background:#fff; border-radius:16px; padding:32px 24px; max-width:350px; width:90%; text-align:center; position:relative; box-shadow:0 8px 32px rgba(0,0,0,0.2); margin:auto;">
-      
-      <!-- Botón para cerrar modal -->
-      <button id="closeModal"
-              style="position:absolute; top:10px; right:15px; font-size:22px; color:#888; cursor:pointer; border:none; background:none;">&times;</button>
-      
-      <!-- Título del modal -->
-      <h3 style="font-size:20px; font-weight:bold; margin-bottom:3px; text-align:left; margin-top:30px;">Usuario</h3>   
 
-      <!-- Formulario dentro del modal -->
-      <form>
-        <input type="email" placeholder="Ingrese Usuario" required
-               style="width:90%; padding:10px; margin:15px 0; border-radius:6px; border:1px solid #ccc;">
-        <button type="submit"
-                style="background:#1e3a5f; color:#fff; border:none; border-radius:6px; padding:10px 20px; cursor:pointer; font-weight:600;">Enviar</button>
-      </form>
-    </div>
-  </div>
-  <!-- FIN MODAL -->
+<!-- FIN MODAL -->
+  <script src="{% static 'js/login.js'%}"></script>
 
-  <!--  SCRIPT PARA ABRIR/CERRAR MODAL -->
-  <script>
-    // Abrir modal
-    document.getElementById('olvideContraseña').onclick = function(e) {
-      e.preventDefault();
-      document.getElementById('modalRecuperar').style.display = 'flex';
-    };
-
-    // Cerrar modal con botón
-    document.getElementById('closeModal').onclick = function() {
-      document.getElementById('modalRecuperar').style.display = 'none';
-    };
-
-    // Cerrar modal haciendo clic fuera del contenido
-    window.onclick = function(event) {
-      var modal = document.getElementById('modalRecuperar');
-      if (event.target == modal) {
-        modal.style.display = "none";
-      }
-    }
-  </script> 
-{% endcomment %}
-  <script type="text/javascript" src="{% static 'js/login.js'%}"></script>
 </body>
 </html>

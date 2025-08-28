@@ -13,23 +13,28 @@ document.addEventListener('DOMContentLoaded', ()=>{
         responseNode.innerText = response.text
     }
     
+    // Reset response al escribir en el input
     inputMailNode
         .addEventListener('input', ()=> setResponse(''))
+
 
     document.getElementById('olvideContraseña').addEventListener('click', e => {
         setResponse('')
         if(e.target !== e.currentTarget) return
         const textOn = inputMailNode.value.trim()
+
         // ¿Texto vacío?
-        if(textOn.length === 0){
+        if(textOn.length === 0 || textOn === ''){
             setResponse('Ingrese su correo para la recuperación')
             return
         }
+
         // ¿La dirección es valida?
         if(!textOn.includes("@") || textOn.split('@').length !== 2){
             setResponse("Ingrese una dirección de correo válida")
             return
         }
+
         // ¿Es un correo institucional?
         if(textOn.split('@')[1] !== 'soy.sena.edu.co'){ 
             setResponse("Correo sena requerido para recuperación")
