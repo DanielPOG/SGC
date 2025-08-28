@@ -85,9 +85,16 @@
         <!--  INICIO FORMULARIO DE LOGIN -->
         <form class="login-form">
           <!-- Campo de usuario -->
-          <div class="form-group">
+          <div class="form-group" style="position:relative;">
             <label for="usuario">Usuario</label>
             <input type="text" id="usuario" placeholder="Ingrese usuario">
+            <div style="position: absolute; top: 90%; left: 52%; transform: translate(-50%, 50%); width:100%;">
+              <span id="olvideContraseñaResponse" style="color:#b50000; white-space: nowrap; overflow: 
+              hidden; text-overflow: ellipsis; font-size: clamp(12px, 2vw, 14px); "
+              {% comment "" %}no permite saltos de línea, oculta el exceso si no cabe, agrega "..." si se corta, achica letra si es necesario{% endcomment %}
+              > 
+              </span>
+            </div>
           </div>
 
           <!-- Campo de contraseña -->
@@ -101,8 +108,10 @@
 
           <!-- Enlace para recuperar contraseña -->
           <div class="forgot-password">
-            <a href="#" id="openModal">¿Olvidé Contraseña?</a>
+            <a href="#" id="olvideContraseña">¿Olvidé Contraseña?</a>
+              
           </div>
+       
         </form>
         <!-- FIN FORMULARIO DE LOGIN -->
 
@@ -114,7 +123,7 @@
 
   </div>
   <!-- FIN CONTENEDOR PRINCIPAL -->
-
+{% comment %} 
   <!-- INICIO MODAL PARA RECUPERAR CONTRASEÑA -->
   <div id="modalRecuperar"
        style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:1000; align-items:center; justify-content:center;">
@@ -142,7 +151,7 @@
   <!--  SCRIPT PARA ABRIR/CERRAR MODAL -->
   <script>
     // Abrir modal
-    document.getElementById('openModal').onclick = function(e) {
+    document.getElementById('olvideContraseña').onclick = function(e) {
       e.preventDefault();
       document.getElementById('modalRecuperar').style.display = 'flex';
     };
@@ -159,6 +168,8 @@
         modal.style.display = "none";
       }
     }
-  </script>
+  </script> 
+{% endcomment %}
+  <script type="text/javascript" src="{% static 'js/login.js'%}"></script>
 </body>
 </html>

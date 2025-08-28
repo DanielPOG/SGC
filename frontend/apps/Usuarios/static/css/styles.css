@@ -133,6 +133,7 @@ body {
 /* Agrupa cada campo individual (etiqueta + input). */
 .form-group {
   margin-bottom: 25px;
+  
 }
 /* Etiquetas de los campos (ej: "Usuario y conttraseña"). */
 .form-group label {
