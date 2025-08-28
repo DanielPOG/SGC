@@ -67,14 +67,14 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     cargo = models.ForeignKey('cargos_api.Cargo', on_delete=models.CASCADE,null=True, blank=True)
     estudioF = models.ForeignKey('EstudioFormal', on_delete=models.CASCADE,null=True, blank=True)
     fechaInicio = models.DateField(auto_now_add=True)
-    fechaActualizacion = models.DateField(auto_now=True)
+    fechaActualizacion = models.DateField(auto_now=True, null=True, blank=True)
     fechaRetiro=models.DateField(null=True, blank=True)
-    rol = models.ForeignKey('Rol', on_delete=models.CASCADE)
-    fecha_n= models.DateField()
-    resolucion= models.CharField(max_length=100)
-    estado= models.ForeignKey('Estado', on_delete=models.CASCADE)
-    dependencia = models.ForeignKey('general.Dependencia', on_delete=models.CASCADE)
-    software= models.IntegerField()
+    rol = models.ForeignKey('Rol', on_delete=models.CASCADE, null=True, blank=True)
+    fecha_n= models.DateField(null=True, blank=True)
+    resolucion= models.CharField(max_length=100, null=True, blank=True)
+    estado= models.ForeignKey('Estado', on_delete=models.CASCADE, null=True, blank=True)
+    dependencia = models.ForeignKey('general.Dependencia', on_delete=models.CASCADE, null=True, blank=True)
+    software= models.IntegerField(null=True, blank=True)
 
     
      
