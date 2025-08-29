@@ -64,6 +64,18 @@
                 {% if request.resolver_match.url_name == 'solicitudes' %}bg-gray-300 shadow-inner{% endif %}">
         Solicitudes
         </a>
+
+        <a href="{% url 'solicitudes' %}" title="Autorizaciones"
+            class="transition-transform duration-200 hover:scale-105 block text-center font-medium py-2 rounded-xl border-2 border-gray-700 bg-white text-black shadow-md
+                {% if request.resolver_match.url_name == 'solicitudes' %}bg-gray-300 shadow-inner{% endif %}">
+        Autorizaciones
+        </a>
+
+        <a href="{% url 'solicitudes' %}" title="Bitacora"
+            class="transition-transform duration-200 hover:scale-105 block text-center font-medium py-2 rounded-xl border-2 border-gray-700 bg-white text-black shadow-md
+                {% if request.resolver_match.url_name == 'solicitudes' %}bg-gray-300 shadow-inner{% endif %}">
+        Bitacora
+        </a>
     </nav>
 
     <!-- Salir -->
@@ -76,29 +88,31 @@
 </aside>
 
 <!-- Contenido dinámico -->
-<main class="flex-1 p-10 border-l-4 border-t-4 border-r-4 border-gray-300 bg-white">
-    {% block content %}{% endblock %}
+<main class="flex-1 flex flex-col border-l-4 border-t-4 border-r-4 border-gray-300 bg-white h-screen">
 
-    <!-- Footer -->
-    <footer class="fixed bottom-0 left-[240px] w-[calc(100%-240px)] bg-gray-300 py-6 px-10 flex justify-center gap-10">
-        <a href="https://www.facebook.com/SENACauca" target="_blank" title="Facebook SENA">
+    <!-- Aquí irá tu contenido dinámico -->
+    <div class="flex-1 p-10 overflow-hidden">
+        {% block content %}{% endblock %}
+    </div>
+
+<footer class="bg-gray-300 py-2 flex justify-center gap-16">
+    <a href="https://www.facebook.com/SENACauca" target="_blank" title="Facebook SENA">
         <img src="{% static 'img/facebook.png' %}" alt="Facebook SENA"
-                class="w-8 h-8 opacity-50 hover:opacity-100 hover:scale-105 transition duration-300 ease-in-out">
-        </a>
-        <a href="https://www.tiktok.com/@senacomunica_" target="_blank" title="TikTok SENA">
+            class="w-10 h-10 opacity-70 hover:opacity-100 hover:scale-110 transition duration-300 ease-in-out">
+    </a>
+    <a href="https://www.tiktok.com/@senacomunica_" target="_blank" title="TikTok SENA">
         <img src="{% static 'img/tiktok.png' %}" alt="TikTok SENA"
-                class="w-8 h-8 opacity-50 hover:opacity-100 hover:scale-105 transition duration-300 ease-in-out">
-        </a>
-        <a href="https://www.instagram.com/sena.regionalcauca/" target="_blank" title="Instagram SENA">
+            class="w-10 h-10 opacity-70 hover:opacity-100 hover:scale-110 transition duration-300 ease-in-out">
+    </a>
+    <a href="https://www.instagram.com/sena.regionalcauca/" target="_blank" title="Instagram SENA">
         <img src="{% static 'img/instagram.png' %}" alt="Instagram SENA"
-                class="w-8 h-8 opacity-50 hover:opacity-100 hover:scale-105 transition duration-300 ease-in-out">
-        </a>
-        <a href="https://www.youtube.com/user/SENATV" target="_blank" title="YouTube SENA">
+            class="w-10 h-10 opacity-70 hover:opacity-100 hover:scale-110 transition duration-300 ease-in-out">
+    </a>
+    <a href="https://www.youtube.com/user/SENATV" target="_blank" title="YouTube SENA">
         <img src="{% static 'img/youtube.png' %}" alt="YouTube SENA"
-                class="w-8 h-8 opacity-50 hover:opacity-100 hover:scale-105 transition duration-300 ease-in-out">
-        </a>
-    </footer>
+            class="w-10 h-10 opacity-70 hover:opacity-100 hover:scale-110 transition duration-300 ease-in-out">
+    </a>
+</footer>
 </main>
-
 </body>
 </html>
