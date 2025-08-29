@@ -14,7 +14,7 @@ def funcionario(request):
     return render(request, 'pages/funcionario.html')
 
 def cargo(request):
-    return render(request, 'pages/cargo.html')
+    return render(request, 'layout/cargo.html')
 
 def grupo_sena(request):
     return render(request, 'pages/grupo_sena.html')
@@ -30,6 +30,9 @@ def solicitudes(request):
 
 def funcionario(request):
     return render(request, 'layout/funcionario.html')
+def newfuncionario(request):
+    return render(request, 'pages/newfuncionario.html')
+
 
 
 

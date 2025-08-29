@@ -12,6 +12,7 @@ urlpatterns = [
     path('solicitudes/', views.solicitudes, name='solicitudes'),
     path('sidebar/', views.sidebar, name='sidebar'),
      path('funcionario/', views.funcionario, name='funcionario'),
+    path('newfuncionario/', views.newfuncionario, name='newfuncionario'),
    
  
 ]
