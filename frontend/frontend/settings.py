@@ -41,6 +41,13 @@ INSTALLED_APPS = [
     'tailwind',
     'theme',
     'apps.Usuarios',
+    'apps.Cargos',
+    'apps.GruposSENA',
+    'apps.Reportes',
+    'apps.IDPlanta',
+    'apps.Solicitudes',
+    'apps.Autorizaciones',
+    'apps.Bitacora',
 ]
 
 MIDDLEWARE = [
