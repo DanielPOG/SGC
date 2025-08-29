@@ -3,14 +3,24 @@
 {% block title %}Nuevo Cargo{% endblock %}
 
 {% block content %}
-<div class="border p-6 w-full max-w-2xl mx-auto h-full">
-  <h2 class="font-bold text-lg mb-6 flex justify-between items-center">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cargos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<div class=" border max-w-2xl p-6 mx-auto">
+
+  <h2 class="font-bold text-xl mb-6 flex justify-between items-center">
     Funcionarios que han pasado por este cargo:
     <input type="text" placeholder="Número de Documento"
-           class="border rounded-full px-3 py-1 w-64" />
+           class="border rounded-full px-3 py-1 w-56" />
   </h2>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+  <!-- Grid de campos -->
+  <div class="grid grid-cols-2 gap-x-6 gap-y-4 mb-6">
     <div>
       <label class="font-semibold block mb-1">Nombre</label>
       <input type="text" value="Carlos Andres"
@@ -56,21 +66,22 @@
     </div>
     <div>
       <label class="font-semibold block mb-1">Fecha de Ingreso</label>
-      <input type="date"
-             class="w-full border rounded-full px-3 py-2" />
+      <input type="date" class="w-full border rounded-full px-3 py-2" />
     </div>
     <div>
       <label class="font-semibold block mb-1">Fecha de Salida</label>
-      <input type="date"
-             class="w-full border rounded-full px-3 py-2" />
+      <input type="date" class="w-full border rounded-full px-3 py-2" />
     </div>
   </div>
 
+  <!-- Observaciones -->
   <div class="mb-6">
     <label class="font-semibold block mb-1">Observaciones</label>
     <textarea rows="4"
               class="w-full border rounded-md px-3 py-2"></textarea>
   </div>
+
+  <!-- Botón -->
   <div class="text-right">
     <button class="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700">
       Guardar

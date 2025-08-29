@@ -77,10 +77,10 @@
 <div id="dropdownDotsHorizontal" class="z-10 hidden absolute bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700 dark:divide-gray-600 mt-2 transform -translate-x-full" style="transform: translateX(-76px);">
       <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownMenuIconHorizontalButton">
         <li>
-          <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Historial</a>
+          <a href="{% url 'cargohistorial' %}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Historial</a>
         </li>
         <li>
-          <a href="#"   id="openNuevoModal" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Añadir Funcionario</a>
+          <a href="#"id="openNuevoModal" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Añadir Funcionario</a>
         </li>
         <li>
           <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Editar</a>
@@ -160,44 +160,41 @@
   <div class="bg-white rounded-lg w-96 p-6 relative">
     <!-- Botón para cerrar el nuevo modal -->
     <button id="closeNuevoModal" class="absolute top-2 right-3 text-gray-600 hover:text-black text-xl font-bold">×</button>
-    <form action=""></form>
-      <div>
-          <label class="font-semibold block mb-1">Número Documento</label>
-            <input type="text" value="1098765432"
-            class="w-full border rounded-full px-3 py-2" />
+    
+    <!-- Formulario -->
+    <form action="#" method="post">
+      <div class="mb-4">
+        <label class="font-semibold block mb-1">Número Documento</label>
+        <input type="text" value="1098765432" class="w-full border rounded-full px-3 py-2" />
       </div>
 
-      <div>
-            <label class="font-semibold block mb-1">Grado</label>
-            <input type="text" value="1098765432"
-            class="w-full border rounded-full px-3 py-2" />
+      <div class="mb-4">
+        <label class="font-semibold block mb-1">Grado</label>
+        <input type="text" value="Instructor" class="w-full border rounded-full px-3 py-2" />
       </div>
 
-      <div>
-          <label class="font-semibold block mb-1">Resolución</label>
-          <input type="file" class="w-full border rounded-full px-3 py-2" />
-      <div>
+      <div class="mb-4">
+        <label class="font-semibold block mb-1">Resolución</label>
+        <input type="file" class="w-full border rounded-full px-3 py-2" />
+      </div>
 
-      
-      <div>
-            <label class="font-semibold block mb-1">Estado</label>
-            <input type="text" value="1098765432"
-            class="w-full border rounded-full px-3 py-2" />
+      <div class="mb-4">
+        <label class="font-semibold block mb-1">Estado</label>
+        <input type="text" value="Activo" class="w-full border rounded-full px-3 py-2" />
       </div>
 
       <div class="mb-6">
-         <label class="font-semibold block mb-1">Observaciones</label>
-         <textarea rows=""
-          class="w-full border rounded-md px-3 py-2"></textarea>
+        <label class="font-semibold block mb-1">Observaciones</label>
+        <textarea rows="4" class="w-full border rounded-md px-3 py-2"></textarea>
       </div>
-      
+
+      <div class="flex justify-end mt-6">
+        <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-2xl hover:bg-green-700">
+          Aceptar
+        </button>
+      </div>
     </form>
-    <div class="flex justify-end mt-6">
-      <button id="submitNuevoModal" class="px-4 py-2 bg-green-600 text-white rounded-2xl hover:bg-green-700">
-        Aceptar
-      </button>
-    </div>
- 
+  </div>
 </div>
 
 <script>

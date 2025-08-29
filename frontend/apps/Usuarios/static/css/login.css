@@ -34,6 +34,7 @@ body {
   float: right;
   margin-top: -80px;
   margin-left: 12rem; /* Aumenta este valor para mover más a la derecha */
+  fill: red; 
 }
 .logo-circle{
   width:500px;
