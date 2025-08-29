@@ -58,12 +58,12 @@ class UsuarioManager(BaseUserManager):
         tipo_doc, _ = TipoDocumento.objects.get_or_create(sigla='CC', defaults={'nombre': 'Cédula'})
         genero, _ = Genero.objects.get_or_create(sigla='ND', defaults={'nombre': 'No definido'})
         estudio, _ = EstudioFormal.objects.get_or_create(nombre='No aplica')
-        rol, _ = Rol.objects.get_or_create(nombre='Admin')
+        rol, _ = Rol.objects.get_or_create(nombre='ADMIN')
         estado, _ = Estado.objects.get_or_create(nombre='Activo')
         dep, _ = Dependencia.objects.get_or_create(codigoDependencia='000', defaults={'nombre': 'General'})
         cargo, _ = Cargo.objects.get_or_create(idp='ADM-000', defaults={
-            'cargoNombre': CargoNombre.objects.first(),  # ajusta a tu semilla
-            'estadoCargo': EstadoCargo.objects.first(),
+            'cargoNombre': CargoNombre.objects.get_or_create(nombre="ADMIN", defaults={'nombre': 'ADMIN'}),  # ajusta a tu semilla
+            'estadoCargo': EstadoCargo.objects.get_or_create(estado="ACTIVO"),
             'resolucion': 'N/A',
             'centro': Centro.objects.first(),
         })
