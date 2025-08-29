@@ -160,7 +160,7 @@ class FormacionComplementaria(models.Model):
             raise ValidationError("fechaFin no puede ser anterior a fechaInicio")
 
     def __str__(self):
-        return f"{self.nombre} - {self.usuario.correo}"
+        return f"{self.nombre} - {self.usuario.correo}" 
 class Accion(models.TextChoices):
     CREAR = "CREAR", "Crear"
     ACTUALIZAR = "ACTUALIZAR", "Actualizar"

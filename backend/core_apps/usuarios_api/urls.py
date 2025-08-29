@@ -1,10 +1,11 @@
 from rest_framework.routers import DefaultRouter
-from .views import UsuarioViewSet, FormacionComplementariaViewSet, BitacoraViewSet, SolicitudViewSet
+from .views import UsuarioViewSet, FormacionComplementariaViewSet, BitacoraViewSet, SolicitudViewSet, RecoverPassMailCheck
 
 router = DefaultRouter()
 router.register(r'usuarios', UsuarioViewSet)
 router.register(r'formaciones', FormacionComplementariaViewSet)
 router.register(r'bitacoras', BitacoraViewSet)
 router.register(r'solicitudes', SolicitudViewSet)
+router.register(r'mail-check', RecoverPassMailCheck)
 
 urlpatterns = router.urls
