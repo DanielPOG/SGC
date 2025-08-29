@@ -10,6 +10,8 @@ FRONTEND
     pip install django-tailwind   
     python manage.py tailwind install 
     python manage.py tailwind build   
+    SIEMPRE PARA TAILWIND INICIAR CON: (PARA VER LOS CAMBIOS)
+    python manage.py tailwind start (y en otra terminal trabajar el runserver)
 BACKEND 
 
 # Entrar a la carpeta backend
@@ -23,3 +25,7 @@ BACKEND
     pip install django-cors-headers (para autorizaciones de los navegadores)
     pip install coreapi (para documentacion automatica hacer para cada app, hacerla para cada una)
     pip install setuptools (para que maneje los package)
+
+
+
+    pip install pandas openpyxl (PARA CARGAR POR EXCEL)

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prueba Tailwind</title>
+  {% load static %}
+  <link href="{% static 'css/dist/styles.css' %}" rel="stylesheet">
+</head>
+<body class="bg-red-500 flex items-center justify-center h-screen">
+  <div class="bg-white p-6 rounded-2xl shadow-lg text-center">
+    <h1 class="text-3xl font-bold text-blue-600 mb-4">🚀 Tailwind funcionando</h1>
+    <p class="text-gray-700">Si ves este cuadro bonito, ¡Tailwind está bien configurado!</p>
+    <button class="mt-4 px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg shadow-md">
+      Probar Botón
+    </button>
+  </div>
+</body>
+</html>
