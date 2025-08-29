@@ -44,3 +44,21 @@ class CargoUsuarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = CargoUsuario
         fields = '__all__'
+
+class CargoExcelSerializer(serializers.ModelSerializer):
+    cargoNombre = serializers.SlugRelatedField(
+        queryset=CargoNombre.objects.all(),
+        slug_field="nombre"
+    )
+    estadoCargo = serializers.SlugRelatedField(
+        queryset=EstadoCargo.objects.all(),
+        slug_field="estado"
+    )
+    centro = serializers.SlugRelatedField(
+        queryset=Centro.objects.all(),
+        slug_field="nombre"
+    )
+
+    class Meta:
+        model = Cargo
+        fields = '__all__'

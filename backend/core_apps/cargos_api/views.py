@@ -11,7 +11,8 @@ from .serializers import (
     EstadoCargoSerializer,
     CargoSerializer,
     CargoFuncionSerializer,
-    CargoUsuarioSerializer
+    CargoUsuarioSerializer,
+    CargoExcelSerializer
 )
 
 class CargoNombreViewSet(viewsets.ModelViewSet):
@@ -45,7 +46,7 @@ class CargoUsuarioViewSet(viewsets.ModelViewSet):
 
 # VISTA PARA SUBIR POR EXCEL
 class CargoUploadView(APIView):
-    parser_classes = [MultiPartParser]  # Habilita la carga de archivos
+    parser_classes = [MultiPartParser]
 
     def post(self, request, format=None):
         excel_file = request.FILES.get('file')
@@ -53,28 +54,33 @@ class CargoUploadView(APIView):
             return Response({'error': 'No file uploaded'}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            df = pd.read_excel(excel_file)  # Usa openpyxl o xlrd si necesario
+            df = pd.read_excel(excel_file)
         except Exception as e:
-            return Response({'error': f'Error reading Excel file: {e}'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': f'Error leyendo Excel: {e}'}, status=status.HTTP_400_BAD_REQUEST)
 
         cargos_creados = []
         for index, row in df.iterrows():
-            try:
-                cargoNombre = CargoNombre.objects.get(nombre=row['cargoNombre'])
-                estadoCargo = EstadoCargo.objects.get(estado=row['estadoCargo'])
-                centro = Centro.objects.get(nombre=row['centro'])
+            data = {
+                "cargoNombre": row['cargoNombre'],
+                "idp": row['idp'],
+                "estadoCargo": row['estadoCargo'],
+                "resolucion": row['resolucion'],
+                "centro": row['centro'],
+                "observacion": row.get('observacion', ''),
+                "fechaCreacion": row.get('fechaCreacion')
+            }
 
-                cargo = Cargo.objects.create(
-                    cargoNombre=cargoNombre,
-                    idp=row['idp'],
-                    estadoCargo=estadoCargo,
-                    resolucion=row['resolucion'],
-                    centro=centro,
-                    observacion=row.get('observacion', '')
-                )
-                cargos_creados.append(cargo.id)
+            serializer = CargoExcelSerializer(data=data)
+            if serializer.is_valid():
+                cargo = serializer.save()
+                cargos_creados.append(serializer.data)
+            else:
+                return Response({
+                    'error': f'Error en fila {index + 2}',
+                    'detalle': serializer.errors
+                }, status=status.HTTP_400_BAD_REQUEST)
 
-            except Exception as e:
-                return Response({'error': f'Error en fila {index + 2}: {e}'}, status=status.HTTP_400_BAD_REQUEST)
-
-        return Response({'message': 'Cargos creados correctamente', 'cargos': cargos_creados}, status=status.HTTP_201_CREATED)
+        return Response({
+            'message': 'Cargos creados correctamente',
+            'cargos': cargos_creados
+        }, status=status.HTTP_201_CREATED)

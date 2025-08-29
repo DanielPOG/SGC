@@ -1,7 +1,7 @@
 from django.db import models
 from core_apps.general.models import Area
 from django.apps import apps
-
+from django.utils import timezone
 # Create your models here.
 
 class CargoNombre(models.Model):
@@ -18,7 +18,7 @@ class Cargo(models.Model):
     estadoCargo = models.ForeignKey('EstadoCargo', on_delete=models.CASCADE) 
     resolucion = models.CharField(max_length=200)
     centro = models.ForeignKey('general.Centro', on_delete=models.CASCADE)
-    fechaCreacion = models.DateTimeField(auto_now_add=True)
+    fechaCreacion = models.DateTimeField(default=timezone.now,)
     fechaActualizacion = models.DateTimeField(auto_now=True)
     observacion = models.TextField(blank=True, null=True)
     def __str__(self):
