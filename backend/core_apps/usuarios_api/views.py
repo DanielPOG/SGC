@@ -12,19 +12,26 @@ class UsuarioViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
 class PasswordRecovering(APIView):
-    def get(request):
+    def get(self, request):
+        """
+            Verificar si el correo institucional existe en la base de datos
+        """
         email = request.query_params.get('email')
         exists = Usuario.objects.filter(correo=email).first()
         if not exists:
-            return Response({'error':'Usuario no encontrado', 'exists':False}, status=404)
-        return Response({'msg':'Correo Confirmado', 'exists':True})
-    def post(request):
+            return Response({'error':'Usuario no encontrado'}, status=404)
+        return Response({'msg':'Correo Confirmado'}, status=status.HTTP_200_OK)
+    def post(self, request):
+        """
+            Verificar
+        """
         email = request.data.get("email")
-        oldPassword = request.data.get("old_password")
         newPassword = request.data.get("new_password")
-        DBOldPassword = Usuario.objects.filter(correo=email).get(password=oldPassword)
-        if not DBOldPassword:
-            return
+        try:
+            usuario = Usuario.objects.filter(correo=email)
+        except Usuario.DoesNotExist:
+            return Response({'error':'Usuario no encontrado'})
+        
     
 
 
