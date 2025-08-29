@@ -74,7 +74,7 @@
   </button>
 
   <!-- Menú desplegable -->
-<div id="dropdownDotsHorizontal" class="z-10 hidden absolute bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700 dark:divide-gray-600 mt-2 transform -translate-x-full" style="transform: translateX(-76px);">
+<div id="dropdownDotsHorizontal" class="z-10 hidden absolute bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700 dark:divide-gray-600 mt-2 transform -translate-x-full" style="transform: translateX(76px);">
       <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownMenuIconHorizontalButton">
         <li>
           <a href="{% url 'cargohistorial' %}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Historial</a>
@@ -157,7 +157,7 @@
 
   <!-- segundo modal para agregar nuevo funcionario   -->
 <div id="nuevoModal" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50">
-  <div class="bg-white rounded-lg w-96 p-6 relative">
+  <div class="bg-white rounded-lg w-96 p-6 relative h-134"> 
     <!-- Botón para cerrar el nuevo modal -->
     <button id="closeNuevoModal" class="absolute top-2 right-3 text-gray-600 hover:text-black text-xl font-bold">×</button>
     
@@ -185,11 +185,11 @@
 
       <div class="mb-6">
         <label class="font-semibold block mb-1">Observaciones</label>
-        <textarea rows="4" class="w-full border rounded-md px-3 py-2"></textarea>
+        <textarea rows="2" class="w-full border rounded-md px-3 py-1"></textarea>
       </div>
 
-      <div class="flex justify-end mt-6">
-        <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-2xl hover:bg-green-700">
+      <div class="flex justify-end -mt-1">
+        <button type="submit" class="px-3 py-2 bg-green-600 text-white rounded-2xl hover:bg-green-700 ">
           Aceptar
         </button>
       </div>
