@@ -14,3 +14,6 @@ def nuevo_fc(request):
 
 def nuevo_fc(request):
     return render(request, 'layout/cargo.html')
+
+def editar_cargo(request):
+    return render(request, 'pages/editar_cargo.html')
