@@ -18,6 +18,9 @@ urlpatterns = [
     path('cargo_actualfun/', views.cargo_actualfun, name='cargo_actualfun'),
     path('cargos_anterioresfun/', views.cargos_anterioresfun, name='cargos_anterioresfun'),
     path('estudios_fun/', views.estudios_fun, name='estudios_fun'),
+    path('editar_fun/', views.editar_fun, name='editar_fun'),
+    
+    
 
     
    

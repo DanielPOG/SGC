@@ -50,4 +50,7 @@ def cargos_anterioresfun(request):
 def estudios_fun(request):
     return render(request, 'pages/estudios_fun.html')
 
+def editar_fun(request):
+    return render(request, 'pages/editar_fun.html')
+
 
