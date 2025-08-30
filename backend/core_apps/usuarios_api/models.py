@@ -3,8 +3,8 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 from django.utils import timezone
 from django.apps import apps
 from datetime import date
-from core_apps.cargos_api.models import Cargo
-from core_apps.general.models import Dependencia
+from core_apps.cargos_api.models import Cargo, CargoNombre, EstadoCargo
+from core_apps.general.models import Dependencia, Centro
 
 from django.contrib.contenttypes.models import ContentType #PARA BITACORA
 from django.contrib.contenttypes.fields import GenericForeignKey #PARA BITACORA
