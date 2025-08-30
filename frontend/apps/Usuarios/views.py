@@ -44,3 +44,10 @@ def cargo_actualfun(request):
     return render(request, 'pages/cargo_actualfun.html')
 
 
+def cargos_anterioresfun(request):
+    return render(request, 'pages/cargos_anterioresfun.html')
+
+def estudios_fun(request):
+    return render(request, 'pages/estudios_fun.html')
+
+

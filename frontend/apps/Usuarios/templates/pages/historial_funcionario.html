@@ -45,17 +45,20 @@
 </a>
 
       <!-- Bloque 3 -->
-      <div class="flex justify-between items-center border border-black rounded-xl px-4 py-2 mb-3 bg-white h-[70px]">
-        <span class="font-medium">Cargos Anteriores</span>
-        <span class="text-xl">↓</span>
-      </div>
+       <a href="{% url 'cargos_anterioresfun' %}">
+  <div class="flex justify-between items-center border border-black rounded-xl px-4 py-2 mb-3 bg-white h-[70px] hover:bg-gray-100 transition cursor-pointer">
+    <span class="font-medium">Cargos Anteriores:</span>
+    <span class="text-xl">↓</span>
+  </div>
+</a>
 
       <!-- Bloque 4 -->
-      <div class="flex justify-between items-center border border-black rounded-xl px-4 py-2 bg-white h-[70px]">
-        <span class="font-medium">Estudios</span>
-        <span class="text-xl">↓</span>
-      </div>
-    </div>
+       <a href="{% url 'estudios_fun' %}">
+  <div class="flex justify-between items-center border border-black rounded-xl px-4 py-2 mb-3 bg-white h-[70px] hover:bg-gray-100 transition cursor-pointer">
+    <span class="font-medium">Estudios:</span>
+    <span class="text-xl">↓</span>
+  </div>
+</a>
   
 </body>
 </html>
