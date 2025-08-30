@@ -9,3 +9,6 @@ def new_grupo(request):
 
 def historial_grupo(request):   
     return render(request, 'pages/historial_grupo.html')
+
+def editar_grupo(request):   
+    return render(request, 'pages/editar_grupo.html')

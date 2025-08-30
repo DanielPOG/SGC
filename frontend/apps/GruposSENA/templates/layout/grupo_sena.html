@@ -82,7 +82,7 @@
               <a href="#" id="openNuevoModal" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Añadir Funcionario</a>
             </li>
             <li>
-              <a href="{% url 'editar_fun' %}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Editar</a>
+              <a href="{% url 'editar_grupo' %}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Editar</a>
             </li>
           </ul>
         </div>
@@ -181,37 +181,16 @@
     <!-- Formulario -->
     <form action="#" method="post">
       <div class="mb-4">
-        <label class="font-semibold block mb-1">Tipo de formaciòn</label>
-        <input type="text" value="1098765432" class="w-full border rounded-full px-3 py-2" />
+        <label class="font-semibold block mb-1">Nùmero de Documento </label>
+        <input type="text"  class="w-full border rounded-full px-3 py-2" />
       </div>
 
-      <div class="mb-4">
-        <label class="font-semibold block mb-1">Nombre del Curso</label>
-        <input type="text" value="Instructor" class="w-full border rounded-full px-3 py-2" />
-      </div>
 
-     
-      <div class="mb-4">
-        <label class="font-semibold block mb-1">institucion</label>
-        <input type="text" value="Instructor" class="w-full border rounded-full px-3 py-2" />
-      </div>
-      
-
-      <div class="mb-4">
-  <label class="font-semibold block mb-1">Fecha de Inicio</label>
-  <input type="date" value="2023-01-01" class="w-full border rounded-full px-3 py-2" />
-</div>
-
-
-  <div class="mb-4">
-  <label class="font-semibold block mb-1">Fecha Fin </label>
-  <input type="date" value="2023-01-01" class="w-full border rounded-full px-3 py-2" />
-</div>
-
-      <div class="mb-4">
-        <label class="font-semibold block mb-1">Resolución</label>
-        <input type="file" class="w-full border rounded-full px-3 py-2" />
-      </div>
+      <div class="mb-6">
+    <label class="font-semibold block mb-1">Observaciones</label>
+    <textarea rows="4"
+              class="w-full border rounded-md px-3 py-2"></textarea>
+  </div>
 
       
       <div class="flex justify-end -mt-1">
