@@ -30,9 +30,17 @@ def solicitudes(request):
 
 def funcionario(request):
     return render(request, 'layout/funcionario.html')
+
 def newfuncionario(request):
     return render(request, 'pages/newfuncionario.html')
 
+def historial_funcionario(request):
+    return render(request, 'pages/historial_funcionario.html')
 
+def datos_basicosfun(request):
+    return render(request, 'pages/datos_basicosfun.html')
+
+def cargo_actualfun(request):
+    return render(request, 'pages/cargo_actualfun.html')
 
 
