@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 from django.utils import timezone
 from django.apps import apps
 from datetime import date
-from core_apps.cargos_api.models import Cargo, CargoNombre, EstadoCargo
+from core_apps.cargos_api.models import Cargo, CargoNombre, EstadoCargo, Idp
 from core_apps.general.models import Dependencia, Centro
 
 from django.contrib.contenttypes.models import ContentType #PARA BITACORA
@@ -61,12 +61,19 @@ class UsuarioManager(BaseUserManager):
         rol, _ = Rol.objects.get_or_create(nombre='ADMIN')
         estado, _ = Estado.objects.get_or_create(nombre='Activo')
         dep, _ = Dependencia.objects.get_or_create(codigoDependencia='000', defaults={'nombre': 'General'})
-        cargo, _ = Cargo.objects.get_or_create(idp='ADM-000', defaults={
-            'cargoNombre': CargoNombre.objects.get_or_create(nombre="ADMIN", defaults={'nombre': 'ADMIN'}),  # ajusta a tu semilla
-            'estadoCargo': EstadoCargo.objects.get_or_create(estado="ACTIVO"),
+        cargo_nombre, _ = CargoNombre.objects.get_or_create(nombre="ADMIN")
+        idp_obj, _ = Idp.objects.get_or_create(numero="ADMIN", defaults={'numero': 'ADMIN'})
+        estado_cargo, _ = EstadoCargo.objects.get_or_create(estado="ACTIVO")
+        centro = Centro.objects.first()
+
+        cargo, _ = Cargo.objects.get_or_create(idp=idp_obj, defaults={
+            'idp': idp_obj,
+            'cargoNombre': cargo_nombre,
+            'estadoCargo': estado_cargo,
             'resolucion': 'N/A',
-            'centro': Centro.objects.first(),
+            'centro': centro,
         })
+
 
         extra_fields.setdefault('tipo_doc', tipo_doc)
         extra_fields.setdefault('genero', genero)

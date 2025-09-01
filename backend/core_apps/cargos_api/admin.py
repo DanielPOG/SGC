@@ -1,6 +1,14 @@
 from django.contrib import admin
-from .models import CargoNombre,EstadoCargo,Cargo,CargoFuncion,CargoUsuario
+from .models import CargoNombre,EstadoCargo,Cargo,CargoFuncion,CargoUsuario, Idp
 # Register your models here.
+@admin.register(Idp)
+class IdpAdmin(admin.ModelAdmin):
+    list_display = ("id", "numero", "fechaCreacion")
+    search_fields = ("numero",)
+    list_filter = ("fechaCreacion",)
+    date_hierarchy = "fechaCreacion"
+    ordering = ("-fechaCreacion",)
+
 @admin.register(CargoNombre)
 class CargoNombreAdmin(admin.ModelAdmin):
     list_display = ("id", "nombre")
@@ -20,7 +28,9 @@ class CargoFuncionInline(admin.TabularInline):
 
 class CargoUsuarioInline(admin.TabularInline):
     model = CargoUsuario
-    extra = 1
+    extra = 0  # No mostrar formularios vacíos por defecto
+    can_delete = True
+    verbose_name_plural = "Asignaciones de Usuario (opcional)"
 
 
 @admin.register(Cargo)

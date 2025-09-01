@@ -4,7 +4,8 @@ from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 import pandas as pd
-from core_apps.general.models import Centro
+from core_apps.usuarios_api.models import Usuario
+from rest_framework.decorators import action
 
 from .serializers import (
     CargoNombreSerializer,
@@ -12,7 +13,9 @@ from .serializers import (
     CargoSerializer,
     CargoFuncionSerializer,
     CargoUsuarioSerializer,
-    CargoExcelSerializer
+    CargoExcelSerializer,
+    CargoNestedSerializer,
+    CargoUsuarioNestedSerializer
 )
 
 class CargoNombreViewSet(viewsets.ModelViewSet):
@@ -28,9 +31,50 @@ class EstadoCargoViewSet(viewsets.ModelViewSet):
 
 
 class CargoViewSet(viewsets.ModelViewSet):
-   
     queryset = Cargo.objects.all()
-    serializer_class = CargoSerializer
+    serializer_class = CargoNestedSerializer
+
+    @action(detail=False, methods=["get"], url_path="por-idp/(?P<numero_idp>[^/.]+)")
+    def por_idp(self, request, numero_idp=None):
+        cargos = Cargo.objects.filter(idp__numero=numero_idp)
+        if not cargos.exists():
+            return Response(
+                {"detail": "No se encontraron cargos para este IDP"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        data = []
+        for cargo in cargos:
+            # Titular fijo (Usuario.cargo)
+            titular = Usuario.objects.filter(cargo=cargo).first()
+
+            # Encargados temporales (CargoUsuario)
+            encargados = CargoUsuario.objects.filter(cargo=cargo)
+
+            data.append({
+                "cargo": {
+                    "id": cargo.id,
+                    "idp": cargo.idp.numero,
+                    "nombre": cargo.cargoNombre.nombre,
+                    "centro":  cargo.centro.nombre if cargo.centro else None,
+                    "fechaCreacion": cargo.fechaCreacion,
+                },
+                "titular": {
+                    "id": titular.id,
+                    "nombre": f"{titular.nombre} {titular.apellido}",
+                } if titular else None,
+                "encargados": [
+                    {
+                        "id": cu.usuario.id,
+                        "nombre": f"{cu.usuario.nombre} {cu.usuario.apellido}",
+                        "estado": cu.estado.estado,
+                        "fechaInicio": cu.fechaInicio,
+                    }
+                    for cu in encargados
+                ],
+            })
+
+        return Response(data, status=status.HTTP_200_OK)
 
 
 class CargoFuncionViewSet(viewsets.ModelViewSet):
@@ -43,6 +87,18 @@ class CargoUsuarioViewSet(viewsets.ModelViewSet):
   
     queryset = CargoUsuario.objects.all()
     serializer_class = CargoUsuarioSerializer
+    
+    def get_serializer_class(self):
+        if self.action in ["list", "retrieve", "por_idp"]:
+            return CargoUsuarioNestedSerializer  # para GET
+        return CargoUsuarioSerializer           # para POST/PUT/PATCH/DELETE
+
+    @action(detail=False, methods=["get"], url_path="por-idp/(?P<idp>[^/.]+)")
+    def por_idp(self, request, idp=None):
+        # filtrar los CargoUsuario cuyo cargo tenga ese idp
+        cargos_usuario = self.get_queryset().filter(cargo__idp__numero=idp)
+        serializer = self.get_serializer(cargos_usuario, many=True)
+        return Response(serializer.data)
 
 # VISTA PARA SUBIR POR EXCEL
 class CargoUploadView(APIView):
