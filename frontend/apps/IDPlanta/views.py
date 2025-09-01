@@ -9,3 +9,6 @@ def newid_palnta(request):
 
 def asignar_idp(request):
     return render(request, 'pages/asignar_idp.html')
+
+def editar_asig_idp(request):
+    return render(request, 'pages/editar_asig_idp.html')
