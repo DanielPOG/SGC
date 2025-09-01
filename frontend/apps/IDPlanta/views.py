@@ -5,3 +5,7 @@ def id_planta(request):
     return render(request, 'layout/id_planta.html')
 def newid_palnta(request):
     return render(request, 'pages/newid_planta.html')
+
+
+def asignar_idp(request):
+    return render(request, 'pages/asignar_idp.html')
