@@ -12,7 +12,7 @@ def cargohistorial(request):
 def nuevo_fc(request):
     return render(request, 'pages/nuevo_fc.html')
 
-def nuevo_fc(request):
+def cargoIndex(request):
     return render(request, 'layout/cargo.html')
 
 def editar_cargo(request):

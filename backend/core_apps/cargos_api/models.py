@@ -22,8 +22,9 @@ class Cargo(models.Model):
     idp = models.ForeignKey('Idp', on_delete=models.CASCADE)
     estadoCargo = models.ForeignKey('EstadoCargo', on_delete=models.CASCADE) 
     resolucion = models.CharField(max_length=200)
+    resolucion_archivo = models.FileField(upload_to="resoluciones/", blank=True, null=True)
     centro = models.ForeignKey('general.Centro', on_delete=models.CASCADE)
-    fechaCreacion = models.DateField(default=timezone.now,)
+    fechaCreacion = models.DateTimeField(default=timezone.now)
     fechaActualizacion = models.DateTimeField(auto_now=True)
     observacion = models.TextField(blank=True, null=True)
     def __str__(self):

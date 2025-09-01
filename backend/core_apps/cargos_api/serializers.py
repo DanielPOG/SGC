@@ -25,11 +25,11 @@ class IdpSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class CargoSerializer(serializers.ModelSerializer):
-    cargoNombre = serializers.PrimaryKeyRelatedField(queryset=CargoNombre.objects.all())
-    estadoCargo = serializers.PrimaryKeyRelatedField(queryset=EstadoCargo.objects.all())
-    centro = serializers.PrimaryKeyRelatedField(queryset=Centro.objects.all())
-    idp = serializers.PrimaryKeyRelatedField(queryset=Idp.objects.all())
-
+    cargoNombre = serializers.PrimaryKeyRelatedField(queryset= CargoNombre.objects.all())
+    estadoCargo = serializers.PrimaryKeyRelatedField(queryset= EstadoCargo.objects.all())
+    centro = serializers.PrimaryKeyRelatedField(queryset= Centro.objects.all())
+    idp = serializers.PrimaryKeyRelatedField(queryset= Idp.objects.all())
+    fechaActualizacion = serializers.DateTimeField(read_only=True) 
     class Meta:
         model = Cargo
         fields = '__all__'
@@ -80,7 +80,8 @@ class CargoNestedSerializer(serializers.ModelSerializer): #sirve para mostrar lo
     estadoCargo = EstadoCargoSerializer(read_only=True)
     centro = CentroSerializer(read_only=True)
     idp = IdpSerializer(read_only=True)
-
+    fechaCreacion = serializers.DateTimeField(read_only=True)
+    fechaActualizacion = serializers.DateTimeField(read_only=True)
     class Meta:
         model = Cargo
         fields = "__all__"

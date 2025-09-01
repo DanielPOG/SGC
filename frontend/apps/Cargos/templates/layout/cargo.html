@@ -48,13 +48,12 @@
     <button id="openModal" class="px-4 py-2 border border-green-600 text-green-600 rounded-full hover:bg-green-600 hover:text-white transition">
       Cargar Excel
     </button>
-  <form action="{% url 'cargo_new' %}" method="get" class="inline">
-  <button type="submit"
-          class="px-4 py-2 border border-green-600 text-green-600 rounded-full 
-                 hover:bg-green-600 hover:text-white transition">
-    Crear Nuevo
-  </button>
-</form>
+    <button type="submit"
+            class="px-4 py-2 border border-green-600 text-green-600 rounded-full 
+                  hover:bg-green-600 hover:text-white transition">
+    <a href="{% url 'cargo_new' %}">Crear Nuevo</a>
+    </button>
+  
   </div>
   
   <!-- Tabla -->

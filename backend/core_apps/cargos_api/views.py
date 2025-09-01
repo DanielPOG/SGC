@@ -1,5 +1,5 @@
 from rest_framework import viewsets, status
-from .models import CargoNombre, EstadoCargo, Cargo, CargoFuncion, CargoUsuario
+from .models import CargoNombre, EstadoCargo, Cargo, CargoFuncion, CargoUsuario, Idp
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
@@ -15,7 +15,8 @@ from .serializers import (
     CargoUsuarioSerializer,
     CargoExcelSerializer,
     CargoNestedSerializer,
-    CargoUsuarioNestedSerializer
+    CargoUsuarioNestedSerializer,
+    IdpSerializer
 )
 
 class CargoNombreViewSet(viewsets.ModelViewSet):
@@ -28,11 +29,25 @@ class EstadoCargoViewSet(viewsets.ModelViewSet):
     
     queryset = EstadoCargo.objects.all()
     serializer_class = EstadoCargoSerializer
-
+class IdpViewSet(viewsets.ModelViewSet):
+    queryset = Idp.objects.all()
+    serializer_class = IdpSerializer
 
 class CargoViewSet(viewsets.ModelViewSet):
     queryset = Cargo.objects.all()
-    serializer_class = CargoNestedSerializer
+
+    def get_serializer_class(self):
+        # Usar nested solo para GET
+        if self.action in ["list", "retrieve", "por_idp"]:
+            return CargoNestedSerializer
+        return CargoSerializer  # POST/PUT/PATCH
+
+    def create(self, request, *args, **kwargs):
+        serializer = CargoSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        cargo = serializer.save()
+        # Devolver serializer simple para evitar errores de nested
+        return Response(CargoSerializer(cargo).data, status=status.HTTP_201_CREATED)
 
     @action(detail=False, methods=["get"], url_path="por-idp/(?P<numero_idp>[^/.]+)")
     def por_idp(self, request, numero_idp=None):
@@ -58,6 +73,7 @@ class CargoViewSet(viewsets.ModelViewSet):
                     "nombre": cargo.cargoNombre.nombre,
                     "centro":  cargo.centro.nombre if cargo.centro else None,
                     "fechaCreacion": cargo.fechaCreacion,
+                    "fechaActualizacion": cargo.fechaActualizacion,
                 },
                 "titular": {
                     "id": titular.id,
@@ -75,8 +91,6 @@ class CargoViewSet(viewsets.ModelViewSet):
             })
 
         return Response(data, status=status.HTTP_200_OK)
-
-
 class CargoFuncionViewSet(viewsets.ModelViewSet):
    
     queryset = CargoFuncion.objects.all()
