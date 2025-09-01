@@ -10,7 +10,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <script src="https://cdn.tailwindcss.com"></script>
   <title>Crear Cargo</title>
-  <script src="{% static 'js/newCargo.js' %}"></script>
+  <script src="{% static 'js/cargo_form.js' %}"></script>
 </head>
 <body class="bg-white min-h-screen flex flex-col items-center p-8">
 
@@ -27,7 +27,7 @@
 
 
   <!-- Formulario -->
-  <form id="cargoForm">
+  <form id="cargoForm" data-mode="{{ mode }}" data-id="{{ cargo_id|default:'' }}">
   <div class="w-full max-w-4xl bg-gray-100 p-8 rounded-md shadow ml-10">
     <div class="grid grid-cols-2 gap-6 mb-6">
       

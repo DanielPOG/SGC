@@ -36,6 +36,7 @@ async function buscarPorIdp() {
     const tablaBody = document.querySelector("table tbody");
     tablaBody.innerHTML = ""; // limpio la tabla
 
+
     cargos.forEach(cargo => {
       tablaBody.innerHTML += `
         <tr class="hover:bg-gray-100">
@@ -79,7 +80,7 @@ async function buscarPorIdp() {
               <ul class="py-2 text-sm text-gray-700 dark:text-gray-200">
                 <li><a href="{% url 'cargohistorial' %}" class="block px-4 py-2 hover:bg-gray-100">Historial</a></li>
                 <li><a href="#" id="openNuevoModal" class="block px-4 py-2 hover:bg-gray-100">Añadir Funcionario</a></li>
-                <li><a href="{% url 'editar_cargo' %}" class="block px-4 py-2 hover:bg-gray-100">Editar</a></li>
+                <li><a  href="${window.urlEditarCargoBase}${cargo.cargo.id}/"   class="block px-4 py-2 hover:bg-gray-100">Editar</a></li>
               </ul>
             </div>
           </td>

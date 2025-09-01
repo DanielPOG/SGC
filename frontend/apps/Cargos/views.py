@@ -5,7 +5,7 @@ def index(request):
     return render(request, 'layout/index.html')
 
 def newcargo(request):
-    return render(request, 'pages/newcargo.html')
+    return render(request, 'pages/newcargo.html', {"mode": "create"})
 
 def cargohistorial(request):
     return render(request, 'pages/cargohistorial.html')
@@ -15,5 +15,5 @@ def nuevo_fc(request):
 def cargoIndex(request):
     return render(request, 'layout/cargo.html')
 
-def editar_cargo(request):
-    return render(request, 'pages/editar_cargo.html')
+def editar_cargo(request, id):
+    return render(request, 'pages/newcargo.html',  {"mode": "edit", "cargo_id": id})

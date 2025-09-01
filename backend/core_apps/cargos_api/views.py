@@ -51,7 +51,7 @@ class CargoViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=["get"], url_path="por-idp/(?P<numero_idp>[^/.]+)")
     def por_idp(self, request, numero_idp=None):
-        cargos = Cargo.objects.filter(idp__numero=numero_idp)
+        cargos = Cargo.objects.filter(idp__numero=numero_idp).order_by("-fechaActualizacion")
         if not cargos.exists():
             return Response(
                 {"detail": "No se encontraron cargos para este IDP"},
