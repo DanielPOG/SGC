@@ -884,8 +884,28 @@
   .border-collapse {
     border-collapse: collapse;
   }
+  .-translate-x-0 {
+    --tw-translate-x: calc(var(--spacing) * -0);
+    translate: var(--tw-translate-x) var(--tw-translate-y);
+  }
+  .-translate-x-10 {
+    --tw-translate-x: calc(var(--spacing) * -10);
+    translate: var(--tw-translate-x) var(--tw-translate-y);
+  }
+  .-translate-x-19 {
+    --tw-translate-x: calc(var(--spacing) * -19);
+    translate: var(--tw-translate-x) var(--tw-translate-y);
+  }
   .-translate-x-20 {
     --tw-translate-x: calc(var(--spacing) * -20);
+    translate: var(--tw-translate-x) var(--tw-translate-y);
+  }
+  .-translate-x-25 {
+    --tw-translate-x: calc(var(--spacing) * -25);
+    translate: var(--tw-translate-x) var(--tw-translate-y);
+  }
+  .-translate-x-30 {
+    --tw-translate-x: calc(var(--spacing) * -30);
     translate: var(--tw-translate-x) var(--tw-translate-y);
   }
   .rotate-180 {
@@ -1107,6 +1127,9 @@
   }
   .text-center {
     text-align: center;
+  }
+  .text-right {
+    text-align: right;
   }
   .font-serif {
     font-family: var(--font-serif);

@@ -12,3 +12,6 @@ def asignar_idp(request):
 
 def editar_asig_idp(request):
     return render(request, 'pages/editar_asig_idp.html')
+
+def editar_idp(request):
+    return render(request, 'pages/editar_idp.html')

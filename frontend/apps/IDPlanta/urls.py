@@ -8,4 +8,6 @@ urlpatterns = [
 
     path('asignar_idp/', views.asignar_idp, name='asignar_idp'),
     path('editar_asig_idp/', views.editar_asig_idp, name='editar_asig_idp'),
+
+    path('editar_idp/', views.editar_idp, name='editar_idp'),
 ]

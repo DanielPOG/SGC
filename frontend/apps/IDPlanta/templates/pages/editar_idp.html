@@ -1,6 +1,6 @@
-{% extends "layout/sidebar.html" %} /* Hereda la estructura llamada "sidebar.html" */
+ {% extends "layout/sidebar.html" %} /* Hereda la estructura llamada "sidebar.html" */
 
-{% block title %} Nueva IDP  {% endblock %}
+{% block title %} Editar  IDP {% endblock %}
 
 {% block content %}
 <!DOCTYPE html>
@@ -9,12 +9,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <script src="https://cdn.tailwindcss.com"></script>
-  <title> Creaciòn de IDP </title>
+  <title> Editar  IDP  </title>
 </head>
 <body class="bg-white min-h-screen flex flex-col items-center p-8">
 
   <!-- Título -->
-  <h1 class="text-5xl font-bold mb-4">Creaciòn de IDP </h1>
+  <h1 class="text-5xl font-bold mb-4">Editar  IDP </h1>
 
 
   
@@ -29,17 +29,17 @@
   <div class="w-full max-w-4xl bg-gray-100 p-8 rounded-md shadow ml-10">
     <div class="grid grid-cols-2 gap-6 mb-6">
       
-      <!-- codigo idp  -->
+      <!-- Nombre  -->
       <div>
-        <label class="block font-medium mb-1">Codigo IDP:</label>
+        <label class="block font-medium mb-1">Nombre:</label>
           <input 
           type="text" 
           class="w-full border border-gray-600 rounded-2xl px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/>
       </div>
 
-      <!-- dependencia   -->
+      <!-- Apellido -->
        <div>
-        <label class="block font-medium mb-1">Dependencia:</label>
+        <label class="block font-medium mb-1">Apellido :</label>
           <input 
           type="text" 
           class="w-full border border-gray-600 rounded-2xl px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/>
@@ -47,22 +47,39 @@
 
 
       <!-- Cargo -->
-     <div>
-        <label class="block font-medium mb-1">Cargo:</label>
-          <input 
-          type="text" 
-          class="w-full border border-gray-600 rounded-2xl px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/>
-      </div>
-        
-<!-- estado   -->
-   <div>
-        <label class="block font-medium mb-1">Estado:</label>
+        <div>
+        <label class="block font-medium mb-1">Cargo :</label>
           <input 
           type="text" 
           class="w-full border border-gray-600 rounded-2xl px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/>
       </div>
 
- <!-- descripciòn  -->
+        
+<!-- dependencia  -->
+   <div>
+        <label class="block font-medium mb-1">Dependencia:</label>
+          <input 
+          type="text" 
+          class="w-full border border-gray-600 rounded-2xl px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/>
+      </div>
+
+      
+      <!-- codigo IDPP  -->
+        <div>
+        <label class="block font-medium mb-1">Codigo IDP:</label>
+          <input 
+          type="text" 
+          class="w-full border border-gray-600 rounded-2xl px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/>
+      </div>
+
+        <!--  Estado   -->
+<div>
+    <label class="block font-medium mb-1">Estado :</label>
+    <input 
+    type="text" 
+     class="w-full border border-gray-600 rounded-2xl px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/>
+ </div>
+<!-- descripciòn  -->
 <div class="mb-6">
   <label class="block font-medium mb-1">Descripciòn:</label>
   <textarea
@@ -71,15 +88,14 @@
            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
 </div>
 
-    </div>
+
     <!-- Botones -->
-    <div class="flex flex-col items-center gap-2">
-      <button class="bg-green-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-green-700 transition">
-        Guardar
-      </button>
-      
+    <div class="col-span-2 flex justify-center mt-6">
+  <button class="bg-green-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-green-700 transition">
+    Guardar
+  </button>
+</div>
     </div>
-  </div>
 
 </body>
 </html>
