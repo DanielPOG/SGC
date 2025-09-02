@@ -1,0 +1,77 @@
+{% extends "layout/sidebar.html" %} /* Hereda la estructura llamada "sidebar.html" */
+
+{% block title %}Solicitudes pendientes {% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>   solicitudes Pendientes  </title>
+</head>
+<body class="bg-white min-h-screen flex flex-col items-center p-8">
+
+
+
+  
+  <!-- Botón Volver -->
+  <form action="{% url 'solicitudes' %}" method="get">
+  <button class="relative -top-1 text-green-600 border border-green-600 rounded-full px-4 py-1 mb-10 hover:bg-green-600 hover:text-white transition">
+    Volver
+  </button>
+</form>
+
+
+
+  <!-- Formulario -->
+<div class="w-full max-w-4xl bg-gray-100 p-8 rounded-md shadow ml-10">
+  <!-- Titulo -->
+  <h1 class="text-center text-4xl font-bold text-gray-800">Pendiente</h1>
+  <hr>
+ <div class="flex justify-between items-center mb-2">
+    <span class="text-gray-500 font-semibold">Tipo:</span>
+    <span class="text-gray-500 font-semibold">ID:</span>
+  </div>
+
+  <div class="flex justify-between items-center mb-4">
+    <p class="text-lg font-medium">Cambio de IDP</p>
+    <p class="text-lg font-medium">108692165</p>
+  </div>
+
+  <!-- Descripción -->
+  <div class="mb-1">
+    <span class="text-gray-500 font-semibold">Descripción:</span>
+  </div>
+  <p class="text-gray-700">
+    Se requiere usar contraseñas más seguras o cumplir con nuevos requisitos.
+  </p>
+  <hr>
+  <div class="flex justify-center gap-6 mt-6">
+  <!-- Botón Denegar -->
+  <button class="bg-red-600 text-white font-bold px-6 py-2 rounded-full hover:bg-red-700">
+    Denegar
+  </button>
+
+  <!-- Botón Aprobar -->
+  <button class="bg-green-600 text-white font-bold px-6 py-2 rounded-full hover:bg-green-700">
+    Aprobar
+  </button>
+
+  <!-- Botón Enviar a revisión -->
+  <button class="bg-yellow-400 text-white font-bold px-6 py-2 rounded-full hover:bg-yellow-500">
+    Enviar a revisión
+  </button>
+</div>
+
+</div>
+
+
+
+
+
+</body>
+</html>
+    
+{% endblock %}
