@@ -1,18 +1,18 @@
 document.addEventListener("DOMContentLoaded", () => {
-  try {
-    fetch("http://127.0.0.1:8001/api/cargos/idps/", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        const tbody = document.querySelector("table tbody");
-        data.forEach((idp) => {
-          const tr = document.createElement("tr");
-          tr.classList.add("hover:bg-gray-100");
-          tr.innerHTML = `
+    try {
+        fetch("http://127.0.0.1:8001/api/cargos/idps/", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                const tbody = document.querySelector("table tbody");
+                data.forEach((idp) => {
+                    const tr = document.createElement("tr");
+                    tr.classList.add("hover:bg-gray-100");
+                    tr.innerHTML = `
                     <td class="px-4 py-2 border text-center">${idp.numero}</td>
                     <td class="px-4 py-2 border text-center hidden md:table-cell">${idp.fechaCreacion}</td>
                     <td class="px-4 py-2 border text-center relative">
@@ -39,44 +39,93 @@ document.addEventListener("DOMContentLoaded", () => {
                         </div>
                     </td>
                 `;
-          tbody.appendChild(tr);
-        });
-      });
-  } catch (e) {
-    console.error("Error al cargar idps:", e);
-    return;
-  }
-
-  const buscarForm = document.getElementById("buscar-idp")
-  buscarForm.addEventListener('submit', e => {
-    e.preventDefault()
-  })
-
-  const crearBtn = document.getElementById("crear-idp");
-  crearBtn.addEventListener("click", () => (location.href = "../newid_planta"));
-
-  document.addEventListener("click", function (e) {
-    const button = e.target.closest("[data-dropdown-toggle]");
-    const menu = e.target.closest(".dropdown-menu");
-
-    // Si clic en botón → alternar menú
-    if (button) {
-      e.stopPropagation();
-      // cerrar todos antes de abrir el nuevo
-      document
-        .querySelectorAll(".dropdown-menu")
-        .forEach((m) => m.classList.add("hidden"));
-
-      const menuId = button.dataset.dropdownToggle;
-      const targetMenu = document.querySelector(`#${menuId}`);
-      targetMenu.classList.toggle("hidden");
-      return;
+                    tbody.appendChild(tr);
+                });
+            });
+    } catch (e) {
+        console.error("Error al cargar idps:", e);
+        return;
     }
 
-    // Si clic fuera → cerrar todos los menús
-    if (!menu) {
-        if(e.target !== menu)
-        document.querySelectorAll(".dropdown-menu").forEach((m) => m.classList.add("hidden"));
+    const buscarForm = document.getElementById("buscar-idp")
+    buscarForm.addEventListener('submit', e => {
+        e.preventDefault()
+    })
+
+    // Crear idp
+    const crearBtn = document.getElementById("crear-idp");
+    crearBtn.addEventListener("click", () => {
+        const modal = document.querySelector('.new-idp-modal')
+        if (!modal.classList.contains('hidden')) return
+        modal.classList.remove('hidden')
+        modal.classList.add('flex')
+    });
+
+    document.addEventListener("click", function (e) {
+        const button = e.target.closest("[data-dropdown-toggle]");
+        const menu = e.target.closest(".dropdown-menu");
+
+        // Si clic en botón → alternar menú
+        if (button) {
+            e.stopPropagation();
+            // cerrar todos antes de abrir el nuevo
+            document
+                .querySelectorAll(".dropdown-menu")
+                .forEach((m) => m.classList.add("hidden"));
+
+            const menuId = button.dataset.dropdownToggle;
+            const targetMenu = document.querySelector(`#${menuId}`);
+            targetMenu.classList.toggle("hidden");
+            return;
+        }
+
+        // Si clic fuera → cerrar todos los menús
+        if (!menu) {
+            if (e.target !== menu)
+                document.querySelectorAll(".dropdown-menu").forEach((m) => m.classList.add("hidden"));
+        }
+    });
+
+
+    const newIdpModal = document.querySelector('.new-idp-modal')
+    const closeBtn = document.querySelector('.close')
+    function close() {
+        if (!newIdpModal.classList.contains('hidden')) newIdpModal.classList.add('hidden')
+        else closeBtn.removeEventListener('click', close)
     }
-  });
+    closeBtn.addEventListener('click', close)
+
+    // Envio del formulario
+    if (!newIdpModal.classList.contains('hidden')) {
+        const form = document.getElementById('crear-nueva-idp')
+        const formSubmit = async e => {
+            e.preventDefault()
+            try {
+                const response = await fetch('http://127.0.0.1:8001/api/cargos/idps/', {
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        numero: form.querySelector('input#numero'), // Atributo data-numero en tu form
+                        nombre: form.querySelector('input#fecha')  // Atributo data-nombre en tu form
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error("Error en la solicitud:", errorData);
+                    return;
+                }
+
+                const data = await response.json();
+                console.log("IDP creado:", data);
+                // Aquí podrías cerrar el modal o limpiar el formulario
+            } catch (e) {
+                console.error('Sucedió un error al crear el IDP');
+                return
+            }
+        }
+        form.addEventListener('submit', formSubmit)
+    }
 });

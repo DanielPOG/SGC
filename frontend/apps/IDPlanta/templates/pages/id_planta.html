@@ -3,6 +3,7 @@
 {% block title %}ID Planta{% endblock %}
 
 {% block content %}
+
  <!DOCTYPE html>
  <head>
   <meta charset="UTF-8">
@@ -11,7 +12,10 @@
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
  <body>
-          <h1 class="text-4xl font-bold mb-6 ms-5">IDP's</h1>
+  <!-- Modal para crear IDP -->
+  {% include "pages/newidp_modal.html" %}
+  
+  <h1 class="text-4xl font-bold mb-6 ms-5">IDP's</h1>
 
 
    <!-- Buscador -->
@@ -42,7 +46,7 @@
   </button>
 <!--    -->
   <div class="inline">
-    <button href='/usuarios/newfuncionario/' id="crear-idp" type="button" class="px-4 py-2 border border-green-600 text-green-600 rounded-full hover:bg-green-600 hover:text-white transition">
+    <button  id="crear-idp" type="button" class="px-4 py-2 border border-green-600 text-green-600 rounded-full hover:bg-green-600 hover:text-white transition">
       Crear Nuevo 
     </button>
   </div>
