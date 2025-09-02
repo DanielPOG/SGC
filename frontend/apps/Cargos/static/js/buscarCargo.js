@@ -78,7 +78,7 @@ async function buscarPorIdp() {
             <div id="dropdown-${cargo.cargo.id}" 
                 class="dropdown-menu z-10 hidden absolute bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700 dark:divide-gray-600 mt-2 -translate-x-20">
               <ul class="py-2 text-sm text-gray-700 dark:text-gray-200">
-                <li><a href="{% url 'cargohistorial' %}" class="block px-4 py-2 hover:bg-gray-100">Historial</a></li>
+                <li><a href="${window.urlHistorialCargo}" class="block px-4 py-2 hover:bg-gray-100">Historial</a></li>
                 <li><a href="#" id="openNuevoModal" class="block px-4 py-2 hover:bg-gray-100">Añadir Funcionario</a></li>
                 <li><a  href="${window.urlEditarCargoBase}${cargo.cargo.id}/"   class="block px-4 py-2 hover:bg-gray-100">Editar</a></li>
               </ul>

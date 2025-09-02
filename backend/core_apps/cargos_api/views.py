@@ -83,7 +83,7 @@ class CargoViewSet(viewsets.ModelViewSet):
                     {
                         "id": cu.usuario.id,
                         "nombre": f"{cu.usuario.nombre} {cu.usuario.apellido}",
-                        "estado": cu.estado.estado,
+                        "estado": cu.estadoVinculacion.estado,
                         "fechaInicio": cu.fechaInicio,
                     }
                     for cu in encargados

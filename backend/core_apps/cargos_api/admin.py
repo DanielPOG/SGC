@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CargoNombre,EstadoCargo,Cargo,CargoFuncion,CargoUsuario, Idp
+from .models import CargoNombre,EstadoCargo,Cargo,CargoFuncion,CargoUsuario, Idp, EstadoVinculacion
 # Register your models here.
 @admin.register(Idp)
 class IdpAdmin(admin.ModelAdmin):
@@ -20,6 +20,10 @@ class EstadoCargoAdmin(admin.ModelAdmin):
     list_display = ("id", "estado")
     search_fields = ("estado",)
 
+@admin.register(EstadoVinculacion)
+class EstadoVinculacionAdmin(admin.ModelAdmin):
+    list_display = ("id", "estado")
+    search_fields = ("estado",)
 
 class CargoFuncionInline(admin.TabularInline):
     model = CargoFuncion
