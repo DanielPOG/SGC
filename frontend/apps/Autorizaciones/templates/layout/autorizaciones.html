@@ -65,9 +65,10 @@
   <!-- fin tabla -->
 
 <!-- Modal -->
+<!-- Modal -->
 <div id="nuevoModal" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50">
   <div class="bg-white rounded-lg w-96 p-6 relative h-auto">
-    <!-- Botón para cerrar el nuevo modal -->
+    <!-- Botón para cerrar -->
     <button id="closeNuevoModal" class="absolute top-2 right-3 text-gray-600 hover:text-black text-xl font-bold">×</button>
 
     <!-- Formulario -->
@@ -79,38 +80,31 @@
           <input type="checkbox" class="principal w-5 h-5 text-green-600" data-target="submenu-funcionario">
           <span>Funcionario</span>
         </label>
-        <div id="submenu-funcionario" class="hidden ml-6 mt-2 space-y-2">
+        <div id="submenu-funcionario" class="ml-6 mt-2 space-y-2 max-h-0 overflow-hidden opacity-0 transition-all duration-300">
           <label class="flex items-center space-x-2">
             <input type="checkbox" class="select-all w-5 h-5 text-green-600" data-group="funcionario">
             <span>Seleccionar todos</span>
           </label>
-
           <label class="flex items-center space-x-2">
             <input type="checkbox" class="submenu funcionario w-5 h-5 text-green-600" data-group="funcionario">
             <span>Agregar Funcionario</span>
           </label>
-
           <label class="flex items-center space-x-2">
             <input type="checkbox" class="submenu funcionario w-5 h-5 text-green-600" data-group="funcionario">
             <span>Historiales</span>
           </label>
-          
           <label class="flex items-center space-x-2">
             <input type="checkbox" class="submenu funcionario w-5 h-5 text-green-600" data-group="funcionario">
-            <span>Añadir Formaciòn</span>
+            <span>Añadir Formación</span>
           </label>
-
           <label class="flex items-center space-x-2">
             <input type="checkbox" class="submenu funcionario w-5 h-5 text-green-600" data-group="funcionario">
-            <span>Consultar Datos </span>
+            <span>Consultar Datos</span>
           </label>
-          
-            
           <label class="flex items-center space-x-2">
             <input type="checkbox" class="submenu funcionario w-5 h-5 text-green-600" data-group="funcionario">
-            <span>Cargar excel</span>
+            <span>Cargar Excel</span>
           </label>
-
           <label class="flex items-center space-x-2">
             <input type="checkbox" class="submenu funcionario w-5 h-5 text-green-600" data-group="funcionario">
             <span>Editar Funcionario</span>
@@ -124,43 +118,35 @@
           <input type="checkbox" class="principal w-5 h-5 text-green-600" data-target="submenu-cargo">
           <span>Cargo</span>
         </label>
-        <div id="submenu-cargo" class="hidden ml-6 mt-2 space-y-2">
-
+        <div id="submenu-cargo" class="ml-6 mt-2 space-y-2 max-h-0 overflow-hidden opacity-0 transition-all duration-300">
           <label class="flex items-center space-x-2">
             <input type="checkbox" class="select-all w-5 h-5 text-green-600" data-group="cargo">
             <span>Seleccionar todos</span>
           </label>
-
           <label class="flex items-center space-x-2">
             <input type="checkbox" class="submenu cargo w-5 h-5 text-green-600" data-group="cargo">
             <span>Agregar Cargo</span>
           </label>
-
           <label class="flex items-center space-x-2">
             <input type="checkbox" class="submenu cargo w-5 h-5 text-green-600" data-group="cargo">
             <span>Historiales</span>
           </label>
-
           <label class="flex items-center space-x-2">
             <input type="checkbox" class="submenu cargo w-5 h-5 text-green-600" data-group="cargo">
             <span>Añadir Funcionario</span>
           </label>
-
           <label class="flex items-center space-x-2">
             <input type="checkbox" class="submenu cargo w-5 h-5 text-green-600" data-group="cargo">
             <span>Cargar Excel</span>
           </label>
-
           <label class="flex items-center space-x-2">
             <input type="checkbox" class="submenu cargo w-5 h-5 text-green-600" data-group="cargo">
-            <span>Consultar Datos </span>
+            <span>Consultar Datos</span>
           </label>
-
           <label class="flex items-center space-x-2">
             <input type="checkbox" class="submenu cargo w-5 h-5 text-green-600" data-group="cargo">
             <span>Editar Cargo</span>
           </label>
-
         </div>
       </div>
 
@@ -170,44 +156,35 @@
           <input type="checkbox" class="principal w-5 h-5 text-green-600" data-target="submenu-grupo">
           <span>Grupo SENA</span>
         </label>
-
-        <div id="submenu-grupo" class="hidden ml-6 mt-2 space-y-2">
+        <div id="submenu-grupo" class="ml-6 mt-2 space-y-2 max-h-0 overflow-hidden opacity-0 transition-all duration-300">
           <label class="flex items-center space-x-2">
             <input type="checkbox" class="select-all w-5 h-5 text-green-600" data-group="grupo">
             <span>Seleccionar todos</span>
           </label>
-
           <label class="flex items-center space-x-2">
             <input type="checkbox" class="submenu grupo w-5 h-5 text-green-600" data-group="grupo">
             <span>Agregar Grupo</span>
           </label>
-
           <label class="flex items-center space-x-2">
             <input type="checkbox" class="submenu grupo w-5 h-5 text-green-600" data-group="grupo">
             <span>Consultar Datos</span>
           </label>
-
-
-           <label class="flex items-center space-x-2">
+          <label class="flex items-center space-x-2">
             <input type="checkbox" class="submenu grupo w-5 h-5 text-green-600" data-group="grupo">
             <span>Cargar Excel</span>
           </label>
-
-           <label class="flex items-center space-x-2">
+          <label class="flex items-center space-x-2">
             <input type="checkbox" class="submenu grupo w-5 h-5 text-green-600" data-group="grupo">
             <span>Historial</span>
           </label>
-
-           <label class="flex items-center space-x-2">
+          <label class="flex items-center space-x-2">
             <input type="checkbox" class="submenu grupo w-5 h-5 text-green-600" data-group="grupo">
             <span>Añadir Funcionario</span>
           </label>
-
           <label class="flex items-center space-x-2">
             <input type="checkbox" class="submenu grupo w-5 h-5 text-green-600" data-group="grupo">
             <span>Editar Grupo</span>
           </label>
-
         </div>
       </div>
 
@@ -217,18 +194,15 @@
           <input type="checkbox" class="principal w-5 h-5 text-green-600" data-target="submenu-reportes">
           <span>Reportes</span>
         </label>
-
-        <div id="submenu-reportes" class="hidden ml-6 mt-2 space-y-2">
+        <div id="submenu-reportes" class="ml-6 mt-2 space-y-2 max-h-0 overflow-hidden opacity-0 transition-all duration-300">
           <label class="flex items-center space-x-2">
             <input type="checkbox" class="select-all w-5 h-5 text-green-600" data-group="reportes">
             <span>Seleccionar todos</span>
           </label>
-
           <label class="flex items-center space-x-2">
             <input type="checkbox" class="submenu reportes w-5 h-5 text-green-600" data-group="reportes">
             <span>Generar Reporte</span>
           </label>
-
           <label class="flex items-center space-x-2">
             <input type="checkbox" class="submenu reportes w-5 h-5 text-green-600" data-group="reportes">
             <span>Descargar Reporte</span>
@@ -242,39 +216,31 @@
           <input type="checkbox" class="principal w-5 h-5 text-green-600" data-target="submenu-idplanta">
           <span>ID Planta</span>
         </label>
-
-        <div id="submenu-idplanta" class="hidden ml-6 mt-2 space-y-2">
+        <div id="submenu-idplanta" class="ml-6 mt-2 space-y-2 max-h-0 overflow-hidden opacity-0 transition-all duration-300">
           <label class="flex items-center space-x-2">
             <input type="checkbox" class="select-all w-5 h-5 text-green-600" data-group="idplanta">
             <span>Seleccionar todos</span>
           </label>
-
           <label class="flex items-center space-x-2">
             <input type="checkbox" class="submenu idplanta w-5 h-5 text-green-600" data-group="idplanta">
             <span>Registrar IDP</span>
           </label>
-
           <label class="flex items-center space-x-2">
             <input type="checkbox" class="submenu idplanta w-5 h-5 text-green-600" data-group="idplanta">
             <span>Cargar Excel</span>
           </label>
-
           <label class="flex items-center space-x-2">
             <input type="checkbox" class="submenu idplanta w-5 h-5 text-green-600" data-group="idplanta">
             <span>Asignar</span>
           </label>
-
           <label class="flex items-center space-x-2">
             <input type="checkbox" class="submenu idplanta w-5 h-5 text-green-600" data-group="idplanta">
-            <span>Consultar Datos </span>
+            <span>Consultar Datos</span>
           </label>
-
-        
           <label class="flex items-center space-x-2">
             <input type="checkbox" class="submenu idplanta w-5 h-5 text-green-600" data-group="idplanta">
             <span>Editar IDP</span>
           </label>
-
         </div>
       </div>
 
@@ -284,38 +250,31 @@
           <input type="checkbox" class="principal w-5 h-5 text-green-600" data-target="submenu-solicitudes">
           <span>Solicitudes</span>
         </label>
-
-        <div id="submenu-solicitudes" class="hidden ml-6 mt-2 space-y-2">
+        <div id="submenu-solicitudes" class="ml-6 mt-2 space-y-2 max-h-0 overflow-hidden opacity-0 transition-all duration-300">
           <label class="flex items-center space-x-2">
             <input type="checkbox" class="select-all w-5 h-5 text-green-600" data-group="solicitudes">
             <span>Seleccionar todos</span>
           </label>
-
           <label class="flex items-center space-x-2">
             <input type="checkbox" class="submenu solicitudes w-5 h-5 text-green-600" data-group="solicitudes">
-            <span>Consltar Solicitudes </span>
+            <span>Consultar Solicitudes</span>
           </label>
-
-           <label class="flex items-center space-x-2">
+          <label class="flex items-center space-x-2">
             <input type="checkbox" class="submenu solicitudes w-5 h-5 text-green-600" data-group="solicitudes">
-            <span>Solicitudes Pendientes </span>
+            <span>Solicitudes Pendientes</span>
           </label>
-
-           <label class="flex items-center space-x-2">
+          <label class="flex items-center space-x-2">
             <input type="checkbox" class="submenu solicitudes w-5 h-5 text-green-600" data-group="solicitudes">
-            <span>Solicitudes En Reviciòn </span>
+            <span>Solicitudes En Revisión</span>
           </label>
-
-           <label class="flex items-center space-x-2">
+          <label class="flex items-center space-x-2">
             <input type="checkbox" class="submenu solicitudes w-5 h-5 text-green-600" data-group="solicitudes">
-            <span>Solicitudes Aprobadas </span>
+            <span>Solicitudes Aprobadas</span>
           </label>
-
           <label class="flex items-center space-x-2">
             <input type="checkbox" class="submenu solicitudes w-5 h-5 text-green-600" data-group="solicitudes">
             <span>Revisar Solicitud</span>
           </label>
-
         </div>
       </div>
 
@@ -325,110 +284,106 @@
           <input type="checkbox" class="principal w-5 h-5 text-green-600" data-target="submenu-autorizaciones">
           <span>Autorizaciones</span>
         </label>
-
-        <div id="submenu-autorizaciones" class="hidden ml-6 mt-2 space-y-2">
+        <div id="submenu-autorizaciones" class="ml-6 mt-2 space-y-2 max-h-0 overflow-hidden opacity-0 transition-all duration-300">
           <label class="flex items-center space-x-2">
             <input type="checkbox" class="select-all w-5 h-5 text-green-600" data-group="autorizaciones">
             <span>Seleccionar todos</span>
           </label>
-
-           <label class="flex items-center space-x-2">
+          <label class="flex items-center space-x-2">
             <input type="checkbox" class="submenu autorizaciones w-5 h-5 text-green-600" data-group="autorizaciones">
-            <span>Consultar Datos </span>
+            <span>Consultar Datos</span>
           </label>
-
-        
           <label class="flex items-center space-x-2">
             <input type="checkbox" class="submenu autorizaciones w-5 h-5 text-green-600" data-group="autorizaciones">
             <span>Aprobar</span>
           </label>
-
           <label class="flex items-center space-x-2">
             <input type="checkbox" class="submenu autorizaciones w-5 h-5 text-green-600" data-group="autorizaciones">
             <span>Rechazar</span>
           </label>
-
         </div>
       </div>
-  <!-- Botón de enviar -->
-  <div class="flex justify-end mt-7">
-    <button type="submit" class="px-3 py-2 bg-green-600 text-white rounded-2xl hover:bg-green-700">
-      Aceptar
-    </button>
-  </div>
 
+      <!-- Botón enviar -->
+      <div class="flex justify-end mt-7">
+        <button type="submit" class="px-3 py-2 bg-green-600 text-white rounded-2xl hover:bg-green-700">Aceptar</button>
+      </div>
     </form>
   </div>
 </div>
 
+<!-- SCRIPT ANIMADO -->
 <script>
-  // Mostrar/Ocultar submenús y cerrar los demás
-  document.querySelectorAll(".principal").forEach(principal => {
-    principal.addEventListener("change", function () {
-      let target = document.getElementById(this.dataset.target);
+  const nuevoModal = document.getElementById('nuevoModal');
+  const closeNuevoModal = document.getElementById('closeNuevoModal');
+  const openNuevoModal = document.getElementById('openNuevoModal');
 
-      // Ocultar todos los submenús
+  // Abrir modal
+  if(openNuevoModal){
+    openNuevoModal.addEventListener('click', () => {
+      nuevoModal.classList.remove('hidden');
+      nuevoModal.classList.add('flex');
+    });
+  }
+
+  // Cerrar modal
+  closeNuevoModal.addEventListener('click', () => {
+    nuevoModal.classList.add('hidden');
+    nuevoModal.classList.remove('flex');
+  });
+
+  window.addEventListener('click', (e) => {
+    if(e.target === nuevoModal){
+      nuevoModal.classList.add('hidden');
+      nuevoModal.classList.remove('flex');
+    }
+  });
+
+  // Submenús animados
+  document.querySelectorAll(".principal").forEach(principal => {
+    principal.addEventListener("change", function() {
+      const target = document.getElementById(this.dataset.target);
+
+      // Ocultar todos menos el actual
       document.querySelectorAll("[id^='submenu-']").forEach(sub => {
-        if (sub !== target) sub.classList.add("hidden");
+        if(sub !== target){
+          sub.style.maxHeight = null;
+          sub.style.opacity = 0;
+        }
       });
 
-      // Mostrar solo el seleccionado
-      if (this.checked) {
-        target.classList.remove("hidden");
+      // Mostrar/ocultar actual
+      if(this.checked){
+        target.style.transition = "all 0.3s ease";
+        target.style.maxHeight = target.scrollHeight + "px";
+        target.style.opacity = 1;
       } else {
-        target.classList.add("hidden");
+        target.style.maxHeight = null;
+        target.style.opacity = 0;
       }
     });
   });
 
-  // Seleccionar todos en cada submenú
-  document.querySelectorAll(".select-all").forEach(selectAll => {
-    selectAll.addEventListener("change", function () {
-      let group = this.dataset.group;
-      document.querySelectorAll(".submenu." + group).forEach(cb => {
-        cb.checked = this.checked;
-      });
-      // Marcar principal
-      let principal = document.querySelector(`.principal[data-target="submenu-${group}"]`);
-      if (principal) principal.checked = this.checked;
+  // "Seleccionar todos"
+  document.querySelectorAll(".select-all").forEach(sa => {
+    sa.addEventListener("change", function() {
+      const group = this.dataset.group;
+      document.querySelectorAll(".submenu."+group).forEach(cb => cb.checked = this.checked);
+      const principal = document.querySelector(`.principal[data-target="submenu-${group}"]`);
+      if(principal) principal.checked = this.checked;
     });
   });
 
-  // Si se selecciona un checkbox de submenú -> marcar principal
+  // Marcar principal si se selecciona un sub-checkbox
   document.querySelectorAll(".submenu").forEach(sub => {
-    sub.addEventListener("change", function () {
-      let group = this.dataset.group;
-      let principal = document.querySelector(`.principal[data-target="submenu-${group}"]`);
-      if (principal) principal.checked = true;
+    sub.addEventListener("change", function() {
+      const group = this.dataset.group;
+      const principal = document.querySelector(`.principal[data-target="submenu-${group}"]`);
+      if(principal) principal.checked = true;
     });
   });
 </script>
-  </div>
-</div>
 
-<script>
-  // Abrir el nuevo modal
-  const openNuevoModal = document.getElementById('openNuevoModal');
-  const nuevoModal = document.getElementById('nuevoModal');
-  const closeNuevoModal = document.getElementById('closeNuevoModal');
-
-  openNuevoModal.addEventListener('click', () => {
-    nuevoModal.classList.remove('hidden');
-    nuevoModal.classList.add('flex');
-  });
-
-  // Cerrar el nuevo modal
-  closeNuevoModal.addEventListener('click', () => {
-    nuevoModal.classList.add('hidden');
-  });
-
-  // Cerrar el modal si se hace clic fuera del contenido
-  window.addEventListener('click', (e) => {
-    if (e.target === nuevoModal) {
-      nuevoModal.classList.add('hidden');
-    }
-  });
-</script>
    
  </body>
  </html>
