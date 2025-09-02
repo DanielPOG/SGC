@@ -1,6 +1,6 @@
 {% extends "layout/sidebar.html" %}
 
-{% block title %}Historial de  Cargo {% endblock %}
+{% block title %}Historial  de Grupo SENA{% endblock %}
 
 {% block content %}
 <!DOCTYPE html>
@@ -8,17 +8,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title> Historial Cargos</title>
+  <title> Historial  de Grupo</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
   <h2 class="font-bold text-4xl mb-20 flex justify-between items-center">
-    instructor
+    Nombre del Grupo SENA
   </h2>
 
    
   <!-- Botón Volver -->
-  <form action="{% url 'cargo' %}" method="get">
+  <form action="{% url 'grupo_sena' %}" method="get">
   <button class="relative -top-10 text-green-600 border border-green-600 rounded-full px-4 py-1 mb-10 hover:bg-green-600 hover:text-white transition">
     Volver
   </button>
@@ -26,39 +26,52 @@
 
 <div class="relative border max-w-3xl p-6 mx-auto -top-10 min-h-screen">
   <h2 class="font-bold text-xl mb-6 flex justify-between items-center">
-    Funcionarios que han pasado por este cargo:
+    Funcionarios que han pasado por este grupo:
     <input type="text" placeholder="Número de Documento"
            class="border rounded-full px-3 py-1 w-59 placeholder:text-sm" />
   </h2>
 
   <!-- Grid de campos -->
   <div class="grid grid-cols-2 gap-x-6 gap-y-4 mb-6">
+
+    <!-- nombre -->
     <div>
       <label class="font-semibold block mb-1">Nombre</label>
-      <input type="text" value="Carlos Andres"
+      <input type="text" 
              class="w-full border rounded-full px-3 py-2" />
     </div>
+    <!-- apellido -->
     <div>
       <label class="font-semibold block mb-1">Apellido</label>
-      <input type="text" value="Mera"
+      <input type="text"
              class="w-full border rounded-full px-3 py-2" />
     </div>
+    <!-- numeo de documento -->
     <div>
       <label class="font-semibold block mb-1">Número Documento</label>
-      <input type="text" value="1098765432"
+      <input type="text" 
              class="w-full border rounded-full px-3 py-2" />
     </div>
-    <div>
+
+ <!-- grado  -->
+     <div>
       <label class="font-semibold block mb-1">Grado</label>
-      <input type="text" value="G12"
-             class="w-full border rounded-full px-3 py-2" />
-    </div>
-    <div>
-      <label class="font-semibold block mb-1">Dependencia</label>
       <select class="w-full border rounded-full px-3 py-2">
-        <option selected>Coordinación Académica</option>
+        <option selected>Activo</option>
+        <option>Inactivo</option>
       </select>
     </div>
+
+ <!-- dependencia  -->
+   <div>
+      <label class="font-semibold block mb-1">Dependencia </label>
+      <select class="w-full border rounded-full px-3 py-2">
+        <option selected>Activo</option>
+        <option>Inactivo</option>
+      </select>
+    </div>
+
+ <!-- estado cargo  -->
     <div>
       <label class="font-semibold block mb-1">Estado Cargo</label>
       <select class="w-full border rounded-full px-3 py-2">
@@ -66,24 +79,40 @@
         <option>Inactivo</option>
       </select>
     </div>
+
+ <!-- cargo  -->
     <div>
       <label class="font-semibold block mb-1">Cargo</label>
       <select class="w-full border rounded-full px-3 py-2">
         <option selected>Instructor de Planta</option>
       </select>
     </div>
+
+  <!-- resolucion 1  -->
     <div>
-      <label class="font-semibold block mb-1">Resolución</label>
+      <label class="font-semibold block mb-1">Resolución 1 </label>
       <input type="file" class="w-full border rounded-full px-3 py-2" />
     </div>
+
+
+    <!-- resolucion 2  -->
+      <div>
+      <label class="font-semibold block mb-1">Resolución 2 </label>
+      <input type="file" class="w-full border rounded-full px-3 py-2" />
+    </div>
+
+   <!-- fecha ingreso -->
     <div>
       <label class="font-semibold block mb-1">Fecha de Ingreso</label>
       <input type="date" class="w-full border rounded-full px-3 py-2" />
     </div>
+
+    <!-- fecha salida -->
     <div>
       <label class="font-semibold block mb-1">Fecha de Salida</label>
       <input type="date" class="w-full border rounded-full px-3 py-2" />
     </div>
+
   </div>
 
   <!-- Observaciones -->
@@ -94,33 +123,47 @@
   </div>
  <hr class="my-3 border-t-2 border-gray-400 ">
   <!-- Segundo contenedor con más campos -->
-  <div class="grid grid-cols-2 gap-x-6 gap-y-4 mb-6">
+
+    <div class="grid grid-cols-2 gap-x-6 gap-y-4 mb-6">
+
+    <!-- nombre -->
     <div>
       <label class="font-semibold block mb-1">Nombre</label>
-      <input type="text" value="Carlos Andres"
+      <input type="text" 
              class="w-full border rounded-full px-3 py-2" />
     </div>
+    <!-- apellido -->
     <div>
       <label class="font-semibold block mb-1">Apellido</label>
-      <input type="text" value="Mera"
+      <input type="text" 
              class="w-full border rounded-full px-3 py-2" />
     </div>
+    <!-- numeo de documento -->
     <div>
       <label class="font-semibold block mb-1">Número Documento</label>
-      <input type="text" value="1098765432"
+      <input type="text"
              class="w-full border rounded-full px-3 py-2" />
     </div>
-    <div>
+
+ <!-- grado  -->
+     <div>
       <label class="font-semibold block mb-1">Grado</label>
-      <input type="text" value="G12"
-             class="w-full border rounded-full px-3 py-2" />
-    </div>
-    <div>
-      <label class="font-semibold block mb-1">Dependencia</label>
       <select class="w-full border rounded-full px-3 py-2">
-        <option selected>Coordinación Académica</option>
+        <option selected>Activo</option>
+        <option>Inactivo</option>
       </select>
     </div>
+
+ <!-- dependencia  -->
+   <div>
+      <label class="font-semibold block mb-1">Dependencia </label>
+      <select class="w-full border rounded-full px-3 py-2">
+        <option selected>Activo</option>
+        <option>Inactivo</option>
+      </select>
+    </div>
+
+ <!-- estado cargo  -->
     <div>
       <label class="font-semibold block mb-1">Estado Cargo</label>
       <select class="w-full border rounded-full px-3 py-2">
@@ -128,24 +171,40 @@
         <option>Inactivo</option>
       </select>
     </div>
+
+ <!-- cargo  -->
     <div>
       <label class="font-semibold block mb-1">Cargo</label>
       <select class="w-full border rounded-full px-3 py-2">
         <option selected>Instructor de Planta</option>
       </select>
     </div>
+
+  <!-- resolucion 1  -->
     <div>
-      <label class="font-semibold block mb-1">Resolución</label>
+      <label class="font-semibold block mb-1">Resolución 1 </label>
       <input type="file" class="w-full border rounded-full px-3 py-2" />
     </div>
+
+
+    <!-- resolucion 2  -->
+      <div>
+      <label class="font-semibold block mb-1">Resolución 2 </label>
+      <input type="file" class="w-full border rounded-full px-3 py-2" />
+    </div>
+
+   <!-- fecha ingreso -->
     <div>
       <label class="font-semibold block mb-1">Fecha de Ingreso</label>
       <input type="date" class="w-full border rounded-full px-3 py-2" />
     </div>
+
+    <!-- fecha salida -->
     <div>
       <label class="font-semibold block mb-1">Fecha de Salida</label>
       <input type="date" class="w-full border rounded-full px-3 py-2" />
     </div>
+
   </div>
 
   <!-- Observaciones -->
@@ -154,70 +213,13 @@
     <textarea rows="4"
               class="w-full border rounded-md px-3 py-2"></textarea>
   </div>
-   <hr class="my-3 border-t-2 border-gray-400 ">
-  <!-- Segundo contenedor con más campos -->
-  <div class="grid grid-cols-2 gap-x-6 gap-y-4 mb-6">
-    <div>
-      <label class="font-semibold block mb-1">Nombre</label>
-      <input type="text" value="Carlos Andres"
-             class="w-full border rounded-full px-3 py-2" />
-    </div>
-    <div>
-      <label class="font-semibold block mb-1">Apellido</label>
-      <input type="text" value="Mera"
-             class="w-full border rounded-full px-3 py-2" />
-    </div>
-    <div>
-      <label class="font-semibold block mb-1">Número Documento</label>
-      <input type="text" value="1098765432"
-             class="w-full border rounded-full px-3 py-2" />
-    </div>
-    <div>
-      <label class="font-semibold block mb-1">Grado</label>
-      <input type="text" value="G12"
-             class="w-full border rounded-full px-3 py-2" />
-    </div>
-    <div>
-      <label class="font-semibold block mb-1">Dependencia</label>
-      <select class="w-full border rounded-full px-3 py-2">
-        <option selected>Coordinación Académica</option>
-      </select>
-    </div>
-    <div>
-      <label class="font-semibold block mb-1">Estado Cargo</label>
-      <select class="w-full border rounded-full px-3 py-2">
-        <option selected>Activo</option>
-        <option>Inactivo</option>
-      </select>
-    </div>
-    <div>
-      <label class="font-semibold block mb-1">Cargo</label>
-      <select class="w-full border rounded-full px-3 py-2">
-        <option selected>Instructor de Planta</option>
-      </select>
-    </div>
-    <div>
-      <label class="font-semibold block mb-1">Resolución</label>
-      <input type="file" class="w-full border rounded-full px-3 py-2" />
-    </div>
-    <div>
-      <label class="font-semibold block mb-1">Fecha de Ingreso</label>
-      <input type="date" class="w-full border rounded-full px-3 py-2" />
-    </div>
-    <div>
-      <label class="font-semibold block mb-1">Fecha de Salida</label>
-      <input type="date" class="w-full border rounded-full px-3 py-2" />
-    </div>
-  </div>
 
-  <!-- Observaciones -->
-  <div class="mb-6">
-    <label class="font-semibold block mb-1">Observaciones</label>
-    <textarea rows="4"
-              class="w-full border rounded-md px-3 py-2"></textarea>
-  </div>
+  
+
+  
+
+
 </div>
-
 </body>
 </html>
 
