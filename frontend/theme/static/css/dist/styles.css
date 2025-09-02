@@ -13,6 +13,7 @@
     --color-yellow-400: oklch(85.2% 0.199 91.936);
     --color-yellow-500: oklch(79.5% 0.184 86.047);
     --color-yellow-600: oklch(68.1% 0.162 75.834);
+    --color-green-300: oklch(87.1% 0.15 154.449);
     --color-green-400: oklch(79.2% 0.209 151.711);
     --color-green-500: oklch(72.3% 0.219 149.579);
     --color-green-600: oklch(62.7% 0.194 149.214);
@@ -20,6 +21,7 @@
     --color-blue-400: oklch(70.7% 0.165 254.624);
     --color-blue-500: oklch(62.3% 0.214 259.815);
     --color-blue-600: oklch(54.6% 0.245 262.881);
+    --color-blue-700: oklch(48.8% 0.243 264.376);
     --color-blue-900: oklch(37.9% 0.146 265.522);
     --color-gray-50: oklch(98.5% 0.002 247.839);
     --color-gray-100: oklch(96.7% 0.003 264.542);
@@ -537,6 +539,101 @@
     bottom: auto;
     --toast-y: 0;
   }
+  .checkbox {
+    border: var(--border) solid var(--input-color, var(--color-base-content));
+  }
+  @supports (color: color-mix(in lab, red, red)) {
+    .checkbox {
+      border: var(--border) solid var(--input-color, color-mix(in oklab, var(--color-base-content) 20%, #0000));
+    }
+  }
+  .checkbox {
+    position: relative;
+    display: inline-block;
+    flex-shrink: 0;
+    cursor: pointer;
+    appearance: none;
+    border-radius: var(--radius-selector);
+    padding: calc(0.25rem * 1);
+    vertical-align: middle;
+    color: var(--color-base-content);
+    box-shadow: 0 1px oklch(0% 0 0 / calc(var(--depth) * 0.1)) inset, 0 0 #0000 inset, 0 0 #0000;
+    transition: background-color 0.2s, box-shadow 0.2s;
+    --size: calc(var(--size-selector, 0.25rem) * 6);
+    width: var(--size);
+    height: var(--size);
+    background-size: auto, calc(var(--noise) * 100%);
+    background-image: none, var(--fx-noise);
+  }
+  .checkbox:before {
+    --tw-content: "";
+    content: var(--tw-content);
+    display: block;
+    width: 100%;
+    height: 100%;
+    rotate: 45deg;
+    background-color: currentColor;
+    opacity: 0%;
+    transition: clip-path 0.3s, opacity 0.1s, rotate 0.3s, translate 0.3s;
+    transition-delay: 0.1s;
+    clip-path: polygon(20% 100%, 20% 80%, 50% 80%, 50% 80%, 70% 80%, 70% 100%);
+    box-shadow: 0px 3px 0 0px oklch(100% 0 0 / calc(var(--depth) * 0.1)) inset;
+    font-size: 1rem;
+    line-height: 0.75;
+  }
+  .checkbox:focus-visible {
+    outline: 2px solid var(--input-color, currentColor);
+    outline-offset: 2px;
+  }
+  .checkbox:checked, .checkbox[aria-checked="true"] {
+    background-color: var(--input-color, var(--color-base-content));
+  }
+  @supports (color: color-mix(in lab, red, red)) {
+    .checkbox:checked, .checkbox[aria-checked="true"] {
+      background-color: var(--input-color, color-mix(in oklab, var(--color-base-content) 20%, #0000));
+    }
+  }
+  .checkbox:checked, .checkbox[aria-checked="true"] {
+    box-shadow: 0 0 #0000 inset, 0 8px 0 -4px oklch(100% 0 0 / calc(var(--depth) * 0.1)) inset, 0 1px oklch(0% 0 0 / calc(var(--depth) * 0.1));
+  }
+  .checkbox:checked:before, .checkbox[aria-checked="true"]:before {
+    clip-path: polygon(20% 100%, 20% 80%, 50% 80%, 50% 0%, 70% 0%, 70% 100%);
+    opacity: 100%;
+  }
+  @media (forced-colors: active) {
+    .checkbox:checked:before, .checkbox[aria-checked="true"]:before {
+      rotate: 0deg;
+      background-color: transparent;
+      --tw-content: "✔︎";
+      clip-path: none;
+    }
+  }
+  @media print {
+    .checkbox:checked:before, .checkbox[aria-checked="true"]:before {
+      rotate: 0deg;
+      background-color: transparent;
+      --tw-content: "✔︎";
+      clip-path: none;
+    }
+  }
+  .checkbox:indeterminate {
+    background-color: var(--input-color, var(--color-base-content));
+  }
+  @supports (color: color-mix(in lab, red, red)) {
+    .checkbox:indeterminate {
+      background-color: var(--input-color, color-mix(in oklab, var(--color-base-content) 20%, #0000));
+    }
+  }
+  .checkbox:indeterminate:before {
+    rotate: 0deg;
+    opacity: 100%;
+    translate: 0 -35%;
+    clip-path: polygon(20% 100%, 20% 80%, 50% 80%, 50% 80%, 80% 80%, 80% 100%);
+  }
+  .checkbox:disabled {
+    cursor: not-allowed;
+    opacity: 20%;
+  }
   .absolute {
     position: absolute;
   }
@@ -555,8 +652,26 @@
   .-top-1 {
     top: calc(var(--spacing) * -1);
   }
+  .-top-4 {
+    top: calc(var(--spacing) * -4);
+  }
+  .-top-9 {
+    top: calc(var(--spacing) * -9);
+  }
   .-top-10 {
     top: calc(var(--spacing) * -10);
+  }
+  .-top-14 {
+    top: calc(var(--spacing) * -14);
+  }
+  .-top-16 {
+    top: calc(var(--spacing) * -16);
+  }
+  .-top-18\.5 {
+    top: calc(var(--spacing) * -18.5);
+  }
+  .-top-19 {
+    top: calc(var(--spacing) * -19);
   }
   .top-0 {
     top: calc(var(--spacing) * 0);
@@ -566,6 +681,9 @@
   }
   .top-4 {
     top: calc(var(--spacing) * 4);
+  }
+  .top-9 {
+    top: calc(var(--spacing) * 9);
   }
   .top-28 {
     top: calc(var(--spacing) * 28);
@@ -631,6 +749,9 @@
   .-mt-6 {
     margin-top: calc(var(--spacing) * -6);
   }
+  .-mt-7 {
+    margin-top: calc(var(--spacing) * -7);
+  }
   .mt-2 {
     margin-top: calc(var(--spacing) * 2);
   }
@@ -639,6 +760,9 @@
   }
   .mt-6 {
     margin-top: calc(var(--spacing) * 6);
+  }
+  .mt-7 {
+    margin-top: calc(var(--spacing) * 7);
   }
   .mt-8 {
     margin-top: calc(var(--spacing) * 8);
@@ -781,8 +905,17 @@
   .inline-flex {
     display: inline-flex;
   }
+  .h-0 {
+    height: calc(var(--spacing) * 0);
+  }
+  .h-4 {
+    height: calc(var(--spacing) * 4);
+  }
   .h-5 {
     height: calc(var(--spacing) * 5);
+  }
+  .h-6 {
+    height: calc(var(--spacing) * 6);
   }
   .h-7 {
     height: calc(var(--spacing) * 7);
@@ -792,6 +925,21 @@
   }
   .h-16 {
     height: calc(var(--spacing) * 16);
+  }
+  .h-60 {
+    height: calc(var(--spacing) * 60);
+  }
+  .h-80 {
+    height: calc(var(--spacing) * 80);
+  }
+  .h-90 {
+    height: calc(var(--spacing) * 90);
+  }
+  .h-104 {
+    height: calc(var(--spacing) * 104);
+  }
+  .h-120 {
+    height: calc(var(--spacing) * 120);
   }
   .h-134 {
     height: calc(var(--spacing) * 134);
@@ -811,6 +959,9 @@
   .h-auto {
     height: auto;
   }
+  .h-full {
+    height: 100%;
+  }
   .h-screen {
     height: 100vh;
   }
@@ -820,8 +971,14 @@
   .w-1\/2 {
     width: calc(1/2 * 100%);
   }
+  .w-4 {
+    width: calc(var(--spacing) * 4);
+  }
   .w-5 {
     width: calc(var(--spacing) * 5);
+  }
+  .w-6 {
+    width: calc(var(--spacing) * 6);
   }
   .w-7 {
     width: calc(var(--spacing) * 7);
@@ -831,6 +988,9 @@
   }
   .w-20 {
     width: calc(var(--spacing) * 20);
+  }
+  .w-30 {
+    width: calc(var(--spacing) * 30);
   }
   .w-44 {
     width: calc(var(--spacing) * 44);
@@ -847,11 +1007,26 @@
   .w-64 {
     width: calc(var(--spacing) * 64);
   }
+  .w-66 {
+    width: calc(var(--spacing) * 66);
+  }
   .w-70 {
     width: calc(var(--spacing) * 70);
   }
+  .w-72 {
+    width: calc(var(--spacing) * 72);
+  }
+  .w-76 {
+    width: calc(var(--spacing) * 76);
+  }
+  .w-80 {
+    width: calc(var(--spacing) * 80);
+  }
   .w-96 {
     width: calc(var(--spacing) * 96);
+  }
+  .w-200 {
+    width: calc(var(--spacing) * 200);
   }
   .w-\[65px\] {
     width: 65px;
@@ -939,6 +1114,9 @@
   .gap-3 {
     gap: calc(var(--spacing) * 3);
   }
+  .gap-4 {
+    gap: calc(var(--spacing) * 4);
+  }
   .gap-5 {
     gap: calc(var(--spacing) * 5);
   }
@@ -958,6 +1136,11 @@
   }
   .gap-x-6 {
     column-gap: calc(var(--spacing) * 6);
+  }
+  :where(.space-x-2 > :not(:last-child)) {
+    --tw-space-x-reverse: 0;
+    margin-inline-start: calc(calc(var(--spacing) * 2) * var(--tw-space-x-reverse));
+    margin-inline-end: calc(calc(var(--spacing) * 2) * calc(1 - var(--tw-space-x-reverse)));
   }
   :where(.space-x-4 > :not(:last-child)) {
     --tw-space-x-reverse: 0;
@@ -1110,14 +1293,26 @@
   .px-4 {
     padding-inline: calc(var(--spacing) * 4);
   }
+  .px-5 {
+    padding-inline: calc(var(--spacing) * 5);
+  }
   .px-6 {
     padding-inline: calc(var(--spacing) * 6);
+  }
+  .px-7 {
+    padding-inline: calc(var(--spacing) * 7);
   }
   .px-8 {
     padding-inline: calc(var(--spacing) * 8);
   }
+  .px-9 {
+    padding-inline: calc(var(--spacing) * 9);
+  }
   .py-1 {
     padding-block: calc(var(--spacing) * 1);
+  }
+  .py-1\.5 {
+    padding-block: calc(var(--spacing) * 1.5);
   }
   .py-2 {
     padding-block: calc(var(--spacing) * 2);
@@ -1128,8 +1323,14 @@
   .py-4 {
     padding-block: calc(var(--spacing) * 4);
   }
+  .py-5 {
+    padding-block: calc(var(--spacing) * 5);
+  }
   .py-6 {
     padding-block: calc(var(--spacing) * 6);
+  }
+  .py-7 {
+    padding-block: calc(var(--spacing) * 7);
   }
   .text-center {
     text-align: center;
@@ -1327,8 +1528,23 @@
     }
   }
   @media (hover: hover) {
+    .hover\:bg-blue-700:hover {
+      background-color: var(--color-blue-700);
+    }
+  }
+  @media (hover: hover) {
     .hover\:bg-gray-100:hover {
       background-color: var(--color-gray-100);
+    }
+  }
+  @media (hover: hover) {
+    .hover\:bg-green-300:hover {
+      background-color: var(--color-green-300);
+    }
+  }
+  @media (hover: hover) {
+    .hover\:bg-green-400:hover {
+      background-color: var(--color-green-400);
     }
   }
   @media (hover: hover) {
@@ -1411,6 +1627,9 @@
   }
   .focus\:ring-gray-50:focus {
     --tw-ring-color: var(--color-gray-50);
+  }
+  .focus\:ring-green-500:focus {
+    --tw-ring-color: var(--color-green-500);
   }
   .focus\:outline-none:focus {
     --tw-outline-style: none;
