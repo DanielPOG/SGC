@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         </button>
 
                         <!-- Menú desplegable -->
-                        <div id="dropdown_${idp.numero}" class="z-10 hidden absolute right-[.8vw] md:right-[2.8vw] bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 mt-2 -translate-x-20">
+                        <div id="dropdown_${idp.numero}" class="dropdown-menu z-10 hidden absolute right-[.8vw] md:right-[2.8vw] bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 mt-2 -translate-x-20">
                         <ul class="py-2 text-sm text-gray-700">
                             <li>
                             <a href="{% url 'historial_funcionario' %}" class="block px-4 py-2 hover:bg-gray-100">Historial</a>
@@ -46,8 +46,14 @@ document.addEventListener("DOMContentLoaded", () => {
     console.error("Error al cargar idps:", e);
     return;
   }
+
+  const buscarForm = document.getElementById("buscar-idp")
+  buscarForm.addEventListener('submit', e => {
+    e.preventDefault()
+  })
+
   const crearBtn = document.getElementById("crear-idp");
-  crearBtn.addEventListener("click", () => (location.href = "../crear_idp"));
+  crearBtn.addEventListener("click", () => (location.href = "../newid_planta"));
 
   document.addEventListener("click", function (e) {
     const button = e.target.closest("[data-dropdown-toggle]");
@@ -69,9 +75,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Si clic fuera → cerrar todos los menús
     if (!menu) {
-      document
-        .querySelectorAll(".dropdown-menu")
-        .forEach((m) => m.classList.add("hidden"));
+        if(e.target !== menu)
+        document.querySelectorAll(".dropdown-menu").forEach((m) => m.classList.add("hidden"));
     }
   });
 });
