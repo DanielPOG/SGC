@@ -16,3 +16,6 @@ def solicitud_revicion(request):
 def solicitud_aprovada(request):
     return render(request, 'pages/solicitud_aprovada.html')
 
+def estado_solucitud(request):
+    return render(request, 'layout/estado_solicitud.html')
+
