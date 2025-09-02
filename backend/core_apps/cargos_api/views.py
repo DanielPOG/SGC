@@ -1,5 +1,5 @@
 from rest_framework import viewsets, status
-from .models import CargoNombre, EstadoCargo, Cargo, CargoFuncion, CargoUsuario, Idp
+from .models import CargoNombre, EstadoCargo, Cargo, CargoUsuario, Idp, EstadoVinculacion
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
@@ -11,12 +11,12 @@ from .serializers import (
     CargoNombreSerializer,
     EstadoCargoSerializer,
     CargoSerializer,
-    CargoFuncionSerializer,
     CargoUsuarioSerializer,
     CargoExcelSerializer,
     CargoNestedSerializer,
     CargoUsuarioNestedSerializer,
-    IdpSerializer
+    IdpSerializer,
+    EstadoVinculacionSerializer
 )
 
 class CargoNombreViewSet(viewsets.ModelViewSet):
@@ -29,6 +29,11 @@ class EstadoCargoViewSet(viewsets.ModelViewSet):
     
     queryset = EstadoCargo.objects.all()
     serializer_class = EstadoCargoSerializer
+
+class EstadoVinculacionViewSet(viewsets.ModelViewSet):
+    queryset = EstadoVinculacion.objects.all()
+    serializer_class = EstadoVinculacionSerializer
+
 class IdpViewSet(viewsets.ModelViewSet):
     queryset = Idp.objects.all()
     serializer_class = IdpSerializer
@@ -91,11 +96,6 @@ class CargoViewSet(viewsets.ModelViewSet):
             })
 
         return Response(data, status=status.HTTP_200_OK)
-class CargoFuncionViewSet(viewsets.ModelViewSet):
-   
-    queryset = CargoFuncion.objects.all()
-    serializer_class = CargoFuncionSerializer
-
 
 class CargoUsuarioViewSet(viewsets.ModelViewSet):
   

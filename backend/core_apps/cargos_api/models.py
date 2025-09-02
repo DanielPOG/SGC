@@ -6,6 +6,7 @@ from django.utils import timezone
 
 class CargoNombre(models.Model):
     nombre = models.CharField(max_length=100, unique=True)
+    funcion = models.TextField(default="Sin función registrada")
     def __str__(self):
         return self.nombre
 class EstadoCargo(models.Model):
@@ -34,11 +35,7 @@ class Cargo(models.Model):
     def __str__(self):
         return str(self.idp)
 
-class CargoFuncion(models.Model):
-    funcion = models.TextField()
-    cargo = models.ForeignKey('Cargo', on_delete=models.CASCADE)
-    def __str__(self):
-        return f'{self.cargo} - {self.funcion[:30]}...' 
+
 class CargoUsuario(models.Model):
     cargo = models.ForeignKey('Cargo', on_delete=models.CASCADE)
     usuario = models.ForeignKey('usuarios_api.Usuario', on_delete=models.CASCADE)

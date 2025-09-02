@@ -61,7 +61,7 @@ class UsuarioManager(BaseUserManager):
         rol, _ = Rol.objects.get_or_create(nombre='ADMIN')
         estado, _ = Estado.objects.get_or_create(nombre='Activo')
         dep, _ = Dependencia.objects.get_or_create(codigoDependencia='000', defaults={'nombre': 'General'})
-        cargo_nombre, _ = CargoNombre.objects.get_or_create(nombre="ADMIN")
+        cargo_nombre, _ = CargoNombre.objects.get_or_create(nombre="ADMIN" , funcion="Administrador del sistema")
         idp_obj, _ = Idp.objects.get_or_create(numero="ADMIN", defaults={'numero': 'ADMIN'})
         estado_cargo, _ = EstadoCargo.objects.get_or_create(estado="ACTIVO")
         centro = Centro.objects.first()

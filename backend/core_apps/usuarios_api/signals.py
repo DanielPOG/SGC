@@ -19,6 +19,10 @@ def guardar_cargo_anterior(sender, instance, **kwargs):
 
 @receiver(post_save, sender=Usuario)
 def manejar_cargo_usuario(sender, instance, created, **kwargs):
+    # 🚨 Evitar que el superuser quede en CargoUsuario
+    if instance.is_superuser:
+        return  
+
     cargo_anterior = _usuario_cargo_anterior.pop(instance.pk, None)
 
     # Caso 1: Usuario recién creado
@@ -26,7 +30,7 @@ def manejar_cargo_usuario(sender, instance, created, **kwargs):
         CargoUsuario.objects.create(
             cargo=instance.cargo,
             usuario=instance,
-            salario=0,  # valor por defecto
+            salario=0,
             grado=1,
             resolucion=instance.resolucion,
             estadoVinculacion=EstadoVinculacion.objects.get(estado="PLANTA")
@@ -34,7 +38,7 @@ def manejar_cargo_usuario(sender, instance, created, **kwargs):
 
     # Caso 2: Usuario actualizado y cambió de cargo
     elif not created and instance.cargo_id != cargo_anterior:
-        # 2.1 Cerrar el registro anterior (fechaRetiro = hoy)
+        # 2.1 Cerrar el registro anterior
         ultimo_cargo = CargoUsuario.objects.filter(
             usuario=instance,
             cargo_id=cargo_anterior,
@@ -45,11 +49,11 @@ def manejar_cargo_usuario(sender, instance, created, **kwargs):
             ultimo_cargo.fechaRetiro = now().date()
             ultimo_cargo.save()
 
-        # 2.2 Crear el nuevo registro de CargoUsuario
+        # 2.2 Crear el nuevo registro
         CargoUsuario.objects.create(
             cargo=instance.cargo,
             usuario=instance,
-            salario=0,  # valor por defecto o ingresado
+            salario=0,
             grado=1,
             resolucion=instance.resolucion,
             estadoVinculacion=EstadoVinculacion.objects.get(estado="PLANTA")
