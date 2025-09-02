@@ -13,3 +13,6 @@ def solicitud_pendiente(request):
 def solicitud_revicion(request):
     return render(request, 'pages/solicitud_revicion.html')
 
+def solicitud_aprovada(request):
+    return render(request, 'pages/solicitud_aprovada.html')
+
