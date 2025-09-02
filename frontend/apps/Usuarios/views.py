@@ -26,7 +26,7 @@ def id_planta(request):
     return render(request, 'pages/id_planta.html')
 
 def solicitudes(request):
-    return render(request, 'pages/solicitudes.html')
+    return render(request, 'layout/solicitudes.html')
 
 def funcionario(request):
     return render(request, 'layout/funcionario.html')
