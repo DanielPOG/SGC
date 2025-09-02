@@ -18,6 +18,9 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
+
+    path('', include('apps.Usuarios.urls')),  #Ruta raíz que carga login_view
+
     path('admin/', admin.site.urls),
     path('usuarios/', include('apps.Usuarios.urls')), # URLS de la app Usuarios 
     path('cargos/', include('apps.Cargos.urls')), # URLS de la app Cargos

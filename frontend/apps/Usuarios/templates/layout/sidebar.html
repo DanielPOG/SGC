@@ -1,116 +1,146 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="es" x-data="{ sidebarOpen: true }">
+<html lang="es" 
+      x-data="sidebar()" 
+      x-init="initSidebar()">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{% block title %}sidebar{% endblock %}</title>
   <link href="{% static 'css/dist/styles.css' %}" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+  <style>[x-cloak]{display:none !important}</style>
 </head>
-<body class="flex min-h-screen bg-white text-gray-900">
-  <!-- Botón flecha para abrir/cerrar -->
-  <button @click="sidebarOpen = !sidebarOpen"
-          class="fixed top-4 left-4 z-50 bg-white text-[#00304D] border border-[#00304D] rounded-full w-8 h-8 flex items-center justify-center shadow-md transition-transform duration-300"
-          :class="!sidebarOpen ? 'rotate-180 left-4' : 'md:left-64'">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-    </svg>
-  </button>
+<body class="bg-white text-gray-900 flex flex-col min-h-screen"
+      x-data="{ showMenu:false, showPasswordModal:false, showUpdateModal:false }">
 
-  <!-- SIDEBAR FIJO -->
+  <!-- SIDEBAR -->
   <aside :class="sidebarOpen ? 'w-60' : 'w-20'"
-         class="fixed top-0 left-0 h-screen bg-[#00304D] text-white flex-col items-center p-4 shadow-[inset_-5px_0_15px_rgba(0,0,0,0.5)] z-40 flex transition-all duration-300">
+         class="fixed top-0 left-0 h-screen bg-[#00304D] text-white flex flex-col items-center p-4 
+                shadow-[inset_-5px_0_15px_rgba(0,0,0,0.5)] z-40 transition-all duration-200">
 
-    <!-- Usuario -->
-    <div class="flex flex-col items-center mb-8" x-show="sidebarOpen" x-transition>
-      <div class="relative w-[110px] h-[110px] md:w-[130px] md:h-[130px] rounded-full bg-white border-4 border-black flex items-center justify-center shadow-[0_0_0_6px_#00304D]">
-        <img src="{% static 'img/usuario.png' %}" alt="Foto de usuario"
-             class="w-[90px] h-[90px] md:w-[110px] md:h-[110px] rounded-full object-cover border-4 border-white">
+    <!-- Botón flecha -->
+    <button @click="toggleSidebar()"
+            class="absolute top-4 -right-4 bg-white text-[#00304D] border border-[#00304D] 
+                   rounded-full w-8 h-8 flex items-center justify-center shadow-md transition-transform duration-200"
+            :class="!sidebarOpen ? 'rotate-180' : ''">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+      </svg>
+    </button>
+
+    <!-- Usuario con Dropdown -->
+    <div class="relative flex flex-col items-center mb-6" x-show="sidebarOpen" x-transition x-cloak>
+      <button @click="showMenu = !showMenu" class="flex flex-col items-center focus:outline-none">
+        <div class="relative w-[90px] h-[90px] rounded-full bg-white border-4 border-black 
+                    flex items-center justify-center shadow-[0_0_0_4px_#00304D]">
+          <img src="{% static 'img/usuario.png' %}" alt="Foto de usuario"
+               class="w-[70px] h-[70px] rounded-full object-cover border-2 border-white">
+        </div>
+        <span class="mt-2 font-bold bg-black px-3 py-1 rounded-full text-xs md:text-sm">USERNAME</span>
+      </button>
+
+      <!-- Dropdown -->
+      <div x-show="showMenu" x-transition x-cloak
+           class="absolute top-28 w-44 bg-white text-black rounded-lg shadow-lg py-2 z-50">
+        <button @click="showPasswordModal=true; showMenu=false"
+                class="block w-full text-left px-4 py-2 hover:bg-gray-100">Cambiar Contraseña</button>
+        <button @click="showUpdateModal=true; showMenu=false"
+                class="block w-full text-left px-4 py-2 hover:bg-gray-100">Actualizar Datos</button>
       </div>
-      <span class="mt-2 font-bold bg-black px-3 py-1 rounded-full text-sm md:text-base">USERNAME</span>
     </div>
 
     <!-- Navegación -->
     <nav class="flex flex-col gap-2 w-full px-2 text-sm md:text-base">
-
       <a href="{% url 'index' %}" title="Principal"
-         class="transition hover:scale-105 flex items-center gap-3 font-medium py-2 rounded-xl border-2 border-gray-700 bg-white text-black shadow-md
-                {% if request.resolver_match.url_name == 'index' %}bg-gray-300 shadow-inner{% endif %}">
+         class="transition hover:scale-105 flex items-center gap-2 font-medium py-2 
+                rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
+                justify-center md:justify-start"
+         :class="{'px-2': !sidebarOpen, 'px-4': sidebarOpen}">
         <img src="{% static 'img/principal.png' %}" alt="Principal" class="w-5 h-5">
-        <span x-show="sidebarOpen" x-transition>Principal</span>
+        <span x-show="sidebarOpen" x-cloak>Principal</span>
       </a>
-
       <a href="{% url 'funcionario' %}" title="Funcionario"
-         class="transition hover:scale-105 flex items-center gap-3 font-medium py-2 rounded-xl border-2 border-gray-700 bg-white text-black shadow-md
-                {% if request.resolver_match.url_name == 'funcionario' %}bg-gray-300 shadow-inner{% endif %}">
-        <img src="{% static 'img/user.png' %}" alt="Principal" class="w-5 h-5">
-        <span x-show="sidebarOpen" x-transition>Funcionario</span>
+         class="transition hover:scale-105 flex items-center gap-2 font-medium py-2 
+                rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
+                justify-center md:justify-start"
+         :class="{'px-2': !sidebarOpen, 'px-4': sidebarOpen}">
+        <img src="{% static 'img/user.png' %}" alt="Funcionario" class="w-5 h-5">
+        <span x-show="sidebarOpen" x-cloak>Funcionario</span>
       </a>
-
       <a href="{% url 'cargo' %}" title="Cargo"
-         class="transition hover:scale-105 flex items-center gap-3 font-medium py-2 rounded-xl border-2 border-gray-700 bg-white text-black shadow-md
-                {% if request.resolver_match.url_name == 'cargo' %}bg-gray-300 shadow-inner{% endif %}">
-        <img src="{% static 'img/cargo.png' %}" alt="Principal" class="w-5 h-5">
-        <span x-show="sidebarOpen" x-transition>Cargo</span>
+         class="transition hover:scale-105 flex items-center gap-2 font-medium py-2 
+                rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
+                justify-center md:justify-start"
+         :class="{'px-2': !sidebarOpen, 'px-4': sidebarOpen}">
+        <img src="{% static 'img/cargo.png' %}" alt="Cargo" class="w-5 h-5">
+        <span x-show="sidebarOpen" x-cloak>Cargo</span>
       </a>
-
       <a href="{% url 'grupo_sena' %}" title="Grupos SENA"
-         class="transition hover:scale-105 flex items-center gap-3 font-medium py-2 rounded-xl border-2 border-gray-700 bg-white text-black shadow-md
-                {% if request.resolver_match.url_name == 'grupo_sena' %}bg-gray-300 shadow-inner{% endif %}">
-        <img src="{% static 'img/grupoSena.png' %}" alt="Principal" class="w-5 h-5">
-        <span x-show="sidebarOpen" x-transition>Grupos SENA</span>
+         class="transition hover:scale-105 flex items-center gap-2 font-medium py-2 
+                rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
+                justify-center md:justify-start"
+         :class="{'px-2': !sidebarOpen, 'px-4': sidebarOpen}">
+        <img src="{% static 'img/grupoSena.png' %}" alt="Grupos SENA" class="w-5 h-5">
+        <span x-show="sidebarOpen" x-cloak>Grupos SENA</span>
       </a>
-
       <a href="{% url 'reportes' %}" title="Reportes"
-         class="transition hover:scale-105 flex items-center gap-3 font-medium py-2 rounded-xl border-2 border-gray-700 bg-white text-black shadow-md
-                {% if request.resolver_match.url_name == 'reportes' %}bg-gray-300 shadow-inner{% endif %}">
-        <img src="{% static 'img/reportes.png' %}" alt="Principal" class="w-5 h-5">
-        <span x-show="sidebarOpen" x-transition>Reportes</span>
+         class="transition hover:scale-105 flex items-center gap-2 font-medium py-2 
+                rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
+                justify-center md:justify-start"
+         :class="{'px-2': !sidebarOpen, 'px-4': sidebarOpen}">
+        <img src="{% static 'img/reportes.png' %}" alt="Reportes" class="w-5 h-5">
+        <span x-show="sidebarOpen" x-cloak>Reportes</span>
       </a>
-
       <a href="{% url 'id_planta' %}" title="ID Planta"
-         class="transition hover:scale-105 flex items-center gap-3 font-medium py-2 rounded-xl border-2 border-gray-700 bg-white text-black shadow-md
-                {% if request.resolver_match.url_name == 'id_planta' %}bg-gray-300 shadow-inner{% endif %}">
-        <img src="{% static 'img/cargo.png' %}" alt="Principal" class="w-5 h-5">
-        <span x-show="sidebarOpen" x-transition>ID Planta</span>
+         class="transition hover:scale-105 flex items-center gap-2 font-medium py-2 
+                rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
+                justify-center md:justify-start"
+         :class="{'px-2': !sidebarOpen, 'px-4': sidebarOpen}">
+        <img src="{% static 'img/cargo.png' %}" alt="ID Planta" class="w-5 h-5">
+        <span x-show="sidebarOpen" x-cloak>ID Planta</span>
       </a>
-
       <a href="{% url 'solicitudes' %}" title="Solicitudes"
-         class="transition hover:scale-105 flex items-center gap-3 font-medium py-2 rounded-xl border-2 border-gray-700 bg-white text-black shadow-md
-                {% if request.resolver_match.url_name == 'solicitudes' %}bg-gray-300 shadow-inner{% endif %}">
-        <img src="{% static 'img/solicitudes.png' %}" alt="Principal" class="w-5 h-5">
-        <span x-show="sidebarOpen" x-transition>Solicitudes</span>
+         class="transition hover:scale-105 flex items-center gap-2 font-medium py-2 
+                rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
+                justify-center md:justify-start"
+         :class="{'px-2': !sidebarOpen, 'px-4': sidebarOpen}">
+        <img src="{% static 'img/solicitudes.png' %}" alt="Solicitudes" class="w-5 h-5">
+        <span x-show="sidebarOpen" x-cloak>Solicitudes</span>
       </a>
-
-      <a href="{% url 'solicitudes' %}" title="Autorizaciones"
-         class="transition hover:scale-105 flex items-center gap-3 font-medium py-2 rounded-xl border-2 border-gray-700 bg-white text-black shadow-md
-                {% if request.resolver_match.url_name == 'solicitudes' %}bg-gray-300 shadow-inner{% endif %}">
-        <img src="{% static 'img/autorizaciones.png' %}" alt="Principal" class="w-5 h-5">
-        <span x-show="sidebarOpen" x-transition>Autorizaciones</span>
+      <a href="{% url 'autorizaciones' %}" title="Autorizaciones"
+         class="transition hover:scale-105 flex items-center gap-2 font-medium py-2 
+                rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
+                justify-center md:justify-start"
+         :class="{'px-2': !sidebarOpen, 'px-4': sidebarOpen}">
+        <img src="{% static 'img/autorizaciones.png' %}" alt="Autorizaciones" class="w-5 h-5">
+        <span x-show="sidebarOpen" x-cloak>Autorizaciones</span>
       </a>
-
-      <a href="{% url 'solicitudes' %}" title="Bitacora"
-         class="transition hover:scale-105 flex items-center gap-3 font-medium py-2 rounded-xl border-2 border-gray-700 bg-white text-black shadow-md
-                {% if request.resolver_match.url_name == 'solicitudes' %}bg-gray-300 shadow-inner{% endif %}">
-        <img src="{% static 'img/bitacora.png' %}" alt="Principal" class="w-5 h-5">
-        <span x-show="sidebarOpen" x-transition>Bitacora</span>
+      <a href="{% url 'bitacora' %}" title="Bitacora"
+         class="transition hover:scale-105 flex items-center gap-2 font-medium py-2 
+                rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
+                justify-center md:justify-start"
+         :class="{'px-2': !sidebarOpen, 'px-4': sidebarOpen}">
+        <img src="{% static 'img/bitacora.png' %}" alt="Bitacora" class="w-5 h-5">
+        <span x-show="sidebarOpen" x-cloak>Bitacora</span>
       </a>
-
     </nav>
 
     <!-- Botón Salir -->
     <div class="mt-auto w-full px-2">
-      <a href="#" title="Salir"
-         class="transition hover:scale-105 flex items-center gap-3 font-medium py-2 rounded-xl border border-gray-700 bg-white text-black shadow-md">
-        <img src="{% static 'img/salir.png' %}" alt="Principal" class="w-5 h-5">
-        <span x-show="sidebarOpen" x-transition>Salir</span>
+      <a href="{% url 'login_view' %}" title="Salir"
+         class="transition hover:scale-105 flex items-center gap-2 font-medium py-2 
+                rounded-xl border border-gray-700 bg-white text-black shadow-md 
+                justify-center md:justify-start"
+         :class="{'px-2': !sidebarOpen, 'px-4': sidebarOpen}">
+        <img src="{% static 'img/salir.png' %}" alt="Salir" class="w-5 h-5">
+        <span x-show="sidebarOpen" x-cloak>Salir</span>
       </a>
     </div>
   </aside>
 
   <!-- CONTENIDO Y FOOTER -->
-  <div class="flex flex-col flex-1 min-h-screen transition-all duration-300"
+  <div class="flex flex-col flex-1 min-h-screen transition-all duration-200"
        :class="sidebarOpen ? 'ml-60' : 'ml-20'">
 
     <!-- CONTENIDO SCROLLEABLE -->
@@ -119,26 +149,81 @@
       {% block content %}{% endblock %}
     </main>
 
-    <!-- FOOTER FIJO AL FINAL -->
-    <footer class="h-16 bg-gray-300 flex justify-center items-center gap-6">
+    <!-- FOOTER -->
+    <footer class="h-auto py-4 bg-gray-300 flex flex-wrap justify-center items-center gap-6 px-4">
       <a href="https://www.facebook.com/SENACauca" target="_blank" title="Facebook SENA">
         <img src="{% static 'img/facebook.png' %}" alt="Facebook SENA"
-             class="w-8 h-8 opacity-70 hover:opacity-100 hover:scale-110 transition duration-300">
+             class="w-7 h-7 md:w-8 md:h-8 opacity-70 hover:opacity-100 hover:scale-110 transition duration-200">
       </a>
       <a href="https://www.tiktok.com/@senacomunica_" target="_blank" title="TikTok SENA">
         <img src="{% static 'img/tiktok.png' %}" alt="TikTok SENA"
-             class="w-8 h-8 opacity-70 hover:opacity-100 hover:scale-110 transition duration-300">
+             class="w-7 h-7 md:w-8 md:h-8 opacity-70 hover:opacity-100 hover:scale-110 transition duration-200">
       </a>
       <a href="https://www.instagram.com/sena.regionalcauca/" target="_blank" title="Instagram SENA">
         <img src="{% static 'img/instagram.png' %}" alt="Instagram SENA"
-             class="w-8 h-8 opacity-70 hover:opacity-100 hover:scale-110 transition duration-300">
+             class="w-7 h-7 md:w-8 md:h-8 opacity-70 hover:opacity-100 hover:scale-110 transition duration-200">
       </a>
       <a href="https://www.youtube.com/user/SENATV" target="_blank" title="YouTube SENA">
         <img src="{% static 'img/youtube.png' %}" alt="YouTube SENA"
-             class="w-8 h-8 opacity-70 hover:opacity-100 hover:scale-110 transition duration-300">
+             class="w-7 h-7 md:w-8 md:h-8 opacity-70 hover:opacity-100 hover:scale-110 transition duration-200">
       </a>
     </footer>
   </div>
+
+  <!-- Modal Cambiar Contraseña -->
+  <div x-show="showPasswordModal" x-cloak
+       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+      <h2 class="text-2xl font-bold mb-4">Cambiar Contraseña</h2>
+      <form class="space-y-4">
+        <input type="password" placeholder="Contraseña Actual" class="w-full border rounded px-3 py-2">
+        <input type="password" placeholder="Nueva Contraseña" class="w-full border rounded px-3 py-2">
+        <input type="password" placeholder="Confirmar Contraseña" class="w-full border rounded px-3 py-2">
+        <div class="flex justify-between">
+          <button type="button" @click="showPasswordModal=false"
+                  class="px-4 py-2 bg-gray-200 rounded">Cancelar</button>
+          <button type="submit"
+                  class="px-4 py-2 bg-green-600 text-white rounded">Cambiar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Actualizar Datos -->
+  <div x-show="showUpdateModal" x-cloak
+       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+      <h2 class="text-2xl font-bold mb-4">Actualizar Datos</h2>
+      <form class="space-y-4">
+        <input type="text" placeholder="Nombre" class="w-full border rounded px-3 py-2">
+        <input type="text" placeholder="Apellido" class="w-full border rounded px-3 py-2">
+        <input type="email" placeholder="Correo Electrónico" class="w-full border rounded px-3 py-2">
+        <input type="tel" placeholder="Teléfono" class="w-full border rounded px-3 py-2">
+        <div class="flex justify-between">
+          <button type="button" @click="showUpdateModal=false"
+                  class="px-4 py-2 bg-gray-200 rounded">Cancelar</button>
+          <button type="submit"
+                  class="px-4 py-2 bg-green-600 text-white rounded">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+<script>
+  function sidebar() {
+    return {
+      sidebarOpen: false,
+      initSidebar() {
+        const saved = localStorage.getItem('sidebarOpen');
+        this.sidebarOpen = saved === 'true'; 
+      },
+      toggleSidebar() {
+        this.sidebarOpen = !this.sidebarOpen;
+        localStorage.setItem('sidebarOpen', this.sidebarOpen);
+      }
+    }
+  }
+</script>
 
 </body>
 </html>
