@@ -1,0 +1,31 @@
+<div id="{{ modal_id }}" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50">
+  <div class="bg-white rounded-lg shadow-lg w-96 p-6 relative">
+    <!-- Botón cerrar -->
+    <button class="absolute top-2 right-3 text-gray-600 hover:text-black text-xl font-bold" 
+            onclick="document.getElementById('{{ modal_id }}').classList.add('hidden')">×</button>
+
+    <!-- Título del modal -->
+    <h2 class="text-lg font-semibold mb-4">{% block modal_title %}Modal{% endblock %}</h2>
+
+    <!-- Campos del formulario -->
+    <form action="{% block modal_action %}#{% endblock %}" method="{% block modal_method %}post{% endblock %}" enctype="multipart/form-data">
+      {% csrf_token %}
+      {% block modal_fields %}
+      <!-- Campos por defecto -->
+      <div class="mb-4">
+        <label class="font-semibold block mb-1">Campo 1</label>
+        <input type="text" class="w-full border rounded-full px-3 py-2" />
+      </div>
+      {% endblock %}
+
+      <!-- Botones -->
+      <div class="flex justify-end -mt-1">
+        {% block modal_buttons %}
+        <button type="submit" class="px-3 py-2 bg-green-600 text-white rounded-2xl hover:bg-green-700">
+          Aceptar
+        </button>
+        {% endblock %}
+      </div>
+    </form>
+  </div>
+</div>

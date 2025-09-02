@@ -29,13 +29,18 @@ class EstadoCargoViewSet(viewsets.ModelViewSet):
     
     queryset = EstadoCargo.objects.all()
     serializer_class = EstadoCargoSerializer
+    
 class IdpViewSet(viewsets.ModelViewSet):
     queryset = Idp.objects.all()
     serializer_class = IdpSerializer
+    def create(self, request):
+        serializer = IdpSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        idp = serializer.save()
+        return Response(IdpSerializer(idp).data, status=status.HTTP_201_CREATED)
 
 class CargoViewSet(viewsets.ModelViewSet):
     queryset = Cargo.objects.all()
-
     def get_serializer_class(self):
         # Usar nested solo para GET
         if self.action in ["list", "retrieve", "por_idp"]:

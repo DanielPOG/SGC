@@ -1,0 +1,229 @@
+{% extends "layout/sidebar.html" %}
+
+{% block title %}Crear IDP{% endblock title %}
+
+{% block content %}<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Crear Funcionario</title>
+</head>
+<body class="bg-white min-h-screen flex flex-col items-center p-8">
+
+  <!-- Título -->
+  <h1 class="text-5xl font-bold mb-4">Crear Funcionario</h1>
+
+
+  
+  <!-- Botón Volver -->
+  <form action="{% url 'funcionario' %}" method="get">
+  <button class="relative -top-1 text-green-600 border border-green-600 rounded-full px-4 py-1 mb-10 hover:bg-green-600 hover:text-white transition">
+    Volver
+  </button>
+</form>
+
+  <!-- Formulario -->
+  <div class="w-full max-w-4xl bg-gray-100 p-8 rounded-md shadow ml-10">
+    <div class="grid grid-cols-2 gap-6 mb-6">
+      
+      <!-- Nombre  -->
+      
+     
+      <!-- red-->
+         <div>
+  <label for="opcion" class="block font-medium mb-1">Red:</label>
+  <select 
+    id="opcion"
+    class="w-full border border-gray-500 rounded-2xl px-3 py-2 text-gray-900 bg-gray 
+           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+    <option value="">-- Selecciona --</option>
+    <option value="opcion1">CC</option>
+    <option value="opcion2">TI </option>
+   
+  </select>
+</div>
+
+  <!-- area  -->
+<div>
+    <label for="opcion" class="block font-medium mb-1">Àrea:</label>
+    <select 
+        id="opcion"
+        class="w-full border border-gray-500 rounded-2xl px-3 py-2 text-gray-900 bg-gray 
+            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        <option value="">-- Selecciona --</option>
+        <option value="opcion1">CC</option>
+        <option value="opcion2">TI </option>
+    </select>
+</div>
+<!-- grupo sena  -->
+     <div>
+  <label for="opcion" class="block font-medium mb-1">Grupo SENA:</label>
+  <select 
+    id="opcion"
+    class="w-full border border-gray-500 rounded-2xl px-3 py-2 text-gray-900 bg-gray 
+           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+    <option value="">-- Selecciona --</option>
+    <option value="opcion1">CC</option>
+    <option value="opcion2">TI </option>
+   
+  </select>
+</div>
+
+
+  <!-- cargo  -->
+       <div>
+    <label for="opcion" class="block font-medium mb-1">Cargo:</label>
+    <select 
+        id="opcion"
+        class="w-full border border-gray-500 rounded-2xl px-3 py-2 text-gray-900 bg-gray 
+            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        <option value="">-- Selecciona --</option>
+        <option value="opcion1">CC</option>
+        <option value="opcion2">TI </option>
+    </select>
+</div>
+      <!-- grado  -->
+<div>
+    <label for="opcion" class="block font-medium mb-1">Grado:</label>
+    <select 
+        id="opcion"
+        class="w-full border border-gray-500 rounded-2xl px-3 py-2 text-gray-900 bg-gray 
+            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        <option value="">-- Selecciona --</option>
+        <option value="opcion1">CC</option>
+        <option value="opcion2">TI </option>
+    </select>
+</div>
+ <!-- ID Planta  -->
+      <div>
+        <label class="block font-medium mb-1">ID Planta:</label>
+          <input 
+          type="text" 
+          class="w-full border border-gray-600 rounded-2xl px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/>
+      </div>
+       <!-- estado cargo   -->
+      <div>
+    <label for="opcion" class="block font-medium mb-1">Estado Cargo:</label>
+    <select 
+        id="opcion"
+        class="w-full border border-gray-500 rounded-2xl px-3 py-2 text-gray-900 bg-gray 
+            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        <option value="">-- Selecciona --</option>
+        <option value="opcion1">CC</option>
+        <option value="opcion2">TI </option>
+    </select>
+</div>
+       <!-- correo   -->
+        <div>
+        <label class="block font-medium mb-1">Correo:</label>
+          <input 
+          type="text" 
+          class="w-full border border-gray-600 rounded-2xl px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/>
+      </div>
+       <!-- resolucion -->
+      <div>
+  <label for="resolucion" class="block font-medium mb-1">Resolución:</label>
+  <input 
+    id="resolucion"
+    type="file" 
+    class="w-full border border-gray-600 rounded-full px-4 py-2 text-sm text-gray-900 
+           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+</div>
+        <!-- fecha nacimiento    -->
+        <div class="mb-6 flex justify-center">
+  <div class="w-full">
+    <label for="fechaIngreso" class="block font-medium mb-1">Fecha de Nacimiento:</label>
+    <input 
+      id="fechaIngreso"
+      type="date" 
+      class="w-full border border-gray-600 rounded-full px-4 py-2 text-gray-900 
+             focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+             appearance-none" />
+  </div>
+</div>
+       <!--Genero-->
+       <div>
+    <label for="opcion" class="block font-medium mb-1">Genero:</label>
+    <select 
+        id="opcion"
+        class="w-full border border-gray-500 rounded-2xl px-3 py-2 text-gray-900 bg-gray 
+            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        <option value="">-- Selecciona --</option>
+        <option value="opcion1">CC</option>
+        <option value="opcion2">TI </option>
+    </select>
+</div>
+
+    <!-- Fecha de ingreso -->
+       <div class="mb-6 flex justify-center">
+  <div class="w-full">
+    <label for="fechaIngreso" class="block font-medium mb-1">Fecha de Ingreso:</label>
+    <input 
+      id="fechaIngreso"
+      type="date" 
+      class="w-full border border-gray-600 rounded-full px-4 py-2 text-gray-900 
+             focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+             appearance-none" />
+  </div>
+</div>
+    <!-- educacion formal  -->
+      <div>
+    <label for="opcion" class="block font-medium mb-1">Educaciòn Formal:</label>
+    <select 
+        id="opcion"
+        class="w-full border border-gray-500 rounded-2xl px-3 py-2 text-gray-900 bg-gray 
+            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        <option value="">-- Selecciona --</option>
+        <option value="opcion1">CC</option>
+        <option value="opcion2">TI </option>
+    </select>
+</div>
+
+
+
+
+    <!-- Observación -->
+<div class="mb-6">
+  <!-- Botón de observación -->
+  <button
+    onclick="toggleTextarea()"
+    class="flex items-center text-lg font-medium text-black hover:text-green-600 transition"
+  >
+    <span class="text-green-600 text-3xl mr-2 font-bold">+</span> Observación
+  </button>
+
+  <!-- Área de texto (inicialmente oculta) -->
+  <div id="textarea-observacion" class="mt-4 hidden">
+    <textarea
+      id="observacion"
+      name="observacion"
+      rows="4"
+      class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring focus:border-green-500"
+    ></textarea>
+  </div>
+</div>
+
+<!-- Script para alternar visibilidad -->
+<script>
+  function toggleTextarea() {
+    const textareaDiv = document.getElementById("textarea-observacion");
+    textareaDiv.classList.toggle("hidden");
+  }
+</script>
+
+
+
+    <!-- Botones -->
+    <div class="flex flex-col items-center gap-2">
+      <button class="bg-green-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-green-700 transition">
+        Crear Cargo
+      </button>
+      
+    </div>
+  </div>
+
+</body>
+</html>
+{% endblock content %}

@@ -11,7 +11,7 @@ class UsuarioViewSet(viewsets.ModelViewSet):
     serializer_class = UsuarioSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-class PasswordRecovering(APIView):
+class PasswordRecovering(viewsets.ViewSet):
     def get(self, request):
         """
             Verificar si el correo institucional existe en la base de datos
@@ -30,9 +30,7 @@ class PasswordRecovering(APIView):
         try:
             usuario = Usuario.objects.filter(correo=email)
         except Usuario.DoesNotExist:
-            return Response({'error':'Usuario no encontrado'})
-        
-    
+            return Response({'error':'Usuario no encontrado'})    
 
 
 class FormacionComplementariaViewSet(viewsets.ModelViewSet):

@@ -1,6 +1,4 @@
 from django.db import models
-from core_apps.general.models import Area
-from django.apps import apps
 from django.utils import timezone
 # Create your models here.
 
@@ -18,7 +16,7 @@ class EstadoVinculacion(models.Model):
         return self.estado
 class Idp(models.Model):
     numero = models.CharField(max_length=10, unique=True)
-    fechaCreacion = models.DateField(default=timezone.now,)
+    fechaCreacion = models.DateField(default=timezone.now)
     def __str__(self):
         return self.numero
 class Cargo(models.Model):
@@ -38,7 +36,7 @@ class CargoFuncion(models.Model):
     funcion = models.TextField()
     cargo = models.ForeignKey('Cargo', on_delete=models.CASCADE)
     def __str__(self):
-        return f'{self.cargo} - {self.funcion[:30]}...' 
+        return f'{self.cargo} - {self.funcion[:30]}...'
 class CargoUsuario(models.Model):
     cargo = models.ForeignKey('Cargo', on_delete=models.CASCADE)
     usuario = models.ForeignKey('usuarios_api.Usuario', on_delete=models.CASCADE)
