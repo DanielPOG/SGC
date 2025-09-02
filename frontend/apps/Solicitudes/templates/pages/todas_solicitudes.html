@@ -73,7 +73,36 @@
       <td class="px-4 py-2 border text-center hidden md:table-cell">Pendiente</td>
       <td class="px-4 py-2 border text-center">10/04/2025</td>
      <td class="px-4 py-2 border text-center">
-  <a href="{% url 'detalles_solicitud' %}" 
+  <a href="{% url 'solicitud_pendiente' %}" 
+     class="text-blue-600 hover:underline font-semibold">
+    VER DETALLES
+  </a>
+</td>
+</tr>
+
+
+
+   <tr class="hover:bg-gray-100">
+      <td class="px-4 py-2 border text-center">086921565</td>
+      <td class="px-4 py-2 border text-center hidden md:table-cell">Cambios de datos personales</td>
+      <td class="px-4 py-2 border text-center hidden md:table-cell">En reviciòn </td>
+      <td class="px-4 py-2 border text-center">10/04/2025</td>
+     <td class="px-4 py-2 border text-center">
+  <a href="{% url 'solicitud_revicion' %}" 
+     class="text-blue-600 hover:underline font-semibold">
+    VER DETALLES
+  </a>
+</td>
+</tr>
+
+
+   <tr class="hover:bg-gray-100">
+      <td class="px-4 py-2 border text-center">086921565</td>
+      <td class="px-4 py-2 border text-center hidden md:table-cell">Cambios de datos personales</td>
+      <td class="px-4 py-2 border text-center hidden md:table-cell">Aprobada</td>
+      <td class="px-4 py-2 border text-center">10/04/2025</td>
+     <td class="px-4 py-2 border text-center">
+  <a href="{% url 'solicitud_pendiente' %}" 
      class="text-blue-600 hover:underline font-semibold">
     VER DETALLES
   </a>

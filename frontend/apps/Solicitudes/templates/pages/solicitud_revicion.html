@@ -1,6 +1,6 @@
 {% extends "layout/sidebar.html" %} /* Hereda la estructura llamada "sidebar.html" */
 
-{% block title %}Solicitudes pendientes {% endblock %}
+{% block title %}Solicitudes  en Reviciòn{% endblock %}
 
 {% block content %}
 <!DOCTYPE html>
@@ -9,7 +9,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <script src="https://cdn.tailwindcss.com"></script>
-  <title>   solicitudes Pendientes  </title>
+  <title>   solicitudes  en Reviciòn </title>
 </head>
 <body class="bg-white min-h-screen flex flex-col items-center p-8">
 
@@ -17,7 +17,7 @@
 
   
   <!-- Botón Volver -->
-  <form action="{% url 'solicitudes' %}" method="get">
+  <form action="{% url 'todas_solicitudes' %}" method="get">
   <button class="relative -top-1 text-green-600 border border-green-600 rounded-full px-4 py-1 mb-10 hover:bg-green-600 hover:text-white transition">
     Volver
   </button>
@@ -28,7 +28,7 @@
   <!-- Formulario -->
 <div class="w-full max-w-4xl bg-gray-100 p-8 rounded-md shadow ml-10">
   <!-- Titulo -->
-  <h1 class="text-center text-4xl font-bold text-gray-800">Pendiente</h1>
+  <h1 class="text-center text-4xl font-bold text-gray-800">En Reviciòn</h1>
   <hr>
  <div class="flex justify-between items-center mb-2">
     <span class="text-gray-500 font-semibold">Tipo:</span>
@@ -59,11 +59,7 @@
     Aprobar
   </button>
 
-  <!-- Botón Enviar a revisión -->
-  <button class="bg-yellow-400 text-white font-bold px-6 py-2 rounded-full hover:bg-yellow-500">
-    Enviar a revisión
-  </button>
-</div>
+  
 
 </div>
 
