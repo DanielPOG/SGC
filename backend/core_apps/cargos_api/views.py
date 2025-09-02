@@ -113,6 +113,8 @@ class CargoUsuarioViewSet(viewsets.ModelViewSet):
         cargos_usuario = self.get_queryset().filter(cargo__idp__numero=idp)
         serializer = self.get_serializer(cargos_usuario, many=True)
         return Response(serializer.data)
+    
+    
 
 # VISTA PARA SUBIR POR EXCEL
 class CargoUploadView(APIView):

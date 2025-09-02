@@ -15,6 +15,7 @@
     window.urlEditarCargoBase = "{% url 'editar_cargo' 0 %}".replace("0/", "");
     window.urlHistorialCargo = "{% url 'cargohistorial' %}".replace("0/", "");
   </script>
+  <script src="{% static 'js/asignarCargo.js' %}"></script>
 </head>
 <body class="bg-white p-8 scrollbar">
 
@@ -80,7 +81,10 @@
   </table>
   <!-- fin tabla -->
 
-  <!-- Modal -->
+  <!-- Modal excel -->
+  {# TODO: Cambiar esto a archivo para lógica de Excel #}
+
+
   <div id="modalExcel" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50">
     <div class="bg-white rounded-lg shadow-lg w-96 p-6 relative">
       <!-- Botón cerrar -->
@@ -98,7 +102,7 @@
     </div>
   </div>
 
-  <!-- Script para abrir el modal -->
+  <!-- Script para abrir el modal excel -->
   <script>
     const openModal = document.getElementById('openModal');
     const closeModal = document.getElementById('closeModal');
@@ -124,37 +128,61 @@
 
 
 
-  <!-- segundo modal para agregar nuevo funcionario   -->
+  <!-- Modal Agregar Nuevo Funcionario   -->
 <div id="nuevoModal" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50">
-  <div class="bg-white rounded-lg w-96 p-6 relative h-134"> 
+  <div class="bg-white rounded-lg w-96 p-6 relative h-auto"> 
     <!-- Botón para cerrar el nuevo modal -->
-    <button id="closeNuevoModal" class="absolute top-2 right-3 text-gray-600 hover:text-black text-xl font-bold">×</button>
+    <button id="closeNuevoModal" class="absolute top-2 right-3 text-gray-600 hover:text-black text-xl font-bold">X</button>
     
     <!-- Formulario -->
-    <form action="#" method="post">
+    <form id="formAsignarFuncionario" action="#" method="post">
+      <input type="hidden" id="cargoIdSeleccionado" name="cargo_id" />
       <div class="mb-4">
-        <label class="font-semibold block mb-1">Número Documento</label>
-        <input type="text" value="1098765432" class="w-full border rounded-full px-3 py-2" />
+        <label class="font-semibold block mb-1" for="usuarioNumDoc">Número Documento</label>
+        <input id="usuarioNumDoc" name="usuarioNumDoc" type="text" class="w-full border rounded-full px-3 py-2" />
       </div>
 
       <div class="mb-4">
-        <label class="font-semibold block mb-1">Grado</label>
-        <input type="text" value="Instructor" class="w-full border rounded-full px-3 py-2" />
+        <label class="font-semibold block mb-1" for="grado">Grado</label>
+        <input id="grado" name="grado" type="text" class="w-full border rounded-full px-3 py-2" />
+      </div>
+      <div class="mb-4">
+        <label class="font-semibold block mb-1" for="salario">Salario</label>
+        <input id="salario" name="salario" type="text" class="w-full border rounded-full px-3 py-2" />
+      </div>
+      <div class="mb-4">
+        <label class="font-semibold block mb-1" for="resolucionNumero">Resolución</label>
+        <input type="text" id="resolucion" name="resolucion" placeholder="Número de resolución" />
+
+        <input 
+        id="resolucionArchivo" name="resolucionArchivo"
+        type="file" 
+        class="w-full border border-gray-600 rounded-full px-4 py-2 text-sm text-gray-900 
+           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
       </div>
 
       <div class="mb-4">
-        <label class="font-semibold block mb-1">Resolución</label>
-        <input type="file" class="w-full border rounded-full px-3 py-2" />
-      </div>
-
-      <div class="mb-4">
-        <label class="font-semibold block mb-1">Estado</label>
-        <input type="text" value="Activo" class="w-full border rounded-full px-3 py-2" />
+        <label class="font-semibold block mb-1" for="estadoVinculacion">Estado</label>
+          <select 
+          id="estadoVinculacion" name="estadoVinculacion"
+          class="w-full border border-gray-500 rounded-2xl px-3 py-2 text-gray-900 bg-gray 
+           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+    <option value="">-- Selecciona --</option>
+  </select>
       </div>
 
       <div class="mb-6">
-        <label class="font-semibold block mb-1">Observaciones</label>
-        <textarea rows="2" class="w-full border rounded-md px-3 py-1"></textarea>
+        <label class="font-semibold block mb-1" for="observacionCU">Observaciones</label>
+        <textarea id="observacionCU" name="observacionCU" rows="2" class="w-full border rounded-md px-3 py-1"></textarea>
+      </div>
+      <div class="mb-6">
+        <div class="w-full">
+          <label for="fechaInicio" class="block font-medium mb-1">Fecha  Inicio</label>
+          <input 
+            id="fechaInicio" name="fechaInicio"
+            type="date" 
+            class="w-full border rounded-full px-3 py-2" />
+        </div>
       </div>
 
       <div class="flex justify-end -mt-1">
@@ -166,29 +194,6 @@
   </div>
 </div>
 
-<script>
-  // Abrir el nuevo modal
-  const openNuevoModal = document.getElementById('openNuevoModal');
-  const nuevoModal = document.getElementById('nuevoModal');
-  const closeNuevoModal = document.getElementById('closeNuevoModal');
-
-  openNuevoModal.addEventListener('click', () => {
-    nuevoModal.classList.remove('hidden');
-    nuevoModal.classList.add('flex');
-  });
-
-  // Cerrar el nuevo modal
-  closeNuevoModal.addEventListener('click', () => {
-    nuevoModal.classList.add('hidden');
-  });
-
-  // Cerrar el modal si se hace clic fuera del contenido
-  window.addEventListener('click', (e) => {
-    if (e.target === nuevoModal) {
-      nuevoModal.classList.add('hidden');
-    }
-  });
-</script>
 
 </body>
 </html>
