@@ -1,0 +1,60 @@
+{% extends "layout/menu.html" %} /* Hereda la estructura llamada "sidebar.html" */
+
+{% block title %} Historial de Solicitudes{% endblock %}
+
+{% block content %}
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title> Historial de SolicitudesBitacora </title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+ <body>
+   
+  <h1 class="text-4xl font-bold mb-6">Historial de Solicitudes </h1>
+  
+     
+
+ 
+<!-- Filtro -->
+<div class="flex justify-end mb-6">
+  <select 
+      id="opcion"
+      class="h-12 w-90 border border-gray-500 rounded-2xl px-3 py-2 text-gray-900 bg-white
+            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+      <option value="">-- Selecciona --</option>
+      <option value="pendiente">Pendientes</option>
+      <option value="revicion">En Reviciòn</option>
+      <option value="aprovada">Aprobadas</option>
+  </select>
+</div>
+
+
+  
+  <!-- Tabla -->
+<table class="min-w-full table-auto border-collapse">
+  <thead>
+    <tr class="text-white bg-blue-900">
+      <th class="px-4 py-2 border">Tipo</th>
+      <th class="px-4 py-2 border hidden md:table-cell">Detalle</th>
+      <th class="px-4 py-2 border hidden md:table-cell">Estado</th>
+ 
+    
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="hover:bg-gray-100">
+      <td class="px-4 py-2 border text-center">Juan</td>
+      <td class="px-4 py-2 border text-center hidden md:table-cell">Pérez</td>
+      <td class="px-4 py-2 border text-center hidden md:table-cell">1234567890</td>
+     
+      
+    </tr>
+  </tbody>
+</table>
+  <!-- fin tabla -->
+ </body>
+ </html>
+{% endblock %}

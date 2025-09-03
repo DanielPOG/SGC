@@ -10,3 +10,11 @@ def cambiar_contra(request):
 
 def actualizar_datos(request):
     return render(request, 'pages/actualizar_datos.html')
+
+def agregar_formacion(request):
+    return render(request, 'pages/agregar_formacion.html')
+
+
+def historial_solicitudes(request):
+    return render(request, 'pages/historial_solicitudes.html')
+
