@@ -128,56 +128,65 @@
 
 
 
-  <!-- Modal Agregar Nuevo Funcionario   -->
-<div id="nuevoModal" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50">
-  <div class="bg-white rounded-lg w-96 p-6 relative h-auto"> 
+  <!-- Modal Agregar Nuevo Funcionario -->
+<div id="nuevoModal" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50 px-4 sm:px-6">
+  <div class="bg-white rounded-lg w-full max-w-3xl p-6 relative h-auto"> 
     <!-- Botón para cerrar el nuevo modal -->
     <button id="closeNuevoModal" class="absolute top-2 right-3 text-gray-600 hover:text-black text-xl font-bold">X</button>
     
     <!-- Formulario -->
     <form id="formAsignarFuncionario" action="#" method="post">
       <input type="hidden" id="cargoIdSeleccionado" name="cargo_id" />
-      <div class="mb-4">
-        <label class="font-semibold block mb-1" for="usuarioNumDoc">Número Documento</label>
-        <input id="usuarioNumDoc" name="usuarioNumDoc" type="text" class="w-full border rounded-full px-3 py-2" />
-      </div>
 
-      <div class="mb-4">
-        <label class="font-semibold block mb-1" for="grado">Grado</label>
-        <input id="grado" name="grado" type="text" class="w-full border rounded-full px-3 py-2" />
-      </div>
-      <div class="mb-4">
-        <label class="font-semibold block mb-1" for="salario">Salario</label>
-        <input id="salario" name="salario" type="text" class="w-full border rounded-full px-3 py-2" />
-      </div>
-      <div class="mb-4">
-        <label class="font-semibold block mb-1" for="resolucionNumero">Resolución</label>
-        <input type="text" id="resolucion" name="resolucion" placeholder="Número de resolución" />
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="mb-4">
+          <label class="font-semibold block mb-1" for="usuarioNumDoc">Número Documento</label>
+          <input id="usuarioNumDoc" name="usuarioNumDoc" type="text" class="w-full border rounded-full px-3 py-2" />
+        </div>
 
-        <input 
-        id="resolucionArchivo" name="resolucionArchivo"
-        type="file" 
-        class="w-full border border-gray-600 rounded-full px-4 py-2 text-sm text-gray-900 
-           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
-      </div>
+        <div class="mb-4">
+          <label class="font-semibold block mb-1" for="grado">Grado</label>
+          <input  id="grado" name="grado" 
+          type="number" min="1" max="20" 
+          class="w-full border rounded-full px-3 py-2"  />
+        </div>
 
-      <div class="mb-4">
-        <label class="font-semibold block mb-1" for="estadoVinculacion">Estado</label>
+        <div class="mb-4">
+          <label class="font-semibold block mb-1" for="salario">Salario</label>
+          <input id="salario" name="salario" type="number" class="w-full border rounded-full px-3 py-2" />
+        </div>
+
+        <div class="mb-4">
+          <label class="font-semibold block mb-1" for="resolucionNumero">Resolución</label>
+          <input type="text" id="resolucion" name="resolucion" placeholder="Número de resolución" class="w-full border rounded-full px-3 py-2" />
+        </div>
+
+        <div class="mb-4">
+          <label class="font-semibold block mb-1" for="resolucionArchivo">Archivo Resolución</label>
+          <input 
+            id="resolucionArchivo" name="resolucionArchivo"
+            type="file" 
+            class="w-full border border-gray-600 rounded-full px-4 py-2 text-sm text-gray-900 
+            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+        </div>
+
+        <div class="mb-4">
+          <label class="font-semibold block mb-1" for="estadoVinculacion">Estado</label>
           <select 
-          id="estadoVinculacion" name="estadoVinculacion"
-          class="w-full border border-gray-500 rounded-2xl px-3 py-2 text-gray-900 bg-gray 
-           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-    <option value="">-- Selecciona --</option>
-  </select>
-      </div>
+            id="estadoVinculacion" name="estadoVinculacion"
+            class="w-full border border-gray-500 rounded-2xl px-3 py-2 text-gray-900 bg-gray 
+            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            <option value="">-- Selecciona --</option>
+          </select>
+        </div>
 
-      <div class="mb-6">
-        <label class="font-semibold block mb-1" for="observacionCU">Observaciones</label>
-        <textarea id="observacionCU" name="observacionCU" rows="2" class="w-full border rounded-md px-3 py-1"></textarea>
-      </div>
-      <div class="mb-6">
-        <div class="w-full">
-          <label for="fechaInicio" class="block font-medium mb-1">Fecha  Inicio</label>
+        <div class="mb-4 md:col-span-2">
+          <label class="font-semibold block mb-1" for="observacionCU">Observaciones</label>
+          <textarea id="observacionCU" name="observacionCU" rows="2" class="w-full border rounded-md px-3 py-1"></textarea>
+        </div>
+
+        <div class="mb-4 md:col-span-2">
+          <label for="fechaInicio" class="block font-medium mb-1">Fecha Inicio</label>
           <input 
             id="fechaInicio" name="fechaInicio"
             type="date" 
@@ -185,7 +194,7 @@
         </div>
       </div>
 
-      <div class="flex justify-end -mt-1">
+      <div class="flex justify-end mt-4">
         <button type="submit" class="px-3 py-2 bg-green-600 text-white rounded-2xl hover:bg-green-700 ">
           Aceptar
         </button>
@@ -193,7 +202,6 @@
     </form>
   </div>
 </div>
-
 
 </body>
 </html>

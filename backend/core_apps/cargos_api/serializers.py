@@ -39,12 +39,27 @@ class CargoSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class CargoUsuarioSerializer(serializers.ModelSerializer):
-    cargo = serializers.PrimaryKeyRelatedField(queryset=Cargo.objects.all())
-    usuario = serializers.PrimaryKeyRelatedField(queryset=Usuario.objects.all())
+    num_doc = serializers.CharField(write_only=True)
 
     class Meta:
         model = CargoUsuario
-        fields = '__all__'
+        fields = [
+            "id", "cargo", "usuario", "num_doc",
+            "estadoVinculacion", "salario", "grado", 
+            "resolucion", "resolucion_archivo", 
+            "observacion", "fechaInicio"
+        ]
+        extra_kwargs = {"usuario": {"read_only": True}}
+
+    def create(self, validated_data):
+        num_doc = validated_data.pop("num_doc")
+        try:
+            usuario = Usuario.objects.get(num_doc=num_doc)
+        except Usuario.DoesNotExist:
+            raise serializers.ValidationError({"usuario": "No existe un usuario con ese documento"})
+        validated_data["usuario"] = usuario
+        return super().create(validated_data)
+
 
 class CargoExcelSerializer(serializers.ModelSerializer):
     cargoNombre = serializers.SlugRelatedField(
