@@ -6,7 +6,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{% block title %}sidebar{% endblock %}</title>
+  <title>{% block title %}menu{% endblock %}</title>
   <link href="{% static 'css/dist/styles.css' %}" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
   <style>[x-cloak]{display:none !important}</style>
@@ -52,88 +52,51 @@
 
     <!-- Navegación -->
     <nav class="flex flex-col gap-2 w-full px-2 text-sm md:text-base">
-      <a href="{% url 'index' %}" title="Principal"
+
+  <!-- cambiar contraseña -->
+      <a href="{% url 'index' %}" title="Cambiar Contraseña"
          class="transition hover:scale-105 flex items-center gap-2 font-medium py-2 
                 rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
                 justify-center md:justify-start"
          :class="{'px-2': !sidebarOpen, 'px-4': sidebarOpen}">
-        <img src="{% static 'img/principal.png' %}" alt="Principal" class="w-5 h-5">
-        <span x-show="sidebarOpen" x-cloak>Principal</span>
+        <img src="{% static 'img/principal.png' %}" alt="Cambiar Contraseña" class="w-5 h-5">
+        <span x-show="sidebarOpen" x-cloak>Cambiar Contraseña</span>
       </a>
 
-      <a href="{% url 'funcionario' %}" title="Funcionario"
+<!-- actualizar datos  -->
+      <a href="{% url 'funcionario' %}" title="Actualizar Datos"
          class="transition hover:scale-105 flex items-center gap-2 font-medium py-2 
                 rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
                 justify-center md:justify-start"
          :class="{'px-2': !sidebarOpen, 'px-4': sidebarOpen}">
-        <img src="{% static 'img/user.png' %}" alt="Funcionario" class="w-5 h-5">
-        <span x-show="sidebarOpen" x-cloak>Funcionario</span>
+        <img src="{% static 'img/user.png' %}" alt="Actualizar Datos" class="w-5 h-5">
+        <span x-show="sidebarOpen" x-cloak>Actualizar Datos</span>
       </a>
 
-      <a href="{% url 'cargo' %}" title="Cargo"
+
+<!-- anadir formacio complementaria -->
+      <a href="{% url 'cargo' %}" title="Añadir Foraciòn Complementaria"
          class="transition hover:scale-105 flex items-center gap-2 font-medium py-2 
                 rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
                 justify-center md:justify-start"
          :class="{'px-2': !sidebarOpen, 'px-4': sidebarOpen}">
-        <img src="{% static 'img/cargo.png' %}" alt="Cargo" class="w-5 h-5">
-        <span x-show="sidebarOpen" x-cloak>Cargo</span>
+        <img src="{% static 'img/cargo.png' %}" alt="Añadir Formaciòn Complementaria" class="w-5 h-5">
+        <span x-show="sidebarOpen" x-cloak>Añadir Formaciòn Complementaria</span>
       </a>
 
-      <a href="{% url 'grupo_sena' %}" title="Grupos SENA"
+
+<!-- historial de solicitudes -->
+      <a href="{% url 'grupo_sena' %}" title="Historial de Solicitudes"
          class="transition hover:scale-105 flex items-center gap-2 font-medium py-2 
                 rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
                 justify-center md:justify-start"
          :class="{'px-2': !sidebarOpen, 'px-4': sidebarOpen}">
-        <img src="{% static 'img/grupoSena.png' %}" alt="Grupos SENA" class="w-5 h-5">
-        <span x-show="sidebarOpen" x-cloak>Grupos SENA</span>
+        <img src="{% static 'img/grupoSena.png' %}" alt="Historial de Solicitudes" class="w-5 h-5">
+        <span x-show="sidebarOpen" x-cloak>Historial de Solicitudes</span>
       </a>
 
-      <a href="{% url 'reportes' %}" title="Reportes"
-         class="transition hover:scale-105 flex items-center gap-2 font-medium py-2 
-                rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
-                justify-center md:justify-start"
-         :class="{'px-2': !sidebarOpen, 'px-4': sidebarOpen}">
-        <img src="{% static 'img/reportes.png' %}" alt="Reportes" class="w-5 h-5">
-        <span x-show="sidebarOpen" x-cloak>Reportes</span>
-      </a>
 
-      <a href="{% url 'id_planta' %}" title="ID Planta"
-         class="transition hover:scale-105 flex items-center gap-2 font-medium py-2 
-                rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
-                justify-center md:justify-start"
-         :class="{'px-2': !sidebarOpen, 'px-4': sidebarOpen}">
-        <img src="{% static 'img/cargo.png' %}" alt="ID Planta" class="w-5 h-5">
-        <span x-show="sidebarOpen" x-cloak>ID Planta</span>
-      </a>
-
-      <a href="{% url 'solicitudes' %}" title="Solicitudes"
-         class="transition hover:scale-105 flex items-center gap-2 font-medium py-2 
-                rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
-                justify-center md:justify-start"
-         :class="{'px-2': !sidebarOpen, 'px-4': sidebarOpen}">
-        <img src="{% static 'img/solicitudes.png' %}" alt="Solicitudes" class="w-5 h-5">
-        <span x-show="sidebarOpen" x-cloak>Solicitudes</span>
-      </a>
-
-      <a href="{% url 'autorizaciones' %}" title="Autorizaciones"
-         class="transition hover:scale-105 flex items-center gap-2 font-medium py-2 
-                rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
-                justify-center md:justify-start"
-         :class="{'px-2': !sidebarOpen, 'px-4': sidebarOpen}">
-        <img src="{% static 'img/autorizaciones.png' %}" alt="Autorizaciones" class="w-5 h-5">
-        <span x-show="sidebarOpen" x-cloak>Autorizaciones</span>
-      </a>
-      
-      <a href="{% url 'bitacora' %}" title="Bitacora"
-         class="transition hover:scale-105 flex items-center gap-2 font-medium py-2 
-                rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
-                justify-center md:justify-start"
-         :class="{'px-2': !sidebarOpen, 'px-4': sidebarOpen}">
-        <img src="{% static 'img/bitacora.png' %}" alt="Bitacora" class="w-5 h-5">
-        <span x-show="sidebarOpen" x-cloak>Bitacora</span>
-      </a>
-    </nav>
-
+     
     <!-- Botón Salir -->
     <div class="mt-auto w-full px-2">
       <a href="{% url 'login_view' %}" title="Salir"
