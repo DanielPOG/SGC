@@ -98,7 +98,7 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     tipo_doc = models.ForeignKey('TipoDocumento', on_delete=PROTECT)
     correo = models.EmailField(max_length=254, unique=True)
     genero = models.ForeignKey('Genero', on_delete=PROTECT)
-    cargo = models.ForeignKey('cargos_api.Cargo', on_delete=PROTECT, null=True , blank=True)
+    cargo = models.ForeignKey('cargos_api.Cargo', on_delete=PROTECT)
     estudioF = models.ForeignKey('EstudioFormal', on_delete=PROTECT)
     fechaInicio = models.DateField(auto_now_add=True)
     fechaActualizacion = models.DateField(auto_now=True, null=True, blank=True)
@@ -188,15 +188,10 @@ class Bitacora(models.Model):
     # Contexto extra
     ip_address = models.GenericIPAddressField(null=True, blank=True)
     user_agent = models.CharField(max_length=255, null=True, blank=True)
-
-    # Cambios realizados (solo en UPDATE)
     cambios = models.JSONField(null=True, blank=True)
-
-    descripcion = models.TextField(blank=True, null=True)  # ✅ Para registrar mensajes adicionales
 
     class Meta:
         ordering = ['-fecha']
-
 class EstadoSolicitud(models.Model):
     nombre = models.CharField(max_length=100, unique=True)
     def __str__(self): return self.nombre
