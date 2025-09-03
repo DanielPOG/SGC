@@ -1,36 +1,70 @@
-from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
-from django.utils import timezone
-from django.apps import apps
-from datetime import date
-from core_apps.cargos_api.models import Cargo
-from core_apps.general.models import Dependencia
-
+"""
+    Modelos API usuarios
+"""
 from django.contrib.contenttypes.models import ContentType #PARA BITACORA
 from django.contrib.contenttypes.fields import GenericForeignKey #PARA BITACORA
+from django.db import models
+from datetime import date
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.utils import timezone
+from django.core.exceptions import ValidationError
+from django.apps import apps
+from django.db.models import UniqueConstraint, PROTECT
+from core_apps.cargos_api.models import Cargo, CargoNombre, EstadoCargo
+from core_apps.general.models import Centro, Dependencia
 # Create your models here.
+
 class TipoDocumento(models.Model):
+    """
+        Entidad fija para los tipos de documento
+    """
     nombre = models.CharField(max_length=100, unique=True)
     sigla = models.CharField(max_length=10, unique=True)
-    def __str__(self): return self.nombre
+    def __str__(self):
+        return self.nombre
 class Genero(models.Model):
+    """
+        Entidad fija para los generos
+    """
     nombre = models.CharField(max_length=50, unique=True)
     sigla = models.CharField(max_length=10, unique=True)
-    def __str__(self): return self.nombre
+    def __str__(self):
+        return self.nombre
 class EstudioFormal(models.Model):
+    """
+        Entidad para el almacenado de los grados de estudio formal
+        de un funcionario
+    """
     nombre = models.CharField(max_length=50, unique=True)
-    def __str__(self): return self.nombre
+    def __str__(self):
+        return self.nombre
 
 class Rol(models.Model):
+    """
+        Entidad fija para roles
+    """
     nombre = models.CharField(max_length=50, unique=True)
-    def __str__(self): return self.nombre
+    def __str__(self):
+        return self.nombre
 
 class Estado(models.Model):
+    """
+        Tabla fija para los estados de un funcionario
+    """
     nombre = models.CharField(max_length=50, unique=True)
-    def __str__(self): return self.nombre
-# Gestor de usuarios personalizado
+    def __str__(self):
+        return self.nombre
+
+
 class UsuarioManager(BaseUserManager):
+    """
+        Gestor de usuarios personalizado
+    """
     def create_user(self, correo, nombre, apellido, num_doc, password=None, **extra_fields):
+        """
+            Metodo con configuracion para crear un 
+            nuevo registro de usuario en la base de datos
+        """
         if not correo:
             raise ValueError('El correo es obligatorio')
         if password is None:
@@ -49,6 +83,9 @@ class UsuarioManager(BaseUserManager):
         return user
 
     def create_superuser(self, correo, nombre, apellido, num_doc, password=None, **extra_fields):
+        """
+            Metodo de configuración al crear un super usuario en django
+        """
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
 
@@ -81,10 +118,10 @@ class UsuarioManager(BaseUserManager):
 
         return self.create_user(correo, nombre, apellido, num_doc, password, **extra_fields)
 
-# Modelo de Usuario personalizado
-from django.db.models import UniqueConstraint, PROTECT
-
 class Usuario(AbstractBaseUser, PermissionsMixin):
+    """
+        Modelo de Usuario personalizado
+    """
     nombre = models.CharField(max_length=100)
     apellido = models.CharField(max_length=100)
     num_doc = models.CharField(max_length=20, db_index=True)
@@ -101,7 +138,7 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     resolucion = models.CharField(max_length=100)
     estado = models.ForeignKey('Estado', on_delete=PROTECT)
     dependencia = models.ForeignKey('general.Dependencia', on_delete=PROTECT)
-
+    is_active = True
     SOFTWARE_OPCIONES = (
         (0, "Sin acceso"),
         (1, "Acceso básico"),
@@ -155,13 +192,15 @@ class FormacionComplementaria(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
 
     def clean(self):
-        from django.core.exceptions import ValidationError
         if self.fechaFin < self.fechaInicio:
             raise ValidationError("fechaFin no puede ser anterior a fechaInicio")
 
     def __str__(self):
-        return f"{self.nombre} - {self.usuario.correo}" 
+        return f"{self.nombre} - {self.usuario.correo}"
 class Accion(models.TextChoices):
+    """
+        Lista de acciones en UPPERCASE y LOWERCASE
+    """
     CREAR = "CREAR", "Crear"
     ACTUALIZAR = "ACTUALIZAR", "Actualizar"
     ELIMINAR = "ELIMINAR", "Eliminar"
@@ -169,6 +208,9 @@ class Accion(models.TextChoices):
     LOGOUT = "LOGOUT", "Cierre de sesión"
 
 class Bitacora(models.Model):
+    """
+        Esta entidad almacena cada acción realizada dentro del software, por cada funcionario
+    """
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     accion = models.CharField(max_length=20, choices=Accion.choices)
     fecha = models.DateTimeField(auto_now_add=True)
@@ -184,16 +226,30 @@ class Bitacora(models.Model):
     cambios = models.JSONField(null=True, blank=True)
 
     class Meta:
+        """
+            Abs Meta config
+        """
         ordering = ['-fecha']
 class EstadoSolicitud(models.Model):
+    """
+        Entidad fija con los nombres de los estado de una solicitud
+    """
     nombre = models.CharField(max_length=100, unique=True)
-    def __str__(self): return self.nombre
+    def __str__(self):
+        return self.nombre
 
 class TipoSolicitud(models.Model):
+    """
+        Entidad fija para los nombres de cada tipo de solicitud
+    """
     nombre = models.CharField(max_length=100, unique=True)
-    def __str__(self): return self.nombre
+    def __str__(self):
+        return self.nombre
 
 class Solicitud(models.Model):
+    """
+        Entidad para peticiones de usuario
+    """
     emisor = models.ForeignKey('Usuario', on_delete=models.CASCADE, related_name='solicitudes_enviadas')
     receptor = models.ForeignKey('Usuario', on_delete=models.CASCADE, related_name='solicitudes_recibidas')
     descripcion = models.TextField()

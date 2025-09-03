@@ -1,3 +1,5 @@
+
+
 FRONTEND
 
 # Entrar a la carpeta frontend
@@ -15,6 +17,10 @@ FRONTEND
 BACKEND 
 
 # Entrar a la carpeta backend
+
+    # Correr el servidor en un puerto diferente al del frontend.
+    py manage.py runserver 127.0.0.1:8001 --settings=backend.settings
+
     # Crear entorno virtual (Solo una vez en local )
         python -m venv venv
         venv\Scripts\activate      #SIEMPRE UTILIZAR 

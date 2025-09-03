@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders', # Para validar cors
-    'rest_framework', #Framework
+    'rest_framework', #API REST Framework
+    'rest_framework_simplejwt',
     #'coreapi', #Documentacion TODO: MIRAR LA VERSION DEL PYTHON 
     # apps
     'core_apps.grupoSena_api',
@@ -140,8 +141,22 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CORS settings TODO:PONER URL AUTORIZADAS
 CORS_ALLOWED_ORIGINS = [
+    'http://127.0.0.1:8000'
 ]
 
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.coreapi.AutoSchema",
+     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
 }
+
+
+#Variables para el envio de correos (Developement)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'jdmapple322@gmail.com'
+EMAIL_HOST_PASSWORD = 'targ jdnk knei dfmb'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

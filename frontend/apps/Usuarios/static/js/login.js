@@ -1,53 +1,119 @@
+import useState from "./hooks.js"
 document.addEventListener('DOMContentLoaded', ()=>{
 
-    const responseNode = document.getElementById('olvideContraseñaResponse')
     const inputMailNode = document.getElementById('usuario')
+    const formNode = document.getElementById('login-form')
+    
+    // Nodos para insertar respuestas
+    const recoverResponseNode = document.getElementById('olvideContraseñaResponse')
+    const responseNode = document.getElementById('response-node')
+    const paragraphNode = document.querySelector('#response-node p')
+    const closeResponseNode = document.querySelector('#response-node button')
 
     console.log('Nodes loaded')
 
-    // Creación de un state para el texto dinámico
-    const response = {text:'', valid:false}
-    const setResponse = (text, valid)=>{
-        if(typeof text !== 'string') return
-        response.text = text
-        response.valid = valid
-        responseNode.innerText = response.text
+    // Creación de un state para loginResponse
+    const [loginResponse, setLoginResponse] = useState({text:'', valid:false})
+    const LResponse = async(newVal)=>{
+        responseNode.style.display = 'flex'
+        paragraphNode.innerText = newVal.text
+        const handleClose = ()=>{
+            responseNode.style.display = 'none'
+            paragraphNode.innerText = ''
+            closeResponseNode.removeEventListener('click', handleClose)
+            
+        }
+        closeResponseNode.addEventListener('click', handleClose)
+    }
+    formNode.addEventListener('submit', async e =>{
+        e.preventDefault()
+        try {
+            const correo = formNode.usuario.value
+            const password = formNode.password.value
+            if(!correo || !password){
+                LResponse({text:'Todos los campos son obligatorios', valid:false})
+                return
+            }
+            const res = await fetch("http://127.0.0.1:8001/api/usuarios/login/", {
+                method:'POST',
+                headers: {"Content-Type":"application/json"},
+                body: JSON.stringify({correo, password})
+            })
+            const data = await res.json()
+            if(data.detail){
+                LResponse({text:'Credenciales inválidas', valid:false})
+                return
+            }
+            console.log("Respuesta del servidor:", data)
+            formNode.reset()
+        }catch(e){
+            console.warn(`Hubo un error al procesar el formulario ${e}`)
+            setLoginResponse({text:'Hubo un error al iniciar sesión', valid:false})
+        }
+    })
+
+
+
+    // Creación de un state para recoverResponse de contraseña debajo del input usuario 
+    const recoverResponse = {text:'', valid:false}
+    const setRecoverResponse = (text, valid)=>{
+        if(typeof text !== 'string' || typeof valid !== 'boolean'){
+            console.error(`
+                Error setLoginResponse: El tipo de dato de uno o ambos parametros
+                es incorrecto
+                `)
+            return
+        }
+        recoverResponse.text = text
+        recoverResponse.valid = valid
+        recoverResponseNode.innerText = recoverResponse.text
     }
     
-    // Reset response al escribir en el input
+    // Reset recoverResponse al escribir en el input
     inputMailNode
-        .addEventListener('input', ()=> setResponse('', false))
+        .addEventListener('input', ()=> setRecoverResponse('', false))
 
-
-    document.getElementById('olvideContraseña').addEventListener('click', e => {
-        setResponse('')
+    // Olvidé mi contraseña
+    document.getElementById('olvideContraseña').addEventListener('click', async e => {
+        setRecoverResponse('')
         if(e.target !== e.currentTarget) return
         const textOn = inputMailNode.value.trim()
 
         // ¿Texto vacío?
         if(textOn.length === 0 || textOn === ''){
-            setResponse('Ingrese su correo para la recuperación', false)
+            setRecoverResponse('Ingrese su correo para la recuperación', false)
             return
         }
 
         // ¿La dirección es valida?
         if(!textOn.includes("@") || textOn.split('@').length !== 2){
-            setResponse("Ingrese una dirección de correo válida", false)
+            setRecoverResponse("Ingrese una dirección de correo válida", false)
             return
         }
-
         // ¿Es un correo institucional?
         if(textOn.split('@')[1] !== 'soy.sena.edu.co'){ 
-            setResponse("Correo sena requerido para recuperación", false)
+            setRecoverResponse("Correo sena requerido para recuperación", false)
             return
         }
-
-        try{
-            const {data} = fetch('api/usuarios/mail-check')
-            setResponse('Enviando correo de recuperación...', true)
+        try{    
+            const res = await fetch('api/usuarios/pw-reset/', {
+                method:'POST',
+                headers:{
+                    "Content-Type":'application/json',
+                    //"X-CSRFToken":
+                },
+                body:JSON.stringify({email:textOn})
+            })
+            const data = await res.json()
+            if(data.error){
+                setRecoverResponse(res.error, false)
+                return
+            }
+            setRecoverResponse('Enviando correo de recuperación..')
+            setTimeout(()=>setRecoverResponse(res.msg), 1000)
         }catch(err){
             console.error(`Error al comprobar el correo institucional: ${err}`)
-            setResponse('No se pudo enviar correo de recuperación...', false)
+            setRecoverResponse('No se pudo enviar correo de recuperación...', false)
         }
     })
 })
