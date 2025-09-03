@@ -1,6 +1,14 @@
 """
-    Modelos API usuarios
+    Usuario Api models
 """
+from django.db import models
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.utils import timezone
+from django.apps import apps
+from datetime import date
+from core_apps.cargos_api.models import Cargo, CargoNombre, EstadoCargo, Idp
+from core_apps.general.models import Dependencia, Centro
+
 from django.contrib.contenttypes.models import ContentType #PARA BITACORA
 from django.contrib.contenttypes.fields import GenericForeignKey #PARA BITACORA
 from django.db import models
@@ -95,15 +103,22 @@ class UsuarioManager(BaseUserManager):
         tipo_doc, _ = TipoDocumento.objects.get_or_create(sigla='CC', defaults={'nombre': 'Cédula'})
         genero, _ = Genero.objects.get_or_create(sigla='ND', defaults={'nombre': 'No definido'})
         estudio, _ = EstudioFormal.objects.get_or_create(nombre='No aplica')
-        rol, _ = Rol.objects.get_or_create(nombre='Admin')
+        rol, _ = Rol.objects.get_or_create(nombre='ADMIN')
         estado, _ = Estado.objects.get_or_create(nombre='Activo')
         dep, _ = Dependencia.objects.get_or_create(codigoDependencia='000', defaults={'nombre': 'General'})
-        cargo, _ = Cargo.objects.get_or_create(idp='ADM-000', defaults={
-            'cargoNombre': CargoNombre.objects.first(),  # ajusta a tu semilla
-            'estadoCargo': EstadoCargo.objects.first(),
+        cargo_nombre, _ = CargoNombre.objects.get_or_create(nombre="ADMIN")
+        idp_obj, _ = Idp.objects.get_or_create(numero="ADMIN", defaults={'numero': 'ADMIN'})
+        estado_cargo, _ = EstadoCargo.objects.get_or_create(estado="ACTIVO")
+        centro = Centro.objects.first()
+
+        cargo, _ = Cargo.objects.get_or_create(idp=idp_obj, defaults={
+            'idp': idp_obj,
+            'cargoNombre': cargo_nombre,
+            'estadoCargo': estado_cargo,
             'resolucion': 'N/A',
-            'centro': Centro.objects.first(),
+            'centro': centro,
         })
+
 
         extra_fields.setdefault('tipo_doc', tipo_doc)
         extra_fields.setdefault('genero', genero)
