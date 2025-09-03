@@ -9,7 +9,7 @@ def newid_palnta(request):
 
 def asignar_idp(request):
     return render(request, 'pages/asignar_idp.html')
-
+RA
 def editar_asig_idp(request):
     return render(request, 'pages/editar_asig_idp.html')
 

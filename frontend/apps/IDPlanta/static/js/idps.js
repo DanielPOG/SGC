@@ -61,6 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
         modal.classList.add('flex')
     });
 
+    
     document.addEventListener("click", function (e) {
         const button = e.target.closest("[data-dropdown-toggle]");
         const menu = e.target.closest(".dropdown-menu");
@@ -98,7 +99,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // Envio del formulario
     if (!newIdpModal.classList.contains('hidden')) {
         const form = document.getElementById('crear-nueva-idp')
-        const formSubmit = async e => {
+
+        form.addEventListener('submit', async e => {
             e.preventDefault()
             try {
                 const response = await fetch('http://127.0.0.1:8001/api/cargos/idps/', {
@@ -107,8 +109,8 @@ document.addEventListener("DOMContentLoaded", () => {
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
-                        numero: form.querySelector('input#numero'), // Atributo data-numero en tu form
-                        nombre: form.querySelector('input#fecha')  // Atributo data-nombre en tu form
+                        numero: form.querySelector('input#numero').value, // Atributo data-numero en tu form
+                        fechaCreacion: form.querySelector('input#fecha').value  // Atributo data-nombre en tu form
                     })
                 });
 
@@ -120,12 +122,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 const data = await response.json();
                 console.log("IDP creado:", data);
-                // Aquí podrías cerrar el modal o limpiar el formulario
+
             } catch (e) {
-                console.error('Sucedió un error al crear el IDP');
+                console.error('Sucedió un error al crear el IDP', e);
                 return
+            } finally {
+                form.reset()
             }
-        }
-        form.addEventListener('submit', formSubmit)
-    }
-});
+    })
+}})
