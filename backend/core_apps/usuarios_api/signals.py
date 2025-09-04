@@ -103,28 +103,8 @@ def manejar_cargo_usuario(sender, instance, created, **kwargs):
     if instance.is_superuser:  # 🚨 Evitar que el superuser quede en CargoUsuario
         return  
 
-    cargo_anterior = _usuario_cargo_anterior.pop(instance.pk, None)
-
     if created and instance.cargo:
-        CargoUsuario.objects.create(
-            cargo=instance.cargo,
-            usuario=instance,
-            salario=0,
-            grado=1,
-            resolucion=instance.resolucion,
-            estadoVinculacion=EstadoVinculacion.objects.get(estado="PLANTA")
-        )
-    elif not created and instance.cargo_id != cargo_anterior:
-        ultimo_cargo = CargoUsuario.objects.filter(
-            usuario=instance,
-            cargo_id=cargo_anterior,
-            fechaRetiro__isnull=True
-        ).order_by('-fechaInicio').first()
-
-        if ultimo_cargo:
-            ultimo_cargo.fechaRetiro = now().date()
-            ultimo_cargo.save()
-
+        # Solo cuando el usuario se crea con un cargo PLANTA
         CargoUsuario.objects.create(
             cargo=instance.cargo,
             usuario=instance,

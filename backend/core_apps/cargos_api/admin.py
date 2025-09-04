@@ -72,7 +72,7 @@ class CargoAdmin(admin.ModelAdmin):
 # ======================
 @admin.register(CargoUsuario)
 class CargoUsuarioAdmin(admin.ModelAdmin):
-    list_display = ("id", "cargo", "usuario", "salario", "grado", "resolucion", "fechaInicio", "fechaRetiro")
+    list_display = ("id", "cargo", "usuario", "salario", "grado", "resolucion", "estadoVinculacion","fechaInicio", "fechaRetiro")
     search_fields = ("cargo__idp__numero", "usuario__username")
     list_filter = ("grado", "fechaInicio", "fechaRetiro")
     date_hierarchy = "fechaInicio"
