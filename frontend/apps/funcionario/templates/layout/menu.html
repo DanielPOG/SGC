@@ -11,8 +11,8 @@
   <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
   <style>[x-cloak]{display:none !important}</style>
 </head>
-<body class="bg-white text-gray-900 flex flex-col"
-      x-data="{ showMenu:false, showPasswordModal:false, showUpdateModal:false }">
+  <body class="h-full min-h-screen bg-white text-gray-900 flex flex-col"
+        x-data="{ showMenu:false, showPasswordModal:false, showUpdateModal:false }">
 
   <!-- SIDEBAR -->
   <aside :class="sidebarOpen ? 'w-60' : 'w-20'"
@@ -40,14 +40,6 @@
         <span class="mt-2 font-bold bg-black px-3 py-1 rounded-full text-xs md:text-sm">USERNAME</span>
       </button>
 
-      <!-- Dropdown -->
-      <div x-show="showMenu" x-transition x-cloak
-           class="absolute top-28 w-44 bg-white text-black rounded-lg shadow-lg py-2 z-50">
-        <button @click="showPasswordModal=true; showMenu=false"
-                class="block w-full text-left px-4 py-2 hover:bg-gray-100">Cambiar Contraseña</button>
-        <button @click="showUpdateModal=true; showMenu=false"
-                class="block w-full text-left px-4 py-2 hover:bg-gray-100">Actualizar Datos</button>
-      </div>
     </div>
 
     <!-- Navegación -->
@@ -56,10 +48,10 @@
   <!-- cambiar contraseña -->
       <a href="{% url 'cambiar_contra' %}" title="Cambiar Contraseña"
          class="transition hover:scale-105 flex items-center gap-2 font-medium py-2 
-                rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
+                rounded-xl border-2 border-gray-700 bg-white text-black shadow-md    
                 justify-center md:justify-start"
          :class="{'px-2': !sidebarOpen, 'px-4': sidebarOpen}">
-        <img src="{% static 'img/principal.png' %}" alt="Cambiar Contraseña" class="w-5 h-5">
+        <img src="{% static 'img/cambiar_contra.png' %}" alt="Cambiar Contraseña" class="w-6 h-6">
         <span x-show="sidebarOpen" x-cloak>Cambiar Contraseña</span>
       </a>
 
@@ -140,44 +132,7 @@
     </footer>
   </div>
 
-  <!-- Modal Cambiar Contraseña -->
-  <div x-show="showPasswordModal" x-cloak
-       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
-      <h2 class="text-2xl font-bold mb-4">Cambiar Contraseña</h2>
-      <form class="space-y-4">
-        <input type="password" placeholder="Contraseña Actual" class="w-full border rounded px-3 py-2">
-        <input type="password" placeholder="Nueva Contraseña" class="w-full border rounded px-3 py-2">
-        <input type="password" placeholder="Confirmar Contraseña" class="w-full border rounded px-3 py-2">
-        <div class="flex justify-between">
-          <button type="button" @click="showPasswordModal=false"
-                  class="px-4 py-2 bg-gray-200 rounded">Cancelar</button>
-          <button type="submit"
-                  class="px-4 py-2 bg-green-600 text-white rounded">Cambiar</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Modal Actualizar Datos -->
-  <div x-show="showUpdateModal" x-cloak
-       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
-      <h2 class="text-2xl font-bold mb-4">Actualizar Datos</h2>
-      <form class="space-y-4">
-        <input type="text" placeholder="Nombre" class="w-full border rounded px-3 py-2">
-        <input type="text" placeholder="Apellido" class="w-full border rounded px-3 py-2">
-        <input type="email" placeholder="Correo Electrónico" class="w-full border rounded px-3 py-2">
-        <input type="tel" placeholder="Teléfono" class="w-full border rounded px-3 py-2">
-        <div class="flex justify-between">
-          <button type="button" @click="showUpdateModal=false"
-                  class="px-4 py-2 bg-gray-200 rounded">Cancelar</button>
-          <button type="submit"
-                  class="px-4 py-2 bg-green-600 text-white rounded">Guardar</button>
-        </div>
-      </form>
-    </div>
-  </div>
+ <!--   scrip de sidebar  -->
 
 <script>
   function sidebar() {
