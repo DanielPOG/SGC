@@ -13,15 +13,18 @@ document.addEventListener('DOMContentLoaded', ()=>{
     console.log('Nodes loaded')
 
     // Creación de un state para loginResponse
-    const [loginResponse, setLoginResponse] = useState({text:'', valid:false})
     const LResponse = async(newVal)=>{
         responseNode.style.display = 'flex'
         paragraphNode.innerText = newVal.text
+        if(newVal.valid){
+            closeResponseNode.style.display = 'none'
+            setTimeout(()=>location.href = '../principal', 800)
+            return
+        }
         const handleClose = ()=>{
             responseNode.style.display = 'none'
             paragraphNode.innerText = ''
-            closeResponseNode.removeEventListener('click', handleClose)
-            
+            closeResponseNode.removeEventListener('click', handleClose)            
         }
         closeResponseNode.addEventListener('click', handleClose)
     }
@@ -45,10 +48,11 @@ document.addEventListener('DOMContentLoaded', ()=>{
                 return
             }
             console.log("Respuesta del servidor:", data)
+            LResponse({text:'Sesión iniciada correctamente', valid:true})
             formNode.reset()
         }catch(e){
             console.warn(`Hubo un error al procesar el formulario ${e}`)
-            setLoginResponse({text:'Hubo un error al iniciar sesión', valid:false})
+            LResponse({text:'Credenciales inválidas', valid:false})
         }
     })
 
