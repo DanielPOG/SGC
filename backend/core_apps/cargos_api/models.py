@@ -15,7 +15,7 @@ class EstadoVinculacion(models.Model):
     def __str__(self):
         return self.estado
 class Idp(models.Model):
-    numero = models.CharField(max_length=10, unique=True)
+    numero = models.CharField(max_length=10, null=False, unique=True)
     fechaCreacion = models.DateField(default=timezone.now)
     def __str__(self):
         return self.numero

@@ -1,23 +1,27 @@
 document.addEventListener("DOMContentLoaded", () => {
-    try {
-        fetch("http://127.0.0.1:8001/api/cargos/idps/", {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                const tbody = document.querySelector("table tbody");
-                data.forEach((idp) => {
-                    const tr = document.createElement("tr");
-                    tr.classList.add("hover:bg-gray-100");
-                    tr.innerHTML = `
+  try {
+    fetch("http://127.0.0.1:8001/api/cargos/idps/", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Error HTTP " + res.status);
+        return res.json();
+      })
+      .then((data) => {
+        console.log("Datos recibidos:", data);
+        const tbody = document.querySelector("table tbody");
+        data.forEach((idp) => {
+          const tr = document.createElement("tr");
+          tr.classList.add("hover:bg-gray-100");
+          tr.innerHTML = `
                     <td class="px-4 py-2 border text-center">${idp.numero}</td>
                     <td class="px-4 py-2 border text-center hidden md:table-cell">${idp.fechaCreacion}</td>
                     <td class="px-4 py-2 border text-center relative">
                         <!-- Botón del Dropdown -->
-                        <button id="dropdown_${idp.id}" data-dropdown-toggle="dropdown_${idp.numero}" class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600" type="button"> 
+                        <button id="dropdown_${idp.numero}" data-dropdown-toggle="dropdown_${idp.numero}" class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600" type="button"> 
                         <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 3">
                             <path d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z"/>
                         </svg>
@@ -30,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             <a href="{% url 'historial_funcionario' %}" class="block px-4 py-2 hover:bg-gray-100">Historial</a>
                             </li>
                             <li>
-                            <a href="#" data-modal-target="modal_${idp.id}" class="block px-4 py-2 hover:bg-gray-100">Añadir Formación</a>
+                            <a href="#" data-modal-target="modal_${idp.numero}" class="block px-4 py-2 hover:bg-gray-100">Añadir Formación</a>
                             </li>
                             <li>
                             <a href="{% url 'editar_fun' %}" class="block px-4 py-2 hover:bg-gray-100">Editar</a>
@@ -39,95 +43,119 @@ document.addEventListener("DOMContentLoaded", () => {
                         </div>
                     </td>
                 `;
-                    tbody.appendChild(tr);
-                });
-            });
-    } catch (e) {
-        console.error("Error al cargar idps:", e);
-        return;
-    }
+          tbody.appendChild(tr);
+        });
+      });
+  } catch (e) {
+    console.error("Error al cargar idps:", e);
+    return;
+  }
 
-    const buscarForm = document.getElementById("buscar-idp")
-    buscarForm.addEventListener('submit', e => {
-        e.preventDefault()
+  const buscarForm = document.getElementById("buscar-idp");
+  buscarForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    if (!buscarForm.querySelector("#numero").value)
+      return alert("Ingrese una idp");
+    fetch(
+      `http://localhost:8001/api/cargos/idps/${
+        buscarForm.querySelector("#numero").value
+      }`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+      .then((res) => {
+        if (!res.ok) throw new Error("Error HTTP " + res.status);
+        return res.json();
+      })
+      .then((idp) => {
+        console.log("IDP Encontrada:", idp);
+
+        const tbody = document.querySelector("table tbody");
+        tbody.innerHTML = "";
+        const row = document.createElement("tr");
+        row.classList.add("hover:bg-gray-100");
+        row.innerHTML = `
+                    <td class="px-4 py-2 border text-center">${idp.numero}</td>
+                    <td class="px-4 py-2 border text-center hidden md:table-cell">${idp.fechaCreacion}</td>
+                    <td class="px-4 py-2 border text-center relative">
+                        <!-- Botón del Dropdown -->
+                        <button id="button-dropdown-${idp.id}" data-dropdown-toggle="dropdown-${idp.id}" class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600" type="button"> 
+                        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 3">
+                            <path d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z"/>
+                        </svg>
+                        </button>
+
+                        <!-- Menú desplegable -->
+                        <div id="dropdown-${idp.id}" class="dropdown-menu z-10 hidden absolute right-[.8vw] md:right-[2.8vw] bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 mt-2 -translate-x-20">
+                        <ul class="py-2 text-sm text-gray-700">
+                            <li>
+                            <a href="{% url 'historial_funcionario' %}" class="block px-4 py-2 hover:bg-gray-100">Historial</a>
+                            </li>
+                            <li>
+                            <a href="#" data-modal-target="modal_${idp.numero}" class="block px-4 py-2 hover:bg-gray-100">Añadir Formación</a>
+                            </li>
+                            <li>
+                            <a href="{% url 'editar_fun' %}" class="block px-4 py-2 hover:bg-gray-100">Editar</a>
+                            </li>
+                        </ul>
+                        </div>
+                    </td>
+                `;
+
+        tbody.appendChild(row);
     })
-
-    // Crear idp
-    const crearBtn = document.getElementById("crear-idp");
-    crearBtn.addEventListener("click", () => {
-        const modal = document.querySelector('.new-idp-modal')
-        if (!modal.classList.contains('hidden')) return
-        modal.classList.remove('hidden')
-        modal.classList.add('flex')
-    });
-
-    
-    document.addEventListener("click", function (e) {
-        const button = e.target.closest("[data-dropdown-toggle]");
-        const menu = e.target.closest(".dropdown-menu");
-
-        // Si clic en botón → alternar menú
-        if (button) {
-            e.stopPropagation();
-            // cerrar todos antes de abrir el nuevo
-            document
+          // Si clic fuera → cerrar todos los menús
+          if (!menu) {
+            if (e.target !== menu)
+              document
                 .querySelectorAll(".dropdown-menu")
                 .forEach((m) => m.classList.add("hidden"));
+          }
+        
+          
 
-            const menuId = button.dataset.dropdownToggle;
-            const targetMenu = document.querySelector(`#${menuId}`);
-            targetMenu.classList.toggle("hidden");
-            return;
-        }
+      });
+  });
 
-        // Si clic fuera → cerrar todos los menús
-        if (!menu) {
-            if (e.target !== menu)
-                document.querySelectorAll(".dropdown-menu").forEach((m) => m.classList.add("hidden"));
-        }
-    });
+document.addEventListener("click", function (e) {
+  const button = e.target.closest("[data-dropdown-toggle]");
+  const menu = e.target.closest(".dropdown-menu");
+
+  // Si clic en botón → alternar menú
+  if (button) {
+    e.stopPropagation();
+
+    // cerrar todos antes de abrir el nuevo
+    document
+      .querySelectorAll(".dropdown-menu")
+      .forEach((m) => m.classList.add("hidden"));
+
+    const menuId = button.dataset.dropdownToggle;
+    const targetMenu = document.querySelector(`#${menuId}`);
+    targetMenu.classList.toggle("hidden");
+    return;
+  }
+
+  // Si clic fuera → cerrar todos
+  if (!menu) {
+    document
+      .querySelectorAll(".dropdown-menu")
+      .forEach((m) => m.classList.add("hidden"));
+  }
+});
 
 
-    const newIdpModal = document.querySelector('.new-idp-modal')
-    const closeBtn = document.querySelector('.close')
-    function close() {
-        if (!newIdpModal.classList.contains('hidden')) newIdpModal.classList.add('hidden')
-        else closeBtn.removeEventListener('click', close)
-    }
-    closeBtn.addEventListener('click', close)
+  // Crear idp
+  const crearBtn = document.getElementById("crear-idp");
+  crearBtn.addEventListener("click", () => {
+    const modal = document.querySelector(".new-idp-modal");
+    if (!modal.classList.contains("hidden")) return;
+    modal.classList.remove("hidden");
+    document.body.style.overflow = "hidden";
+    modal.classList.add("flex");
+  });
 
-    // Envio del formulario
-    if (!newIdpModal.classList.contains('hidden')) {
-        const form = document.getElementById('crear-nueva-idp')
-
-        form.addEventListener('submit', async e => {
-            e.preventDefault()
-            try {
-                const response = await fetch('http://127.0.0.1:8001/api/cargos/idps/', {
-                    method: 'POST',
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        numero: form.querySelector('input#numero').value, // Atributo data-numero en tu form
-                        fechaCreacion: form.querySelector('input#fecha').value  // Atributo data-nombre en tu form
-                    })
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    console.error("Error en la solicitud:", errorData);
-                    return;
-                }
-
-                const data = await response.json();
-                console.log("IDP creado:", data);
-
-            } catch (e) {
-                console.error('Sucedió un error al crear el IDP', e);
-                return
-            } finally {
-                form.reset()
-            }
-    })
-}})

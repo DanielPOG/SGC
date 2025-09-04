@@ -20,6 +20,10 @@ class EstadoCargoSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class IdpSerializer(serializers.ModelSerializer):
+    numero = serializers.SlugRelatedField(
+    queryset=Idp.objects.all(),
+    slug_field="numero"
+)
     class Meta:
         model = Idp
         fields = '__all__'

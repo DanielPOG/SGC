@@ -1,12 +1,13 @@
-<div class="new-idp-modal fixed -ms-6 -mt-8 w-screen h-screen bg-black/60 hidden z-10">
+{% load static %}
+<div class="new-idp-modal fixed inset-0 flex justify-center items-center -ms-6 -mt-8 bg-black/60 hidden z-10">
   <!-- Formulario -->
-  <div class="w-full h-full grid justify-center items-center">
-      <div class="flex">
-        <h3 class="text-3xl font-bold mb-4">Creación de IDP </h3>
+  
+      <div class="flex fixed w-full h-full justify-center top-[40px]">
+        <h3 class="text-4xl font-bold mb-4">Creación de IDP </h3>
       </div>
-
+      <div class="flex gap-2 justify-center">
       <div class="grid grid-row gap-6 mb-10">
-    <form id="crear-nueva-idp" class="  min-w-2/4 w-fit h-fit bg-gray-100 p-8 rounded-md shadow fixed left-[43%]">
+    <form id="crear-nueva-idp" class="  min-w-2/4 w-fit h-fit bg-gray-100 p-8 rounded-md shadow static z-20">
           <label class="font-medium mb-1 flex">
             <p class="text-red-600 text-[19px] me-1">*</p>Codigo IDP:
           </label>
@@ -16,7 +17,6 @@
             class="w-full border border-gray-600 rounded-2xl px-3 py-2 text-gray-900 placeholder-gray-400 
             focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           />
-        </div>
 
         <div>
           <label class="block font-medium mb-1">Fecha Creación:</label>
@@ -27,24 +27,28 @@
             focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
-      </div>
-
-      <!-- Botones -->
+        <!-- Botones -->
       <div class="flex flex-col items-center gap-2">
-        <buton  type="submit" class="bg-green-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-green-700 transition">
-          Gutardar
-        </buton>
-    </form>
+        <button  type="submit" class="bg-green-600 text-white px-6 py-[5px] mb-2 mt-6 rounded-full font-semibold hover:bg-green-700 transition">
+          Guardar
+        </button>
+        </div>
 
         <!-- Botón Volver --> 
+      <div class="flex flex-col items-center gap-2">
+
         <button type="button" class="close relative -top-0 text-red-600 border border-red-600 rounded-full px-7 py-1 hover:bg-red-600 hover:text-white transition">
           Cerrar
         </button>
+        </div>
       </div>
-  </div>
+    </form>
+      </div>
 </div>
-<script>
-  //Logica cerrar modal
+      
+<script defer type="module" src="{% static "js/newidp.js" %}"></script>
+  
+</div>
   
 
 </script>

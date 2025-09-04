@@ -153,7 +153,6 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     resolucion = models.CharField(max_length=100)
     estado = models.ForeignKey('Estado', on_delete=PROTECT)
     dependencia = models.ForeignKey('general.Dependencia', on_delete=PROTECT)
-    is_active = True
     SOFTWARE_OPCIONES = (
         (0, "Sin acceso"),
         (1, "Acceso básico"),
