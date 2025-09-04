@@ -6,6 +6,7 @@ from rest_framework.response import Response
 import pandas as pd
 from core_apps.usuarios_api.models import Usuario
 from rest_framework.decorators import action
+from django.utils import timezone
 
 from .serializers import (
     CargoNombreSerializer,
@@ -98,21 +99,41 @@ class CargoViewSet(viewsets.ModelViewSet):
         return Response(data, status=status.HTTP_200_OK)
 
 class CargoUsuarioViewSet(viewsets.ModelViewSet):
-  
     queryset = CargoUsuario.objects.all()
     serializer_class = CargoUsuarioSerializer
     
     def get_serializer_class(self):
         if self.action in ["list", "retrieve", "por_idp"]:
-            return CargoUsuarioNestedSerializer  # para GET
-        return CargoUsuarioSerializer           # para POST/PUT/PATCH/DELETE
+            return CargoUsuarioNestedSerializer
+        return CargoUsuarioSerializer
 
-    @action(detail=False, methods=["get"], url_path="por-idp/(?P<idp>[^/.]+)")
-    def por_idp(self, request, idp=None):
-        # filtrar los CargoUsuario cuyo cargo tenga ese idp
-        cargos_usuario = self.get_queryset().filter(cargo__idp__numero=idp)
-        serializer = self.get_serializer(cargos_usuario, many=True)
-        return Response(serializer.data)
+    def perform_create(self, serializer):
+        # si el frontend manda ?modo=escalonado → activamos sugerencias
+        modo = self.request.query_params.get("modo", "auto")
+        instance = serializer.save()
+        
+        if modo == "escalonado":
+            sugerencias = serializer._devolver_a_planta(instance.usuario, timezone.now(), modo="escalonado")
+            if sugerencias:
+                # devolvemos sugerencias en la response
+                self.sugerencias = sugerencias
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+
+        headers = self.get_success_headers(serializer.data)
+        response_data = serializer.data
+
+        if hasattr(self, "sugerencias") and self.sugerencias:
+            response_data = {
+                "cargo_usuario": serializer.data,
+                "sugerencias": self.sugerencias
+            }
+
+        return Response(response_data, status=status.HTTP_201_CREATED, headers=headers)
+
+
     
     
 

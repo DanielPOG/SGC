@@ -1,6 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
   const estadoSelect = document.getElementById("estadoVinculacion");
 
+  // ------------------------
+  // Cargar estados
+  // ------------------------
   async function cargarEstados() {
     try {
       const response = await fetch("http://127.0.0.1:8001/api/cargos/estado-vinculacion/");
@@ -20,73 +23,126 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   cargarEstados();
 
+  // ------------------------
   // Modal
-  const nuevoModal = document.getElementById('nuevoModal');
-  const closeNuevoModal = document.getElementById('closeNuevoModal');
-  const cargoIdInput = document.getElementById('cargoIdSeleccionado');
+  // ------------------------
+  const nuevoModal = document.getElementById("nuevoModal");
+  const closeNuevoModal = document.getElementById("closeNuevoModal");
+  const cargoIdInput = document.getElementById("cargoIdSeleccionado");
 
-  document.addEventListener('click', (e) => {
-    const btn = e.target.closest('.open-nuevo-modal');
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest(".open-nuevo-modal");
     if (btn) {
       e.preventDefault();
       cargoIdInput.value = btn.dataset.cargoId;
-      nuevoModal.classList.remove('hidden');
-      nuevoModal.classList.add('flex');
+      nuevoModal.classList.remove("hidden");
+      nuevoModal.classList.add("flex");
     }
   });
 
-  closeNuevoModal.addEventListener('click', () => {
-    nuevoModal.classList.add('hidden');
-    nuevoModal.classList.remove('flex');
+  closeNuevoModal.addEventListener("click", () => {
+    nuevoModal.classList.add("hidden");
+    nuevoModal.classList.remove("flex");
   });
 
-  window.addEventListener('click', (e) => {
+  window.addEventListener("click", (e) => {
     if (e.target === nuevoModal) {
-      nuevoModal.classList.add('hidden');
-      nuevoModal.classList.remove('flex');
+      nuevoModal.classList.add("hidden");
+      nuevoModal.classList.remove("flex");
     }
   });
 
-  // 🚀 Enviar formulario
-const formAsignarFuncionario = document.getElementById("formAsignarFuncionario");
+  // ------------------------
+  // Enviar formulario
+  // ------------------------
+  const formAsignarFuncionario = document.getElementById("formAsignarFuncionario");
 
-formAsignarFuncionario.addEventListener("submit", async (e) => {
-  e.preventDefault();
+  formAsignarFuncionario.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-  const formData = new FormData();
+    // ------------------------
+    // Validaciones básicas
+    // ------------------------
+    const numDoc = document.getElementById("usuarioNumDoc").value.trim();
+    const cargoId = document.getElementById("cargoIdSeleccionado").value;
+    const estadoVinculacion = document.getElementById("estadoVinculacion").value;
 
-  formData.append("num_doc", document.getElementById("usuarioNumDoc").value);
-  formData.append("cargo", document.getElementById("cargoIdSeleccionado").value);
-  formData.append("estadoVinculacion", document.getElementById("estadoVinculacion").value);
-  formData.append("salario", document.getElementById("salario").value);
-  formData.append("grado", document.getElementById("grado").value);
-  formData.append("resolucion", document.getElementById("resolucion").value);
-  formData.append("observacion", document.getElementById("observacionCU").value);
-  formData.append("fechaInicio", document.getElementById("fechaInicio").value);
-
-  // 👇 archivo solo si el usuario seleccionó uno
-  const fileInput = document.getElementById("resolucionArchivo");
-  if (fileInput.files.length > 0) {
-    formData.append("resolucion_archivo", fileInput.files[0]);
-  }
-
-  try {
-    const response = await fetch("http://127.0.0.1:8001/api/cargos/cargo-usuarios/", {
-      method: "POST",
-      body: formData, 
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      alert("Funcionario asignado con éxito");
-    } else {
-      const text = await response.text();
-      console.error("❌ Error al asignar funcionario:", text);
-      alert("Error al asignar funcionario. Mira consola.");
+    if (!numDoc || !cargoId || !estadoVinculacion) {
+      alert("⚠️ Debes completar documento, cargo y estado de vinculación");
+      return;
     }
-  } catch (error) {
-    console.error("⚠️ Error de red:", error);
-  }
-});
+
+    // ------------------------
+    // Preguntar el modo
+    // ------------------------
+    let modo = null;
+
+    const elegirModo = confirm(
+      "¿Quieres hacer la reasignación de forma ESCALONADA?\n\nAceptar = Escalonado\nCancelar = Automático"
+    );
+
+    if (elegirModo) {
+      modo = "escalonado";
+    } else {
+      modo = "auto";
+    }
+
+    // ------------------------
+    // Construir FormData
+    // ------------------------
+    const formData = new FormData();
+    formData.append("num_doc", numDoc);
+    formData.append("cargo", cargoId);
+    formData.append("estadoVinculacion", estadoVinculacion);
+    formData.append("salario", document.getElementById("salario").value);
+    formData.append("grado", document.getElementById("grado").value);
+    formData.append("resolucion", document.getElementById("resolucion").value);
+    formData.append("observacion", document.getElementById("observacionCU").value);
+
+    const fileInput = document.getElementById("resolucionArchivo");
+    if (fileInput.files.length > 0) {
+      formData.append("resolucion_archivo", fileInput.files[0]);
+    }
+
+    // ------------------------
+    // Llamada al backend
+    // ------------------------
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:8001/api/cargos/cargo-usuarios/?modo=${modo}`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+
+        if (modo === "escalonado" && data.sugerencias) {
+          let mensaje = "⚠️ Funcionarios que deberían volver a su cargo de planta:\n\n";
+          data.sugerencias.forEach((s) => {
+            mensaje += `👤 ${s.usuario_nombre} → ${s.cargo_nombre}\n`;
+          });
+          alert(mensaje);
+        } else {
+          alert("✅ Funcionario asignado con éxito");
+        }
+
+        // Reset form y cerrar modal
+        formAsignarFuncionario.reset();
+        nuevoModal.classList.add("hidden");
+        nuevoModal.classList.remove("flex");
+      } else {
+        const text = await response.text();
+        console.error("❌ Error al asignar funcionario:", text);
+        alert("❌ Error al asignar funcionario. Revisa la consola.");
+      }
+    } catch (error) {
+      console.error("⚠️ Error de red:", error);
+      alert("⚠️ No se pudo conectar con el servidor");
+    }
+  });
+
 
 });

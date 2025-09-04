@@ -52,134 +52,57 @@ class CargoUsuarioSerializer(serializers.ModelSerializer):
         extra_kwargs = {"usuario": {"read_only": True}}
 
     # ---------------------------
-    # CREATE
+    # create / update
     # ---------------------------
     def create(self, validated_data):
-        # 🔎 Buscar usuario por documento
         num_doc = validated_data.pop("num_doc")
         try:
             usuario = Usuario.objects.get(num_doc=num_doc)
         except Usuario.DoesNotExist:
-            raise serializers.ValidationError(
-                {"usuario": "No existe un usuario con ese documento"}
-            )
+            raise serializers.ValidationError({"usuario": "No existe un usuario con ese documento"})
 
         validated_data["usuario"] = usuario
+        validated_data["fechaInicio"] = timezone.now()
 
-        estado = validated_data["estadoVinculacion"].estado.upper()
-        cargo = validated_data["cargo"]
-
-        # 🚫 Validación 1: evitar duplicados PLANTA en el mismo cargo
-        if estado == "PLANTA":
-            ya_activo = CargoUsuario.objects.filter(
-                usuario=usuario,
-                cargo=cargo,
-                estadoVinculacion__estado__iexact="PLANTA",
-                fechaRetiro__isnull=True
-            ).exists()
-            if ya_activo:
-                raise serializers.ValidationError(
-                    {"cargo": "El usuario ya está cursando este cargo en estado PLANTA."}
-                )
-
-        # 🚫 Validación 2: no permitir TEMPORAL si ya hay un PLANTA activo en ese cargo
-        if estado == "TEMPORAL":
+        # Validación: no permitir TEMPORAL si ya hay PLANTA activo en ese cargo
+        if validated_data["estadoVinculacion"].estado.upper() == "TEMPORAL":
             activo_planta = CargoUsuario.objects.filter(
-                cargo=cargo,
+                cargo=validated_data["cargo"],
                 estadoVinculacion__estado__iexact="PLANTA",
                 fechaRetiro__isnull=True
             ).first()
             if activo_planta:
                 raise serializers.ValidationError(
-                    {"cargo": f"No se puede asignar temporal. "
-                              f"El cargo PLANTA ya está siendo cursado por {activo_planta.usuario.nombre}"}
+                    {"cargo": f"No se puede asignar temporal. El cargo PLANTA ya está siendo cursado por {activo_planta.usuario.nombre}"}
                 )
 
-        # 📌 Asignamos fechaInicio al momento actual
-        validated_data["fechaInicio"] = timezone.now()
-
-        # Creamos el registro (persistir en BD)
         instance = super().create(validated_data)
-
-        # Lógica en cascada después de guardar
         self._post_create_update_logic(instance)
-
         return instance
 
-    # ---------------------------
-    # UPDATE
-    # ---------------------------
     def update(self, instance, validated_data):
-        estado = validated_data.get("estadoVinculacion", instance.estadoVinculacion).estado.upper()
-        cargo = validated_data.get("cargo", instance.cargo)
-        usuario = instance.usuario
-
-        # 🚫 Validación 1 en update: evitar duplicados PLANTA
-        if estado == "PLANTA":
-            ya_activo = CargoUsuario.objects.filter(
-                usuario=usuario,
-                cargo=cargo,
-                estadoVinculacion__estado__iexact="PLANTA",
-                fechaRetiro__isnull=True
-            ).exclude(pk=instance.pk).exists()
-            if ya_activo:
-                raise serializers.ValidationError(
-                    {"cargo": "El usuario ya está cursando este cargo en estado PLANTA."}
-                )
-
-        # 🚫 Validación 2 en update: TEMPORAL en cargo con PLANTA activo
-        if estado == "TEMPORAL":
-            activo_planta = CargoUsuario.objects.filter(
-                cargo=cargo,
-                estadoVinculacion__estado__iexact="PLANTA",
-                fechaRetiro__isnull=True
-            ).exclude(pk=instance.pk).first()
-            if activo_planta:
-                raise serializers.ValidationError(
-                    {"cargo": f"No se puede asignar temporal. "
-                              f"El cargo PLANTA ya está siendo cursado por {activo_planta.usuario.nombre}"}
-                )
-
-        # Actualizamos el registro en BD
         instance = super().update(instance, validated_data)
-
-        # Post-procesamiento lógico
         self._post_create_update_logic(instance, validated_data=validated_data)
-
         return instance
 
     # ---------------------------
-    # Lógica principal (post-procesamiento)
+    # Lógica principal
     # ---------------------------
     def _post_create_update_logic(self, instance, validated_data=None):
-        """
-        Ejecuta la lógica de negocio usando el registro ya persistido (instance).
-        - Cierra otros registros activos del mismo usuario.
-        - Si el registro es PLANTA:
-            • Cierra titulares previos (PLANTA o TEMPORAL).
-            • Si el reemplazado era TEMPORAL -> devolverlo a su PLANTA original (creando nuevo registro).
-            • Si el reemplazado era PLANTA -> usuario.cargo queda en None.
-        - Si el registro es TEMPORAL: cierra la PLANTA activa del usuario (pausa).
-        - Si un TEMPORAL fue cerrado (fechaRetiro asignada) → retorna automáticamente a su PLANTA.
-        """
         hoy = timezone.now()
         usuario = instance.usuario
         cargo = instance.cargo
         estado = instance.estadoVinculacion.estado.upper()
 
-        # 1️⃣ Cerrar otros cargos activos del mismo usuario
-        abiertos = CargoUsuario.objects.filter(
-            usuario=usuario, fechaRetiro__isnull=True
-        ).exclude(pk=instance.pk)
+        # 1) Cerrar otros cargos activos del mismo usuario
+        abiertos = CargoUsuario.objects.filter(usuario=usuario, fechaRetiro__isnull=True).exclude(pk=instance.pk)
         for abierto in abiertos:
             abierto.fechaRetiro = hoy
             abierto.save(update_fields=["fechaRetiro"])
 
-        # 2️⃣ Si el registro es PLANTA → cerrar titulares previos
+        # 2) Si el registro actual es PLANTA
         if estado == "PLANTA":
-            titulares = CargoUsuario.objects.filter(
-                cargo=cargo, fechaRetiro__isnull=True
-            ).exclude(pk=instance.pk)
+            titulares = CargoUsuario.objects.filter(cargo=cargo, fechaRetiro__isnull=True).exclude(pk=instance.pk)
             for titular in titulares:
                 titular.fechaRetiro = hoy
                 titular.save(update_fields=["fechaRetiro"])
@@ -190,10 +113,21 @@ class CargoUsuarioSerializer(serializers.ModelSerializer):
                 elif titular.estadoVinculacion.estado.upper() == "TEMPORAL":
                     self._devolver_a_planta(titular.usuario, hoy)
 
+            # ⚡️ FIX NUEVO:
+            # Si alguien tenía este cargo en PLANTA (aunque ya cerrado), aseguramos que quede sin cargo fijo
+            ultimo_planta = CargoUsuario.objects.filter(
+                cargo=cargo,
+                estadoVinculacion__estado__iexact="PLANTA"
+            ).exclude(usuario=usuario).order_by("-fechaInicio").first()
+            if ultimo_planta:
+                ultimo_planta.usuario.cargo = None
+                ultimo_planta.usuario.save(update_fields=["cargo"])
+
+            # Asignamos el cargo fijo al usuario actual
             usuario.cargo = cargo
             usuario.save(update_fields=["cargo"])
 
-        # 3️⃣ Si el registro es TEMPORAL → cerrar la PLANTA activa del usuario
+        # 3) Si el registro actual es TEMPORAL
         elif estado == "TEMPORAL":
             planta_activa = CargoUsuario.objects.filter(
                 usuario=usuario,
@@ -206,19 +140,14 @@ class CargoUsuarioSerializer(serializers.ModelSerializer):
                 p.usuario.cargo = None
                 p.usuario.save(update_fields=["cargo"])
 
-        # 4️⃣ Si el registro TEMPORAL fue cerrado → retornar a PLANTA
+        # 4) Si cerraron un TEMPORAL, devolver en cascada
         if instance.estadoVinculacion.estado.upper() == "TEMPORAL" and instance.fechaRetiro is not None:
             self._devolver_a_planta(usuario, hoy)
 
     # ---------------------------
-    # Función recursiva para retorno a planta
+    # Retornar a planta en cascada
     # ---------------------------
-    def _devolver_a_planta(self, usuario, hoy, visited=None):
-        """
-        Devuelve a un usuario a su PLANTA original.
-        - Crea un nuevo registro PLANTA (no reabre el viejo).
-        - Si la PLANTA está ocupada por un TEMPORAL, cierra ese temporal y lo devuelve recursivamente.
-        """
+    def _devolver_a_planta(self, usuario, hoy, visited=None, modo="auto"):
         if visited is None:
             visited = set()
         if usuario.pk in visited:
@@ -231,7 +160,17 @@ class CargoUsuarioSerializer(serializers.ModelSerializer):
         ).order_by("-fechaInicio").first()
 
         if planta_original:
-            CargoUsuario.objects.create(
+            if modo == "escalonado":
+                # 🚨 En este caso NO reasignamos aún, devolvemos sugerencia
+                return {
+                    "usuario": usuario.id,
+                    "usuario_nombre": usuario.nombre,
+                    "cargo_sugerido": planta_original.cargo.id,
+                    "cargo_nombre": planta_original.cargo.cargoNombre.nombre,
+                }
+
+            # ✅ modo automático → como lo tienes ahora
+            nuevo = CargoUsuario.objects.create(
                 usuario=usuario,
                 cargo=planta_original.cargo,
                 estadoVinculacion=planta_original.estadoVinculacion,
@@ -253,10 +192,11 @@ class CargoUsuarioSerializer(serializers.ModelSerializer):
             if temporal_en_planta:
                 temporal_en_planta.fechaRetiro = hoy
                 temporal_en_planta.save(update_fields=["fechaRetiro"])
-                self._devolver_a_planta(temporal_en_planta.usuario, hoy, visited=visited)
+                self._devolver_a_planta(temporal_en_planta.usuario, hoy, visited=visited, modo=modo)
         else:
             usuario.cargo = None
             usuario.save(update_fields=["cargo"])
+
 
 class CargoExcelSerializer(serializers.ModelSerializer):
     cargoNombre = serializers.SlugRelatedField(
