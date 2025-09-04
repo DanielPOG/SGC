@@ -53,4 +53,12 @@ def estudios_fun(request):
 def editar_fun(request):
     return render(request, 'pages/editar_fun.html')
 
+def pr(request):
+    return render(request, 'layout/pr.html')
+
+def prContet(request):
+    return render(request, 'pages/prContent.html')
+
+
+
 

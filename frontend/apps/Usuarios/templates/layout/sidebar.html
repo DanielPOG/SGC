@@ -11,7 +11,7 @@
   <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
   <style>[x-cloak]{display:none !important}</style>
 </head>
-<body class="bg-white text-gray-900 flex flex-col min-h-screen"
+  <body class="h-full min-h-screen bg-white text-gray-900 flex flex-col"
       x-data="{ showMenu:false, showPasswordModal:false, showUpdateModal:false }">
 
   <!-- SIDEBAR -->
@@ -28,31 +28,44 @@
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
       </svg>
     </button>
+<!-- Usuario con Dropdown (solo visible en pantallas grandes y con sidebar abierto) -->
+<div 
+  class="relative mb-6 items-center flex-col hidden lg:flex" 
+  x-show="sidebarOpen && window.innerWidth >= 1024" 
+  x-transition 
+  x-cloak
+>
+  <!-- Avatar -->
+  <button @click="showMenu = !showMenu" class="flex flex-col items-center focus:outline-none">
+    <div class="relative w-[90px] h-[90px] rounded-full bg-white border-4 border-black 
+                flex items-center justify-center shadow-[0_0_0_4px_#00304D]">
+      <img src="{% static 'img/usuario.png' %}" alt="Foto de usuario"
+           class="w-[70px] h-[70px] rounded-full object-cover border-2 border-white">
+    </div> 
+    <span class="mt-2 font-bold bg-black px-3 py-1 rounded-full text-xs md:text-sm">USERNAME</span>
+  </button>
 
-    <!-- Usuario con Dropdown -->
-    <div class="relative flex flex-col items-center mb-6" x-show="sidebarOpen" x-transition x-cloak>
-      <button @click="showMenu = !showMenu" class="flex flex-col items-center focus:outline-none">
-        <div class="relative w-[90px] h-[90px] rounded-full bg-white border-4 border-black 
-                    flex items-center justify-center shadow-[0_0_0_4px_#00304D]">
-          <img src="{% static 'img/usuario.png' %}" alt="Foto de usuario"
-               class="w-[70px] h-[70px] rounded-full object-cover border-2 border-white">
-        </div>
-        <span class="mt-2 font-bold bg-black px-3 py-1 rounded-full text-xs md:text-sm">USERNAME</span>
-      </button>
+  <!-- Dropdown -->
+  <div 
+    x-show="showMenu" 
+    x-transition 
+    x-cloak
+    class="absolute top-28 w-44 bg-white text-black rounded-lg shadow-lg py-2 z-50"
+  >
+    <button @click="showPasswordModal=true; showMenu=false"
+            class="block w-full text-left px-4 py-2 hover:bg-gray-100">Cambiar Contraseña</button>
+    <button @click="showUpdateModal=true; showMenu=false"
+            class="block w-full text-left px-4 py-2 hover:bg-gray-100">Actualizar Datos</button>
+    <a href="{% url 'login_view' %}" 
+       class="block w-full text-left px-4 py-2 hover:bg-gray-100">Cerrar Sesión</a>
+  </div>
+</div>
 
-      <!-- Dropdown -->
-      <div x-show="showMenu" x-transition x-cloak
-           class="absolute top-28 w-44 bg-white text-black rounded-lg shadow-lg py-2 z-50">
-        <button @click="showPasswordModal=true; showMenu=false"
-                class="block w-full text-left px-4 py-2 hover:bg-gray-100">Cambiar Contraseña</button>
-        <button @click="showUpdateModal=true; showMenu=false"
-                class="block w-full text-left px-4 py-2 hover:bg-gray-100">Actualizar Datos</button>
-      </div>
-    </div>
+
 
     <!-- Navegación -->
-    <nav class="flex flex-col gap-2 w-full px-2 text-sm md:text-base">
-      <a href="{% url 'index' %}" title="Principal"
+ <nav class="flex flex-col gap-2 w-full px-2 text-sm md:text-base">
+        <a href="{% url 'index' %}" title="Principal"
          class="transition hover:scale-105 flex items-center gap-2 font-medium py-2 
                 rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
                 justify-center md:justify-start"
@@ -77,7 +90,7 @@
          :class="{'px-2': !sidebarOpen, 'px-4': sidebarOpen}">
         <img src="{% static 'img/cargo.png' %}" alt="Cargo" class="w-5 h-5">
         <span x-show="sidebarOpen" x-cloak>Cargo</span>
-      </a>
+      </a> 
 
       <a href="{% url 'grupo_sena' %}" title="Grupos SENA"
          class="transition hover:scale-105 flex items-center gap-2 font-medium py-2 
