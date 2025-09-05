@@ -3,8 +3,8 @@ from .models import CargoNombre,EstadoCargo,Cargo,CargoFuncion,CargoUsuario, Idp
 # Register your models here.
 @admin.register(Idp)
 class IdpAdmin(admin.ModelAdmin):
-    list_display = ("numero", "fechaCreacion")
-    search_fields = ("numero",)
+    list_display = ("idp_id", "fechaCreacion")
+    search_fields = ("idp_id",)
     list_filter = ("fechaCreacion",)
     date_hierarchy = "fechaCreacion"
     ordering = ("-fechaCreacion",)

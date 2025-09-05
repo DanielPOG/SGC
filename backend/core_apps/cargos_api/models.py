@@ -15,10 +15,10 @@ class EstadoVinculacion(models.Model):
     def __str__(self):
         return self.estado
 class Idp(models.Model):
-    numero = models.CharField(max_length=10, null=False, unique=True)
+    idp_id = models.CharField(max_length=10,unique=True, primary_key=True, default='0')
     fechaCreacion = models.DateField(default=timezone.now)
     def __str__(self):
-        return self.numero
+        return self.idp_id
 class Cargo(models.Model):
     cargoNombre = models.ForeignKey('CargoNombre', on_delete=models.CASCADE)
     idp = models.ForeignKey('Idp', on_delete=models.CASCADE)

@@ -110,20 +110,7 @@
   {% comment %}
   <!-- Script para manejar el menú desplegable -->
   <script>
-    document.querySelectorAll('[data-dropdown-toggle]').forEach(button => {
-      button.addEventListener('click', function() {
-        const menu = document.querySelector(`#${this.dataset.dropdownToggle}`);
-        menu.classList.toggle('hidden');  // Alterna la visibilidad del menú
-      });
-    });
-
-    document.addEventListener('click', function(e) {
-      if (!e.target.closest('[data-dropdown-toggle]') && !e.target.closest('#dropdownDotsHorizontal')) {
-        document.querySelectorAll('.z-10').forEach(menu => {
-          menu.classList.add('hidden');
-        });
-      }
-    });
+    
   </script> {% endcomment %}
 
 
@@ -202,6 +189,7 @@
   });
 </script> {% endcomment %}
 <script defer type="module" src="{% static "js/idps.js" %}"></script>
+<script defer  src="{% static "js/acciones.js" %}"></script>
   {% include "./newidp_modal.html" %}
 
  </body>

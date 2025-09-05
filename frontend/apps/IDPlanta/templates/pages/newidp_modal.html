@@ -3,16 +3,18 @@
   <!-- Formulario -->
   
       <div class="flex fixed w-full h-full justify-center top-[40px]">
-        <h3 class="text-4xl font-bold mb-4">Creación de IDP </h3>
+        <h3 class="text-4xl font-bold mb-4 inset-0">Creación de IDP </h3>
       </div>
       <div class="flex gap-2 justify-center">
       <div class="grid grid-row gap-6 mb-10">
-    <form id="crear-nueva-idp" class="  min-w-2/4 w-fit h-fit bg-gray-100 p-8 rounded-md shadow static z-20">
+      
+    <form id="crear-nueva-idp" class="grid justify-center min-w-2/4 w-fit h-fit bg-gray-100 p-8 rounded-md shadow relative z-20">
+        <p id="new-idp-response" class="whitespace-nowrap absolute top-0 text-center w-full py-0 rounded-t-md  text-white font-bold"></p>
           <label class="font-medium mb-1 flex">
             <p class="text-red-600 text-[19px] me-1">*</p>Codigo IDP:
           </label>
           <input 
-            id="numero"
+            id="numero-new"
             type="text" 
             class="w-full border border-gray-600 rounded-2xl px-3 py-2 text-gray-900 placeholder-gray-400 
             focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"

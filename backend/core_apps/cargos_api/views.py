@@ -56,7 +56,7 @@ class CargoViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=["get"], url_path="por-idp/(?P<numero_idp>[^/.]+)")
     def por_idp(self, request, numero_idp=None):
-        cargos = Cargo.objects.filter(idp__numero=numero_idp).order_by("-fechaActualizacion")
+        cargos = Cargo.objects.filter(idp__idp_id=numero_idp).order_by("-fechaActualizacion")
         if not cargos.exists():
             return Response(
                 {"detail": "No se encontraron cargos para este IDP"},
@@ -74,7 +74,7 @@ class CargoViewSet(viewsets.ModelViewSet):
             data.append({
                 "cargo": {
                     "id": cargo.id,
-                    "idp": cargo.idp.numero,
+                    "idp": cargo.idp.idp_id,
                     "nombre": cargo.cargoNombre.nombre,
                     "centro":  cargo.centro.nombre if cargo.centro else None,
                     "fechaCreacion": cargo.fechaCreacion,
@@ -115,7 +115,7 @@ class CargoUsuarioViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=["get"], url_path="por-idp/(?P<idp>[^/.]+)")
     def por_idp(self, request, idp=None):
         # filtrar los CargoUsuario cuyo cargo tenga ese idp
-        cargos_usuario = self.get_queryset().filter(cargo__idp__numero=idp)
+        cargos_usuario = self.get_queryset().filter(cargo__idp__idp_id=idp)
         serializer = self.get_serializer(cargos_usuario, many=True)
         return Response(serializer.data)
 

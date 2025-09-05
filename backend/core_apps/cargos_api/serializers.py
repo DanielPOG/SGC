@@ -5,7 +5,9 @@ from rest_framework import serializers
 from core_apps.general.models import Centro
 from core_apps.usuarios_api.models import Usuario
 from core_apps.usuarios_api.serializers import UsuarioSerializer
-from .models import CargoNombre, EstadoCargo, Cargo, CargoFuncion, CargoUsuario, Idp
+from .models import (
+    CargoNombre, EstadoCargo, Cargo, CargoFuncion, CargoUsuario, Idp, EstadoVinculacion
+)
 from core_apps.general.views import CentroSerializer
 
 class CargoNombreSerializer(serializers.ModelSerializer):
@@ -20,10 +22,9 @@ class EstadoCargoSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class IdpSerializer(serializers.ModelSerializer):
-    numero = serializers.SlugRelatedField(
+    
     queryset=Idp.objects.all(),
-    slug_field="numero"
-)
+    
     class Meta:
         model = Idp
         fields = '__all__'
@@ -38,6 +39,10 @@ class CargoSerializer(serializers.ModelSerializer):
         model = Cargo
         fields = '__all__'
 
+class EstadoVinculacionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EstadoVinculacion
+        fields = '__all__'
 
 class CargoFuncionSerializer(serializers.ModelSerializer):
     cargo = serializers.PrimaryKeyRelatedField(queryset=Cargo.objects.all())
@@ -70,7 +75,7 @@ class CargoExcelSerializer(serializers.ModelSerializer):
     )
     idp = serializers.SlugRelatedField(
         queryset=Idp.objects.all(),
-        slug_field="numero"
+        slug_field="idp_id"
     )
 
     class Meta:
