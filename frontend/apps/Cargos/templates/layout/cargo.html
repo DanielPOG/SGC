@@ -16,6 +16,10 @@
     window.urlHistorialCargo = "{% url 'cargohistorial' %}".replace("0/", "");
   </script>
   <script src="{% static 'js/asignarCargo.js' %}"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>  {# Animaciones de entrada y salida #}
+  <script src="{% static 'js/libs/sweetalert2.all.min.js' %}"></script> {# Alertas visuales #}
+  <script src="{% static 'js/cargo_form.js' %}"></script> 
+  <script src="{% static 'js/prAlert.js' %}"></script> 
 </head>
 <body class="bg-white p-8 scrollbar">
 
@@ -202,6 +206,42 @@
     </form>
   </div>
 </div>
+{% if messages %}
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        {% for message in messages %}
+        Swal.fire({
+            toast: true,
+            icon: "{{ message.tags|default:'success' }}", // Tipo de alerta: 'success', 'error', 'warning', 'info', 'question'
+            title: "{{ message|escapejs }}",
+            position: "top-end", // Posición de la alerta (arriba a la derecha)
+            showConfirmButton: false, // No mostrar botón de confirmación
+            timer: 1500,
+            timerProgressBar: true, // Muestra una barra de progreso durante el tiempo determinado
+
+            // Animación de entrada (usando Animate.css)
+            showClass: {
+                popup: "animate__animated animate__fadeInDown"
+            },
+            // Animación de salida (usando Animate.css)
+            hideClass: {
+                popup: "animate__animated animate__fadeOutUp"
+            },
+            didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer; 
+                toast.onmouseleave = Swal.resumeTimer; 
+
+                // Cambiar color de la barra de progreso (verde en este caso)
+                const progressBar = toast.querySelector('.swal2-timer-progress-bar');
+                if (progressBar) {
+                    progressBar.style.backgroundColor = '#39a900'; // Color verde
+                }
+            }
+        });
+        {% endfor %}
+    });
+</script>
+{% endif %}
 
 </body>
 </html>

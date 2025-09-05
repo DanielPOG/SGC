@@ -14,6 +14,11 @@ FRONTEND
     python manage.py tailwind start (y en otra terminal trabajar el runserver)
 BACKEND 
 
+## SweetAlert2 (Frontend JS)
+    Instalado vía:
+    npm install sweetalert2
+
+
 # Entrar a la carpeta backend
     # Crear entorno virtual (Solo una vez en local )
         python -m venv venv
