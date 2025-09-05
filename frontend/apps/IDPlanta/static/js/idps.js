@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
       {
         method: "GET",
         headers: {
-2e4444444444444444444444444444444444444444444444444444444444444444444444444444444444444444          "Content-Type": "application/json",
+          "Content-Type": "application/json",
         },
       }
     )

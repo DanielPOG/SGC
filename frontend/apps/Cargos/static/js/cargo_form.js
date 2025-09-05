@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     await cargarSelect("http://127.0.0.1:8001/api/cargos/cargo-nombres/", "cargoNombre", "nombre");
-    await cargarSelect("http://127.0.0.1:8001/api/cargos/idps/", "idp", "numero");
+    await cargarSelect("http://127.0.0.1:8001/api/cargos/idps/", "idp", "idp_id");
     await cargarSelect("http://127.0.0.1:8001/api/cargos/estado-cargo/", "estadoCargo", "estado");
     await cargarSelect("http://127.0.0.1:8001/api/general/centros/", "centro", "nombre");
 

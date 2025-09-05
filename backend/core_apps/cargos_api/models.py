@@ -17,6 +17,7 @@ class EstadoVinculacion(models.Model):
 class Idp(models.Model):
     idp_id = models.CharField(max_length=10,unique=True, primary_key=True, default='0')
     fechaCreacion = models.DateField(default=timezone.now)
+    estado  = models.BooleanField(default=True)
     def __str__(self):
         return self.idp_id
 class Cargo(models.Model):

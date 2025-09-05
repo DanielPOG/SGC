@@ -34,7 +34,7 @@ async function buscarPorIdp() {
         <tr class="hover:bg-gray-100">
           <td class="px-4 py-2 border text-center">${cargo.cargo.cargoNombre?.nombre || "Sin nombre"}</td>
           <td class="px-4 py-2 border text-center hidden md:table-cell">${cargo.cargo.centro?.nombre || "-"}</td>
-          <td class="px-4 py-2 border text-center">${cargo.cargo.idp?.numero || "-"}</td>
+          <td class="px-4 py-2 border text-center">${cargo.cargo.idp?.idp_id || "-"}</td>
           <td class="px-4 py-2 border text-center hidden md:table-cell">${cargo.estado.estado || "-"}</td>
           <td class="px-4 py-2 border text-center hidden md:table-cell">${cargo.usuario?.nombre || "Sin asignar"}</td>
           <td class="px-4 py-2 border text-center hidden md:table-cell">${cargo.cargo.fechaCreacion || "-"}</td>
