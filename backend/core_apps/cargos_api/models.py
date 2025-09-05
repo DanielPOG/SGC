@@ -23,7 +23,7 @@ class Idp(models.Model):
 class Cargo(models.Model):
     cargoNombre = models.ForeignKey('CargoNombre', on_delete=models.CASCADE)
     idp = models.ForeignKey('Idp', on_delete=models.CASCADE)
-    estadoCargo = models.ForeignKey('EstadoCargo', on_delete=models.CASCADE) 
+    estadoCargo = models.ForeignKey('EstadoCargo', on_delete=models.CASCADE)
     resolucion = models.CharField(max_length=200)
     resolucion_archivo = models.FileField(upload_to="resolucionesCargo/", blank=True, null=True)
     centro = models.ForeignKey('general.Centro', on_delete=models.CASCADE)

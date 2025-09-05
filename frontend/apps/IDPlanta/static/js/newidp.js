@@ -1,3 +1,4 @@
+import { cargarIdps, idpRow } from "./idps.js"
 document.addEventListener('DOMContentLoaded',()=>{
     const newIdpModal = document.querySelector('.new-idp-modal')
     const closeBtn = document.querySelector('.close')
@@ -47,18 +48,22 @@ document.addEventListener('DOMContentLoaded',()=>{
 
                 const data = await response.json();
                 newIdpRes.innerText = 'IDP Creado correctamente'
+                   
+                if( newIdpRes.classList.contains('bg-red-600')) newIdpRes.classList.remove('bg-red-600')
                 newIdpRes.classList.add('bg-green-600')
                 console.log("IDP creado:", data);
-                
-                
-
+                const tbody = document.querySelector("table tbody")
+                const tr = document.createElement("tr")
+                tr.classList.add("hover:bg-gray-100")
+                tr.innerHTML = idpRow(data, window.cargos)
+                tbody.appendChild(tr)
+                setTimeout(()=>{close(); cargarIdps(window.cargos)}, 1500)
             } catch (e) {
                 console.error('Sucedió un error al crear el IDP', e);
                 return
             } finally {
                 form.reset()
                 setTimeout(()=>{
-                    close()
                     newIdpRes.innerText = ''
                     newIdpRes.classList.remove('bg-green-600')
                     newIdpRes.classList.remove('bg-red-600')

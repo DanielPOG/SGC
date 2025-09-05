@@ -1,8 +1,6 @@
 function useState(initValue){
   let value = initValue
-  function get(){
-    return value
-  }
+  function get(){return value};
   function set(newValue){
     const prevType = typeof initValue
     const newType = typeof newValue
@@ -11,10 +9,10 @@ function useState(initValue){
       return
     }
     value = newValue
+    console.log('State cambiado', value)
   }
   return [get, set]
 }
 
-export default (
+export default 
   useState
-)
