@@ -55,94 +55,42 @@ document.addEventListener("DOMContentLoaded", () => {
   // ------------------------
   // Enviar formulario
   // ------------------------
-  const formAsignarFuncionario = document.getElementById("formAsignarFuncionario");
+formAsignarFuncionario.addEventListener("submit", async function (e) {
+  e.preventDefault();
 
-  formAsignarFuncionario.addEventListener("submit", async (e) => {
-    e.preventDefault();
+  const formData = new FormData(this);
+  formData.append("cargo_id", cargoIdInput.value); // asegurar que se incluya el cargo
 
-    // ------------------------
-    // Validaciones básicas
-    // ------------------------
-    const numDoc = document.getElementById("usuarioNumDoc").value.trim();
-    const cargoId = document.getElementById("cargoIdSeleccionado").value;
-    const estadoVinculacion = document.getElementById("estadoVinculacion").value;
+  try {
+    const res = await fetch("http://127.0.0.1:8001/api/cargos/cargo-usuarios/?modo=escalonado", {
+      method: "POST",
+      body: formData
+    });
 
-    if (!numDoc || !cargoId || !estadoVinculacion) {
-      alert("⚠️ Debes completar documento, cargo y estado de vinculación");
+    const data = await res.json();
+
+    if (!res.ok) {
+      console.error("❌ Errores de validación:", data);
+      alert("❌ Verifica los campos obligatorios");
       return;
     }
 
-    // ------------------------
-    // Preguntar el modo
-    // ------------------------
-    let modo = null;
-
-    const elegirModo = confirm(
-      "¿Quieres hacer la reasignación de forma ESCALONADA?\n\nAceptar = Escalonado\nCancelar = Automático"
-    );
-
-    if (elegirModo) {
-      modo = "escalonado";
+    // 👉 Si hay sugerencias (escalonado)
+    if (data.sugerencias && data.sugerencias.length > 0) {
+      manejarSugerenciasEscalonadas(data.sugerencias, data.cargo_usuario.usuario_id);
     } else {
-      modo = "auto";
+      alert("✅ Funcionario asignado correctamente");
+      nuevoModal.classList.add("hidden");
+      nuevoModal.classList.remove("flex");
+      if (typeof buscarPorIdp === "function") buscarPorIdp();
     }
 
-    // ------------------------
-    // Construir FormData
-    // ------------------------
-    const formData = new FormData();
-    formData.append("num_doc", numDoc);
-    formData.append("cargo", cargoId);
-    formData.append("estadoVinculacion", estadoVinculacion);
-    formData.append("salario", document.getElementById("salario").value);
-    formData.append("grado", document.getElementById("grado").value);
-    formData.append("resolucion", document.getElementById("resolucion").value);
-    formData.append("observacion", document.getElementById("observacionCU").value);
+  } catch (err) {
+    console.error("⚠️ Error de red:", err);
+    alert("❌ Error de red al asignar funcionario");
+  }
+});
 
-    const fileInput = document.getElementById("resolucionArchivo");
-    if (fileInput.files.length > 0) {
-      formData.append("resolucion_archivo", fileInput.files[0]);
-    }
-
-    // ------------------------
-    // Llamada al backend
-    // ------------------------
-    try {
-      const response = await fetch(
-        `http://127.0.0.1:8001/api/cargos/cargo-usuarios/?modo=${modo}`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-
-        if (modo === "escalonado" && data.sugerencias) {
-          let mensaje = "⚠️ Funcionarios que deberían volver a su cargo de planta:\n\n";
-          data.sugerencias.forEach((s) => {
-            mensaje += `👤 ${s.usuario_nombre} → ${s.cargo_nombre}\n`;
-          });
-          alert(mensaje);
-        } else {
-          alert("✅ Funcionario asignado con éxito");
-        }
-
-        // Reset form y cerrar modal
-        formAsignarFuncionario.reset();
-        nuevoModal.classList.add("hidden");
-        nuevoModal.classList.remove("flex");
-      } else {
-        const text = await response.text();
-        console.error("❌ Error al asignar funcionario:", text);
-        alert("❌ Error al asignar funcionario. Revisa la consola.");
-      }
-    } catch (error) {
-      console.error("⚠️ Error de red:", error);
-      alert("⚠️ No se pudo conectar con el servidor");
-    }
-  });
 
 
 });

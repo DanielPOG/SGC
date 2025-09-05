@@ -108,15 +108,16 @@ class CargoUsuarioViewSet(viewsets.ModelViewSet):
         return CargoUsuarioSerializer
 
     def perform_create(self, serializer):
-        # si el frontend manda ?modo=escalonado → activamos sugerencias
         modo = self.request.query_params.get("modo", "auto")
         instance = serializer.save()
         
         if modo == "escalonado":
-            sugerencias = serializer._devolver_a_planta(instance.usuario, timezone.now(), modo="escalonado")
+            sugerencias = serializer.build_escalon_sugerencias(
+                instance.usuario, timezone.now()
+            )
             if sugerencias:
-                # devolvemos sugerencias en la response
                 self.sugerencias = sugerencias
+
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -132,10 +133,6 @@ class CargoUsuarioViewSet(viewsets.ModelViewSet):
             }
 
         return Response(response_data, status=status.HTTP_201_CREATED, headers=headers)
-
-
-    
-    
 
 # VISTA PARA SUBIR POR EXCEL
 class CargoUploadView(APIView):

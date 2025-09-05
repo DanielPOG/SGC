@@ -86,7 +86,7 @@ class CargoUsuarioSerializer(serializers.ModelSerializer):
         return instance
 
     # ---------------------------
-    # Lógica principal
+    # Lógica principal (igual que antes)
     # ---------------------------
     def _post_create_update_logic(self, instance, validated_data=None):
         hoy = timezone.now()
@@ -94,13 +94,12 @@ class CargoUsuarioSerializer(serializers.ModelSerializer):
         cargo = instance.cargo
         estado = instance.estadoVinculacion.estado.upper()
 
-        # 1) Cerrar otros cargos activos del mismo usuario
+        # cerrar cargos abiertos del usuario
         abiertos = CargoUsuario.objects.filter(usuario=usuario, fechaRetiro__isnull=True).exclude(pk=instance.pk)
         for abierto in abiertos:
             abierto.fechaRetiro = hoy
             abierto.save(update_fields=["fechaRetiro"])
 
-        # 2) Si el registro actual es PLANTA
         if estado == "PLANTA":
             titulares = CargoUsuario.objects.filter(cargo=cargo, fechaRetiro__isnull=True).exclude(pk=instance.pk)
             for titular in titulares:
@@ -113,8 +112,6 @@ class CargoUsuarioSerializer(serializers.ModelSerializer):
                 elif titular.estadoVinculacion.estado.upper() == "TEMPORAL":
                     self._devolver_a_planta(titular.usuario, hoy)
 
-            # ⚡️ FIX NUEVO:
-            # Si alguien tenía este cargo en PLANTA (aunque ya cerrado), aseguramos que quede sin cargo fijo
             ultimo_planta = CargoUsuario.objects.filter(
                 cargo=cargo,
                 estadoVinculacion__estado__iexact="PLANTA"
@@ -123,11 +120,9 @@ class CargoUsuarioSerializer(serializers.ModelSerializer):
                 ultimo_planta.usuario.cargo = None
                 ultimo_planta.usuario.save(update_fields=["cargo"])
 
-            # Asignamos el cargo fijo al usuario actual
             usuario.cargo = cargo
             usuario.save(update_fields=["cargo"])
 
-        # 3) Si el registro actual es TEMPORAL
         elif estado == "TEMPORAL":
             planta_activa = CargoUsuario.objects.filter(
                 usuario=usuario,
@@ -140,12 +135,73 @@ class CargoUsuarioSerializer(serializers.ModelSerializer):
                 p.usuario.cargo = None
                 p.usuario.save(update_fields=["cargo"])
 
-        # 4) Si cerraron un TEMPORAL, devolver en cascada
         if instance.estadoVinculacion.estado.upper() == "TEMPORAL" and instance.fechaRetiro is not None:
             self._devolver_a_planta(usuario, hoy)
 
     # ---------------------------
-    # Retornar a planta en cascada
+    # NUEVO: construir sugerencias con opciones
+    # ---------------------------
+    def build_escalon_sugerencias(self, usuario, hoy=None, visited=None):
+        if hoy is None:
+            hoy = timezone.now()
+
+        if visited is None:
+            visited = set()
+
+        sugerencias = []
+        if usuario.pk in visited:
+            return sugerencias
+        visited.add(usuario.pk)
+
+        planta_original = CargoUsuario.objects.filter(
+            usuario=usuario,
+            estadoVinculacion__estado__iexact="PLANTA"
+        ).order_by("-fechaInicio").first()
+
+        if not planta_original:
+            return sugerencias
+
+        opciones = []
+
+        # opción 1 → volver a planta
+        opciones.append({
+            "cargo_id": planta_original.cargo.pk,
+            "cargo_nombre": planta_original.cargo.cargoNombre.nombre if planta_original.cargo.cargoNombre else None,
+            "tipo": "planta"
+        })
+
+        # opción 2 → cargos libres para asignar como temporal
+        cargos_ocupados = CargoUsuario.objects.filter(fechaRetiro__isnull=True).values("cargo_id")
+        cargos_temporales_libres = Cargo.objects.exclude(id__in=cargos_ocupados)
+        for cargo in cargos_temporales_libres:
+            opciones.append({
+                "cargo_id": cargo.pk,
+                "cargo_nombre": cargo.cargoNombre.nombre if cargo.cargoNombre else None,
+                "tipo": "temporal"
+            })
+
+        # recursivo: si hay alguien ocupando el cargo de planta
+        temporal_en_planta = CargoUsuario.objects.filter(
+            cargo=planta_original.cargo,
+            estadoVinculacion__estado__iexact="TEMPORAL",
+            fechaRetiro__isnull=True
+        ).first()
+
+        if temporal_en_planta:
+            # solo si hay alguien ocupando el cargo de planta → sugerencias en cascada
+            sugerencias.append({
+                "usuario_id": usuario.pk,
+                "usuario_nombre": getattr(usuario, "nombre", str(usuario)),
+                "opciones": opciones
+            })
+            siguiente = self.build_escalon_sugerencias(temporal_en_planta.usuario, hoy, visited=visited)
+            sugerencias.extend(siguiente)
+
+        return sugerencias
+
+
+    # ---------------------------
+    # devolver a planta (auto)
     # ---------------------------
     def _devolver_a_planta(self, usuario, hoy, visited=None, modo="auto"):
         if visited is None:
@@ -161,15 +217,8 @@ class CargoUsuarioSerializer(serializers.ModelSerializer):
 
         if planta_original:
             if modo == "escalonado":
-                # 🚨 En este caso NO reasignamos aún, devolvemos sugerencia
-                return {
-                    "usuario": usuario.id,
-                    "usuario_nombre": usuario.nombre,
-                    "cargo_sugerido": planta_original.cargo.id,
-                    "cargo_nombre": planta_original.cargo.cargoNombre.nombre,
-                }
+                return self.build_escalon_sugerencias(usuario, hoy, visited)
 
-            # ✅ modo automático → como lo tienes ahora
             nuevo = CargoUsuario.objects.create(
                 usuario=usuario,
                 cargo=planta_original.cargo,
@@ -196,7 +245,6 @@ class CargoUsuarioSerializer(serializers.ModelSerializer):
         else:
             usuario.cargo = None
             usuario.save(update_fields=["cargo"])
-
 
 class CargoExcelSerializer(serializers.ModelSerializer):
     cargoNombre = serializers.SlugRelatedField(

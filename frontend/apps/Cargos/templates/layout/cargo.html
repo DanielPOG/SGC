@@ -16,6 +16,7 @@
     window.urlHistorialCargo = "{% url 'cargohistorial' %}".replace("0/", "");
   </script>
   <script src="{% static 'js/asignarCargo.js' %}"></script>
+  <script src="{% static 'js/pruebaAsignar.js' %}"></script>
 </head>
 <body class="bg-white p-8 scrollbar">
 
@@ -131,75 +132,98 @@
   <!-- Modal Agregar Nuevo Funcionario -->
 <div id="nuevoModal" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50 px-4 sm:px-6">
   <div class="bg-white rounded-lg w-full max-w-3xl p-6 relative h-auto"> 
-    <!-- Botón para cerrar el nuevo modal -->
+    <!-- Botón para cerrar el modal -->
     <button id="closeNuevoModal" class="absolute top-2 right-3 text-gray-600 hover:text-black text-xl font-bold">X</button>
     
     <!-- Formulario -->
-    <form id="formAsignarFuncionario" action="#" method="post">
+    <form id="formAsignarFuncionario">
       <input type="hidden" id="cargoIdSeleccionado" name="cargo_id" />
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Número de documento -->
         <div class="mb-4">
-          <label class="font-semibold block mb-1" for="usuarioNumDoc">Número Documento</label>
-          <input id="usuarioNumDoc" name="usuarioNumDoc" type="text" class="w-full border rounded-full px-3 py-2" />
+          <label class="font-semibold block mb-1" for="usuarioId">Usuario</label>
+          <input id="usuarioId" name="usuario_id" type="number" class="w-full border rounded-full px-3 py-2" />
         </div>
 
+        <!-- Grado -->
         <div class="mb-4">
           <label class="font-semibold block mb-1" for="grado">Grado</label>
-          <input  id="grado" name="grado" 
-          type="number" min="1" max="20" 
-          class="w-full border rounded-full px-3 py-2"  />
+          <input id="grado" name="grado" type="number" min="1" max="20" class="w-full border rounded-full px-3 py-2" />
         </div>
 
+        <!-- Salario -->
         <div class="mb-4">
           <label class="font-semibold block mb-1" for="salario">Salario</label>
           <input id="salario" name="salario" type="number" class="w-full border rounded-full px-3 py-2" />
         </div>
 
+        <!-- Resolución -->
         <div class="mb-4">
-          <label class="font-semibold block mb-1" for="resolucionNumero">Resolución</label>
+          <label class="font-semibold block mb-1" for="resolucion">Resolución</label>
           <input type="text" id="resolucion" name="resolucion" placeholder="Número de resolución" class="w-full border rounded-full px-3 py-2" />
         </div>
 
+        <!-- Archivo resolución -->
         <div class="mb-4">
           <label class="font-semibold block mb-1" for="resolucionArchivo">Archivo Resolución</label>
-          <input 
-            id="resolucionArchivo" name="resolucionArchivo"
-            type="file" 
-            class="w-full border border-gray-600 rounded-full px-4 py-2 text-sm text-gray-900 
-            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+          <input id="resolucionArchivo" name="resolucionArchivo" type="file" class="w-full border rounded-full px-3 py-2 text-sm" />
         </div>
 
+        <!-- Estado vinculación -->
         <div class="mb-4">
           <label class="font-semibold block mb-1" for="estadoVinculacion">Estado</label>
-          <select 
-            id="estadoVinculacion" name="estadoVinculacion"
-            class="w-full border border-gray-500 rounded-2xl px-3 py-2 text-gray-900 bg-gray 
-            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+          <select id="estadoVinculacion" name="estadoVinculacion" class="w-full border rounded-full px-3 py-2 bg-gray-100">
             <option value="">-- Selecciona --</option>
           </select>
         </div>
 
+        <!-- Observación -->
         <div class="mb-4 md:col-span-2">
           <label class="font-semibold block mb-1" for="observacionCU">Observaciones</label>
           <textarea id="observacionCU" name="observacionCU" rows="2" class="w-full border rounded-md px-3 py-1"></textarea>
         </div>
 
+        <!-- Fecha inicio -->
         <div class="mb-4 md:col-span-2">
-          <label for="fechaInicio" class="block font-medium mb-1">Fecha Inicio</label>
-          <input 
-            id="fechaInicio" name="fechaInicio"
-            type="date" 
-            class="w-full border rounded-full px-3 py-2" />
+          <label class="font-semibold block mb-1" for="fechaInicio">Fecha Inicio</label>
+          <input id="fechaInicio" name="fechaInicio" type="date" class="w-full border rounded-full px-3 py-2" />
         </div>
       </div>
 
       <div class="flex justify-end mt-4">
-        <button type="submit" class="px-3 py-2 bg-green-600 text-white rounded-2xl hover:bg-green-700 ">
-          Aceptar
-        </button>
+        <button type="submit" class="px-3 py-2 bg-green-600 text-white rounded-2xl hover:bg-green-700">Aceptar</button>
       </div>
     </form>
+  </div>
+</div>
+
+
+
+<!-- Modal escalonado -->
+<div id="escalonModal" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50 px-4">
+  <div class="bg-white rounded-lg w-full max-w-xl p-6 relative">
+    <button id="closeEscalonModal" class="absolute top-3 right-3 text-xl">×</button>
+    <h3 class="text-lg font-bold mb-3">Devolución escalonada</h3>
+
+    <div id="escalonContent">
+      <!-- Aquí se renderiza la sugerencia actual -->
+      <p id="escalonTexto" class="mb-4"></p>
+
+      <div id="escalonOpciones" class="flex gap-3">
+        <button id="btnDevolverPlanta" class="px-3 py-2 bg-green-600 text-white rounded">Devolver a planta</button>
+        <button id="btnAsignarOtro" class="px-3 py-2 bg-yellow-600 text-white rounded">Asignar a otro temporal</button>
+        <button id="btnOmitir" class="px-3 py-2 bg-gray-400 text-white rounded">Omitir</button>
+        <button id="btnDevolverTodo" class="px-3 py-2 bg-red-600 text-white rounded">Devolver todo</button>
+      </div>
+
+      <!-- selector de cargos (solo visible si eligen Asignar otro) -->
+      <div id="selectorCargos" class="mt-4 hidden">
+        <label for="selectCargos" class="block mb-1">Selecciona cargo temporal:</label>
+        <select id="selectCargos" class="w-full border rounded px-2 py-1"></select>
+        <button id="btnConfirmAsignar" class="mt-2 px-3 py-2 bg-blue-600 text-white rounded">Confirmar asignación</button>
+      </div>
+    </div>
   </div>
 </div>
 
