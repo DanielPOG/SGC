@@ -30,4 +30,5 @@ urlpatterns = [
     path('solicitudes/', include('apps.Solicitudes.urls')), # URLS de la app Solicitudes
     path('autorizaciones/', include('apps.Autorizaciones.urls')), # URLS de la app Autorizaciones
     path('bitacora/', include('apps.Bitacora.urls')), # URLS de la app Bitacora
+    path('funcionario/', include('apps.funcionario.urls')), # URLS de la app funcionario
 ]

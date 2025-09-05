@@ -1,0 +1,64 @@
+{% extends "layout/menu.html" %} /* Hereda la estructura llamada "sidebar.html" */
+
+{% block title %} Cambiar Contraseña {% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Cambiar Contraseñá</title>
+</head>
+<body class="bg-white min-h-screen flex flex-col items-center p-8">
+
+  <!-- Título -->
+  <h1 class="text-5xl font-bold mb-4">Cambiar Contraseña</h1>
+
+
+
+  <!-- Formulario -->
+<div class="max-w-md w-full bg-gray-200 p-4 sm:p-6 md:p-8 rounded-md shadow mx-auto mt-15">
+    <div class="grid  gap-6 mb-4">
+      
+      <!-- Nombre  -->
+      <div>
+        <label class="block font-medium mb-1">Contraseña Actual:</label>
+          <input 
+          type="text" 
+          class="w-full border border-gray-600 rounded-2xl px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/>
+      </div>
+
+      <!-- Apellido -->
+       <div>
+        <label class="block font-medium mb-1">Nueva Contraseña:</label>
+          <input 
+          type="text" 
+          class="w-full border border-gray-600 rounded-2xl px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/>
+      </div>
+
+      <!-- Numero de documento  -->
+      <div>
+        <label class="block font-medium mb-1">Confirmar  Contraseña:</label>
+          <input 
+          type="text" 
+          class="w-full border border-gray-600 rounded-2xl px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/>
+      </div>
+
+    <!-- Botones -->
+    <div class="flex flex-col items-center gap-2">
+      <button class="bg-green-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-green-700 transition">
+        Cambiar Contraseña
+      </button>
+      
+    </div>
+  </div>
+  </div>
+
+</body>
+</html>
+    
+
+
+{% endblock %}

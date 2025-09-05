@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'apps.Solicitudes',
     'apps.Autorizaciones',
     'apps.Bitacora',
+    'apps.funcionario',
 ]
 
 MIDDLEWARE = [

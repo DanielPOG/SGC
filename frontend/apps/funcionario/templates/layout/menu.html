@@ -1,0 +1,154 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es" 
+      x-data="sidebar()" 
+      x-init="initSidebar()">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}menu{% endblock %}</title>
+  <link href="{% static 'css/dist/styles.css' %}" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+  <style>[x-cloak]{display:none !important}</style>
+</head>
+  <body class="h-full min-h-screen bg-white text-gray-900 flex flex-col"
+        x-data="{ showMenu:false, showPasswordModal:false, showUpdateModal:false }">
+
+  <!-- SIDEBAR -->
+  <aside :class="sidebarOpen ? 'w-60' : 'w-20'"
+         class="fixed top-0 left-0 h-screen bg-[#00304D] text-white flex flex-col items-center p-4 
+                shadow-[inset_-5px_0_15px_rgba(0,0,0,0.5)] z-40 transition-all duration-200">
+
+    <!-- Botón flecha -->
+    <button @click="toggleSidebar()"
+            class="absolute top-4 -right-4 bg-white text-[#00304D] border border-[#00304D] 
+                   rounded-full w-8 h-8 flex items-center justify-center shadow-md transition-transform duration-200"
+            :class="!sidebarOpen ? 'rotate-180' : ''">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+      </svg>
+    </button>
+
+    <!-- Usuario con Dropdown -->
+    <div class="relative flex flex-col items-center mb-6" x-show="sidebarOpen" x-transition x-cloak>
+      <button @click="showMenu = !showMenu" class="flex flex-col items-center focus:outline-none">
+        <div class="relative w-[90px] h-[90px] rounded-full bg-white border-4 border-black 
+                    flex items-center justify-center shadow-[0_0_0_4px_#00304D]">
+          <img src="{% static 'img/usuario.png' %}" alt="Foto de usuario"
+               class="w-[70px] h-[70px] rounded-full object-cover border-2 border-white">
+        </div>
+        <span class="mt-2 font-bold bg-black px-3 py-1 rounded-full text-xs md:text-sm">USERNAME</span>
+      </button>
+
+    </div>
+
+    <!-- Navegación -->
+    <nav class="flex flex-col gap-2 w-full px-2 text-sm md:text-base">
+
+  <!-- cambiar contraseña -->
+      <a href="{% url 'cambiar_contra' %}" title="Cambiar Contraseña"
+         class="transition hover:scale-105 flex items-center gap-2 font-medium py-2 
+                rounded-xl border-2 border-gray-700 bg-white text-black shadow-md    
+                justify-center md:justify-start"
+         :class="{'px-2': !sidebarOpen, 'px-4': sidebarOpen}">
+        <img src="{% static 'img/cambiar_contra.png' %}" alt="Cambiar Contraseña" class="w-6 h-6">
+        <span x-show="sidebarOpen" x-cloak>Cambiar Contraseña</span>
+      </a>
+
+<!-- actualizar datos  -->
+      <a href="{% url 'actualizar_datos' %}" title="Actualizar Datos"
+         class="transition hover:scale-105 flex items-center gap-2 font-medium py-2 
+                rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
+                justify-center md:justify-start"
+         :class="{'px-2': !sidebarOpen, 'px-4': sidebarOpen}">
+        <img src="{% static 'img/user.png' %}" alt="Actualizar Datos" class="w-5 h-5">
+        <span x-show="sidebarOpen" x-cloak>Actualizar Datos</span>
+      </a>
+
+
+<!-- anadir formacio complementaria -->
+      <a href="{% url 'agregar_formacion' %}" title="Añadir Foraciòn Complementaria"
+         class="transition hover:scale-105 flex items-center gap-2 font-medium py-2 
+                rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
+                justify-center md:justify-start"
+         :class="{'px-2': !sidebarOpen, 'px-4': sidebarOpen}">
+        <img src="{% static 'img/cargo.png' %}" alt="Añadir Formaciòn Complementaria" class="w-5 h-5">
+        <span x-show="sidebarOpen" x-cloak>Añadir Formaciòn Complementaria</span>
+      </a>
+
+
+<!-- historial de solicitudes -->
+      <a href="{% url 'historial_solicitudes' %}" title="Historial de Solicitudes"
+         class="transition hover:scale-105 flex items-center gap-2 font-medium py-2 
+                rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
+                justify-center md:justify-start"
+         :class="{'px-2': !sidebarOpen, 'px-4': sidebarOpen}">
+        <img src="{% static 'img/grupoSena.png' %}" alt="Historial de Solicitudes" class="w-5 h-5">
+        <span x-show="sidebarOpen" x-cloak>Historial de Solicitudes</span>
+      </a>
+
+
+     
+    <!-- Botón Salir -->
+    <div class="mt-auto w-full px-2">
+      <a href="{% url 'login_view' %}" title="Salir"
+         class="transition hover:scale-105 flex items-center gap-2 font-medium py-2 
+                rounded-xl border border-gray-700 bg-white text-black shadow-md 
+                justify-center md:justify-start"
+         :class="{'px-2': !sidebarOpen, 'px-4': sidebarOpen}">
+        <img src="{% static 'img/salir.png' %}" alt="Salir" class="w-5 h-5">
+        <span x-show="sidebarOpen" x-cloak>Salir</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- CONTENIDO Y FOOTER -->
+  <div class="flex flex-col flex-1 min-h-screen transition-all duration-200"
+       :class="sidebarOpen ? 'ml-60' : 'ml-20'">
+
+    <!-- CONTENIDO -->
+    <main class="flex-1 py-6 px-4 md:px-6 bg-white">
+      {% block content %}{% endblock %}
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="h-auto py-4 bg-gray-300 flex flex-wrap justify-center items-center gap-6 px-4">
+      <a href="https://www.facebook.com/SENACauca" target="_blank" title="Facebook SENA">
+        <img src="{% static 'img/facebook.png' %}" alt="Facebook SENA"
+             class="w-7 h-7 md:w-8 md:h-8 opacity-70 hover:opacity-100 hover:scale-110 transition duration-200">
+      </a>
+      <a href="https://www.tiktok.com/@senacomunica_" target="_blank" title="TikTok SENA">
+        <img src="{% static 'img/tiktok.png' %}" alt="TikTok SENA"
+             class="w-7 h-7 md:w-8 md:h-8 opacity-70 hover:opacity-100 hover:scale-110 transition duration-200">
+      </a>
+      <a href="https://www.instagram.com/sena.regionalcauca/" target="_blank" title="Instagram SENA">
+        <img src="{% static 'img/instagram.png' %}" alt="Instagram SENA"
+             class="w-7 h-7 md:w-8 md:h-8 opacity-70 hover:opacity-100 hover:scale-110 transition duration-200">
+      </a>
+      <a href="https://www.youtube.com/user/SENATV" target="_blank" title="YouTube SENA">
+        <img src="{% static 'img/youtube.png' %}" alt="YouTube SENA"
+             class="w-7 h-7 md:w-8 md:h-8 opacity-70 hover:opacity-100 hover:scale-110 transition duration-200">
+      </a>
+    </footer>
+  </div>
+
+ <!--   scrip de sidebar  -->
+
+<script>
+  function sidebar() {
+    return {
+      sidebarOpen: false,
+      initSidebar() {
+        const saved = localStorage.getItem('sidebarOpen');
+        this.sidebarOpen = saved === 'true'; 
+      },
+      toggleSidebar() {
+        this.sidebarOpen = !this.sidebarOpen;
+        localStorage.setItem('sidebarOpen', this.sidebarOpen);
+      }
+    }
+  }
+</script>
+
+</body>
+</html>

@@ -1,25 +1,18 @@
 from django.shortcuts import render
 
-# Simulación de datos (como si fueran registros de una base de datos)
 SOLICITUDES = [
-    {"id": "001", "titulo": "Cambio de carrera", "estado": "pendiente", "fecha": "2025-04-10"},
-    {"id": "002", "titulo": "Cambio de datos", "estado": "en_revision", "fecha": "2025-04-11"},
-    {"id": "003", "titulo": "Solicitud beca", "estado": "aprobada", "fecha": "2025-04-12"},
-    {"id": "004", "titulo": "Certificado", "estado": "pendiente", "fecha": "2025-04-13"},
+    {"id": 1, "titulo": "Cambio de carrera", "estado": "pendiente", "fecha": "2025-04-10", "ver_detalle": "Ver"},
+    {"id": 2, "titulo": "Solicitud beca", "estado": "aprobada", "fecha": "2025-04-12", "ver_detalle": "Ver", "fecha_aprobacion": "2025-04-15"},
+    {"id": 3, "titulo": "Certificado", "estado": "pendiente", "fecha": "2025-04-13", "ver_detalle": "Ver"},
 ]
 
-# Vista principal que filtra por estado
 def estado_solicitud(request):
-    estado = request.GET.get("estado")  # Captura el estado desde la URL (GET)
-    
+    estado = request.GET.get("estado")  
+
     if estado:
         solicitudes_filtradas = [s for s in SOLICITUDES if s["estado"] == estado]
     else:
-        solicitudes_filtradas = SOLICITUDES  # Si no hay estado, muestra todas
-
-    # 👇 Debug (puedes eliminarlo después de probar)
-    print("Estado actual:", estado)
-    print("Solicitudes filtradas:", solicitudes_filtradas)
+        solicitudes_filtradas = SOLICITUDES  
 
     return render(request, "layout/estado_solicitud.html", {
         "solicitudes": solicitudes_filtradas,
@@ -27,20 +20,22 @@ def estado_solicitud(request):
     })
 
 
-# Otras vistas básicas (según tu estructura)
+# Otras vistas básicas
 def solicitudes(request):
     return render(request, 'layout/solicitudes.html')
 
 def todas_solicitudes(request):
-    return render(request, 'pages/todas_solicitudes.html')
-
-def solicitud_pendiente(request):    
-    return render(request, 'pages/solicitud_pendiente.html')
-
-def solicitud_revicion(request):
-    return render(request, 'pages/solicitud_revicion.html')
-
-def solicitud_aprovada(request):
-    return render(request, 'pages/solicitud_aprovada.html')
+    return render(request, 'pages/todas_solicitudes.html', {"solicitudes": SOLICITUDES})
 
 
+def solicitud_pendiente(request, id):
+    solicitud = next((s for s in SOLICITUDES if s["id"] == id), None)
+    return render(request, "pages/solicitud_pendiente.html", {"solicitud": solicitud})
+
+def solicitud_revicion(request, id):
+    solicitud = next((s for s in SOLICITUDES if s["id"] == id), None)
+    return render(request, "pages/solicitud_revicion.html", {"solicitud": solicitud})
+
+def solicitud_aprovada(request, id):
+    solicitud = next((s for s in SOLICITUDES if s["id"] == id), None)
+    return render(request, "pages/solicitud_aprovada.html", {"solicitud": solicitud})
