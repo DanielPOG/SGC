@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders', # Para validar cors
-    'rest_framework', #Framework
+    'rest_framework', #API REST Framework
+    'rest_framework_simplejwt',
     #'coreapi', #Documentacion TODO: MIRAR LA VERSION DEL PYTHON 
     # apps
     'core_apps.grupoSena_api',
@@ -49,10 +50,10 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
     "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -85,9 +86,9 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'SGC',
+        'NAME': 'sgcv3',
         'USER': 'postgres',
-        'PASSWORD': 'root',
+        'PASSWORD': '12345678',
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -133,6 +134,15 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+import os
+
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+MEDIA_URL = '/media/'   # URL pública
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Carpeta física
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
@@ -140,8 +150,22 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CORS settings TODO:PONER URL AUTORIZADAS
 CORS_ALLOWED_ORIGINS = [
+    'http://127.0.0.1:8000'
 ]
 
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.coreapi.AutoSchema",
+     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
 }
+
+
+#Variables para el envio de correos (Developement)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'jdmapple322@gmail.com'
+EMAIL_HOST_PASSWORD = 'targ jdnk knei dfmb'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

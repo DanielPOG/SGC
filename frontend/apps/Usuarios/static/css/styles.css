@@ -66,6 +66,7 @@ body {
   text-shadow: 0 2px 4px rgba(0,0,0,0.3);
   position: relative;
 }
+
 /* Línea decorativa horizontal en login  */
 .linea-vertical { 
   border-top: 3px solid black; /* grosor y color */
@@ -253,6 +254,5 @@ body {
     max-width: 90%; /* para que se adapte en móviles */
   }
   
-}
-
+  }
 }
