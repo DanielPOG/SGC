@@ -24,6 +24,7 @@
           <label class="block font-medium mb-1">Fecha Creación:</label>
           <input
             id="fecha"
+            value=""
             type="date" 
             class="w-full border border-gray-600 rounded-2xl px-3 py-2 text-gray-900 placeholder-gray-400 
             focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -52,5 +53,10 @@
   
 </div>
   
-
+<script>
+  const hoy = new Date()
+  const yyyy = hoy.getFullYear();
+  const mm = String(hoy.getMonth() + 1).padStart(2, '0'); // Mes empieza en 0
+  const dd = String(hoy.getDate()).padStart(2, '0');
+  document.getElementById('fecha').value = `${yyyy}-${mm}-${dd}`;
 </script>

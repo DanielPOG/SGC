@@ -17,6 +17,7 @@ router.register(r'cargos', CargoViewSet, basename='cargo')
 router.register(r'cargo-funciones', CargoFuncionViewSet, basename='cargo-funcion')
 router.register(r'cargo-usuarios', CargoUsuarioViewSet, basename='cargo-usuario')
 router.register(r'idps', IdpViewSet, basename='idp')
+
 # Aquí defines las URL manuales
 custom_urls = [
     path('upload/', CargoUploadView.as_view(), name='cargo-upload'),

@@ -33,11 +33,33 @@ class EstadoCargoViewSet(viewsets.ModelViewSet):
 class IdpViewSet(viewsets.ModelViewSet):
     queryset = Idp.objects.all()
     serializer_class = IdpSerializer
+    http_method_names = ['get', 'post', 'patch']
     def create(self, request):
         serializer = IdpSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        if Idp.objects.filter(idp_id=request.data.get('idp_id')).exists():
+            return Response({'error':'Ya existe una IDP con ese número'}, status=status.HTTP_409_CONFLICT)
         idp = serializer.save()
         return Response(IdpSerializer(idp).data, status=status.HTTP_201_CREATED)
+    @action(methods=['patch'], detail=False)
+    def cambiarEstado(self, request):
+        idp_id = request.data.get('idp_id')
+        if not idp_id:
+            return Response({"error":"Error al cambiar estado"}, status=400)
+        try:
+            idp = Idp.objects.get(idp_id=idp_id)
+        except Idp.DoesNotExist as e:
+            print(f'Error al cambiar estado: {e}')
+            return Response({'error':'Error al cambiar el estado de la IDP'}, status=404)
+        if Cargo.objects.filter(idp=idp.idp_id).exists():
+            return Response({'error':'No es posible desactivar una IDP con cargos activos'}, status=400)
+        idp.estado = not idp.estado
+        idp.save()
+        text = 'IDP Desactivado' if idp.estado is False else 'IDP Activado'
+        return Response({"msg":text},status=200)
+        
+
+
 
 class CargoViewSet(viewsets.ModelViewSet):
     queryset = Cargo.objects.all()
