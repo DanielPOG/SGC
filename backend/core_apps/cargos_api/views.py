@@ -52,7 +52,7 @@ class IdpViewSet(viewsets.ModelViewSet):
             print(f'Error al cambiar estado: {e}')
             return Response({'error':'Error al cambiar el estado de la IDP'}, status=404)
         if Cargo.objects.filter(idp=idp.idp_id).exists():
-            return Response({'error':'No es posible desactivar una IDP con cargos asignados'}, status=400)
+            return Response({'error':'No es posible desactivar una IDP con cargos activos'}, status=400)
         idp.estado = not idp.estado
         idp.save()
         text = 'IDP Desactivado' if idp.estado is False else 'IDP Activado'

@@ -20,7 +20,9 @@ export default async function toggleIdpState(idp) {
         "Content-Type": "application/json",
       },
     })
-
+    if(!res){
+    showMessage("Error al actualizar estado")
+    }
     const data = await res.json()
 
     if (data.error) {

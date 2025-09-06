@@ -11,7 +11,7 @@ export function idpRow(idp, cargos) {
       <td class="px-4 py-2 border text-center">${idp.idp_id}</td>
       <td class="px-4 py-2 border text-center hidden md:table-cell">${idp.fechaCreacion}</td>
       <td class="px-4 py-2 border text-center ">
-        <div class="flex justify-center gap-2 "> 
+        <div class="flex justify-center items-center gap-2 "> 
           <div class="border-r pe-2">${state}</div>
           <p class="border-r-2 pe-2 border-black"><strong>${cargosIDP}&nbsp;</strong>Cargos activos</p>
           <strong>Acciones:</strong>
