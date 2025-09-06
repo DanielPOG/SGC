@@ -1,5 +1,7 @@
 import { cargarIdps, idpRow } from "./idps.js"
+
 document.addEventListener('DOMContentLoaded',()=>{
+
     const newIdpModal = document.querySelector('.new-idp-modal')
     const closeBtn = document.querySelector('.close')
     function close() {
@@ -34,19 +36,25 @@ document.addEventListener('DOMContentLoaded',()=>{
                     },
                     body: JSON.stringify({
                         idp_id: numero, 
-                        fechaCreacion: fecha  
+                        fechaCreacion: fecha,
                     })
                 });
 
                 if (!response.ok) {
-                    newIdpRes.innerText = 'No se pudo crear la IDP'
-                    newIdpRes.classList.add('bg-red-600')
                     const errorData = await response.json();
+                    newIdpRes.innerText = 
+                    errorData.idp_id == 'idp with this idp id already exists.' 
+                    ? 'Ya existe una IDP con ese número' 
+                    : (errorData.idp_id == 'Ensure this field has no more than 10 characters.' 
+                        ? 'La IDP lleva máximo 10 digitos' 
+                        :(errorData.fechaCreacion ?'Formato de fecha incorrecto':'No se pudo crear la IDP' ))
+                    newIdpRes.classList.add('bg-red-600')
                     console.error("Error en la solicitud:", errorData);
                     return;
                 }
 
                 const data = await response.json();
+
                 newIdpRes.innerText = 'IDP Creado correctamente'
                    
                 if( newIdpRes.classList.contains('bg-red-600')) newIdpRes.classList.remove('bg-red-600')

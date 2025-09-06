@@ -57,7 +57,7 @@
     <tr class="text-white bg-blue-900">
       <th class="px-4 py-2 border">ID Planta</th>
       <th class="px-4 py-2 border hidden md:table-cell">Fecha Creación</th>
-      <th class="px-4 py-2 border">Estado</th>
+      <th class="px-4 py-2 border">Estado de IDP</th>
     </tr>
   </thead>
   <tbody>
@@ -189,7 +189,7 @@
   });
 </script> {% endcomment %}
 <script defer type="module" src="{% static "js/idps.js" %}"></script>
-<script defer  src="{% static "js/acciones.js" %}"></script>
+<script defer type="module" src="{% static "js/acciones.js" %}"></script>
   {% include "./newidp_modal.html" %}
 
  </body>

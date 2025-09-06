@@ -17,17 +17,17 @@ class CargoNombreSerializer(serializers.ModelSerializer):
 
 
 class EstadoCargoSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = EstadoCargo
         fields = '__all__'
 
 class IdpSerializer(serializers.ModelSerializer):
-    
     queryset=Idp.objects.all(),
-    
     class Meta:
         model = Idp
         fields = '__all__'
+        
 
 class CargoSerializer(serializers.ModelSerializer):
     cargoNombre = serializers.PrimaryKeyRelatedField(queryset= CargoNombre.objects.all())
