@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const data = await resp.json();
 
             document.getElementById("cargoNombre").value = data.cargoNombre.id;
-            document.getElementById("idp").value = data.idp.id;
+            document.getElementById("idp").value = data.idp.idp_id;
             document.getElementById("estadoCargo").value = data.estadoCargo.id;
             document.getElementById("centro").value = data.centro.id;
             document.getElementById("resolucion_numero").value = data.resolucion;
