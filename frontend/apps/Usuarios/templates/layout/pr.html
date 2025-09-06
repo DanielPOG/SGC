@@ -46,8 +46,10 @@
         </button>
     </div>
     
-    <nav class="flex-1 overflow-y-auto mt-1 flex flex-col items-center pr-0 space-y-2 lg:space-y-1">
-        <a title="principal"
+  <nav class="flex-1 overflow-y-auto mt-1 flex flex-col items-center pr-0 space-y-2 lg:space-y-1">
+    <div class="flex flex-col flex-grow items-center w-full space-y-2 lg:space-y-1">
+
+        <a href="{% url 'index' %}" title="principal"
            class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
                   rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
                   justify-center md:justify-center lg:max-h-fit lg:py-2"
@@ -56,7 +58,9 @@
                  class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
            <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">principal</span>
         </a>
-        <a title="Funcionario"
+
+        
+        <a href="{% url 'funcionario' %}" title="Funcionario"
            class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
                   rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
                   justify-center md:justify-center lg:max-h-fit lg:py-2"
@@ -65,7 +69,9 @@
                  class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
            <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Funcionario</span>
         </a>
-        <a title="Cargo"
+
+
+        <a  href="{% url 'cargo' %}" title="Cargo"
            class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
                   rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
                   justify-center md:justify-center lg:max-h-fit lg:py-2"
@@ -74,7 +80,9 @@
                  class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
            <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Cargo</span>
         </a>
-        <a title="Grupo SENA"
+
+
+        <a href="{% url 'grupo_sena' %}" title="Grupo SENA"
            class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
                   rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
                   justify-center md:justify-center lg:max-h-fit lg:py-2"
@@ -83,16 +91,20 @@
                  class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
            <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Grupo SENA</span>
         </a>
-        <a title="Reportes"
+
+
+        <a href="{% url 'reportes' %}" title="Reportes"
            class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
                   rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
                   justify-center md:justify-center lg:max-h-fit lg:py-2"
            :class="sidebarOpen ? 'w-48 sm:w-56 lg:w-60 px-2 sm:px-3' : 'w-12 sm:w-14 lg:w-16 px-1 sm:px-2'">
            <img src="{% static 'img/reportes.png' %}" alt="Reportes" 
-                 class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
+                 class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-h-6">
            <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Reportes</span>
         </a>
-        <a title="ID Planta"
+
+
+        <a href="{% url 'id_planta' %}" title="ID Planta"
            class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
                   rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
                   justify-center md:justify-center lg:max-h-fit lg:py-2"
@@ -101,7 +113,9 @@
                  class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
            <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">ID Planta</span>
         </a>
-        <a title="Solicitudes"
+
+
+        <a href="{% url 'solicitudes' %}"  title="Solicitudes"
            class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
                   rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
                   justify-center md:justify-center lg:max-h-fit lg:py-2"
@@ -110,7 +124,9 @@
                  class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
            <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Solicitudes</span>
         </a>
-        <a title="Autorizaciones"
+
+
+        <a href="{% url 'autorizaciones' %}"  title="Autorizaciones"
            class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
                   rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
                   justify-center md:justify-center lg:max-h-fit lg:py-2"
@@ -119,7 +135,9 @@
                  class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
            <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Autorizaciones</span>
         </a>
-        <a title="Bitacora"
+
+
+        <a  href="{% url 'bitacora' %}" title="Bitacora"
            class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
                   rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
                   justify-center md:justify-center lg:max-h-fit lg:py-2"
@@ -128,16 +146,18 @@
                  class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
            <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Bitacora</span>
         </a>
-        <a title="Salir"
-           class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
-                  rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
-                  justify-center md:justify-center lg:max-h-fit lg:py-2"
-           :class="sidebarOpen ? 'w-48 sm:w-56 lg:w-60 px-2 sm:px-3' : 'w-12 sm:w-14 lg:w-16 px-1 sm:px-2'">
-           <img src="{% static 'img/salir.png' %}" alt="Salir" 
-                 class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
-           <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Salir</span>
-        </a>
-    </nav>
+    </div>
+
+    <a title="Salir"
+       class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 mt-auto mb-4
+              rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
+              justify-center md:justify-center lg:max-h-fit lg:py-2"
+       :class="sidebarOpen ? 'w-48 sm:w-56 lg:w-60 px-2 sm:px-3' : 'w-12 sm:w-14 lg:w-16 px-1 sm:px-2'">
+       <img src="{% static 'img/salir.png' %}" alt="Salir" 
+             class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
+       <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Salir</span>
+    </a>
+</nav>
    </aside>
     
     <div class="flex flex-col flex-1 min-h-screen transition-all duration-300"
