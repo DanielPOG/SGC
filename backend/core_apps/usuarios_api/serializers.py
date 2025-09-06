@@ -27,7 +27,7 @@ class UsuarioSerializer(serializers.ModelSerializer):
         return user
 
 class FormacionComplementariaSerializer(serializers.ModelSerializer):
-    tipo = serializers.PrimaryKeyRelatedField(queryset=TipoCertificado.objects.all()) 
+    tipo = serializers.PrimaryKeyRelatedField(queryset=TipoCertificado.objects.all())
     usuario = serializers.PrimaryKeyRelatedField(queryset=Usuario.objects.all())
 
     class Meta:

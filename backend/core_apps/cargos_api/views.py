@@ -1,5 +1,5 @@
 from rest_framework import viewsets, status
-from .models import CargoNombre, EstadoCargo, Cargo, CargoUsuario, Idp, EstadoVinculacion
+from .models import CargoNombre, EstadoCargo, Cargo, CargoFuncion, CargoUsuario, Idp
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
@@ -11,12 +11,12 @@ from .serializers import (
     CargoNombreSerializer,
     EstadoCargoSerializer,
     CargoSerializer,
+    CargoFuncionSerializer,
     CargoUsuarioSerializer,
     CargoExcelSerializer,
     CargoNestedSerializer,
     CargoUsuarioNestedSerializer,
-    IdpSerializer,
-    EstadoVinculacionSerializer
+    IdpSerializer
 )
 
 class CargoNombreViewSet(viewsets.ModelViewSet):
@@ -29,18 +29,40 @@ class EstadoCargoViewSet(viewsets.ModelViewSet):
     
     queryset = EstadoCargo.objects.all()
     serializer_class = EstadoCargoSerializer
-
-class EstadoVinculacionViewSet(viewsets.ModelViewSet):
-    queryset = EstadoVinculacion.objects.all()
-    serializer_class = EstadoVinculacionSerializer
-
+    
 class IdpViewSet(viewsets.ModelViewSet):
     queryset = Idp.objects.all()
     serializer_class = IdpSerializer
+    http_method_names = ['get', 'post', 'patch']
+    def create(self, request):
+        serializer = IdpSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        if Idp.objects.filter(idp_id=request.data.get('idp_id')).exists():
+            return Response({'error':'Ya existe una IDP con ese número'}, status=status.HTTP_409_CONFLICT)
+        idp = serializer.save()
+        return Response(IdpSerializer(idp).data, status=status.HTTP_201_CREATED)
+    @action(methods=['patch'], detail=False)
+    def cambiarEstado(self, request):
+        idp_id = request.data.get('idp_id')
+        if not idp_id:
+            return Response({"error":"Error al cambiar estado"}, status=400)
+        try:
+            idp = Idp.objects.get(idp_id=idp_id)
+        except Idp.DoesNotExist as e:
+            print(f'Error al cambiar estado: {e}')
+            return Response({'error':'Error al cambiar el estado de la IDP'}, status=404)
+        if Cargo.objects.filter(idp=idp.idp_id).exists():
+            return Response({'error':'No es posible desactivar una IDP con cargos activos'}, status=400)
+        idp.estado = not idp.estado
+        idp.save()
+        text = 'IDP Desactivado' if idp.estado is False else 'IDP Activado'
+        return Response({"msg":text},status=200)
+        
+
+
 
 class CargoViewSet(viewsets.ModelViewSet):
     queryset = Cargo.objects.all()
-
     def get_serializer_class(self):
         # Usar nested solo para GET
         if self.action in ["list", "retrieve", "por_idp"]:
@@ -56,7 +78,7 @@ class CargoViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=["get"], url_path="por-idp/(?P<numero_idp>[^/.]+)")
     def por_idp(self, request, numero_idp=None):
-        cargos = Cargo.objects.filter(idp__numero=numero_idp).order_by("-fechaActualizacion")
+        cargos = Cargo.objects.filter(idp__idp_id=numero_idp).order_by("-fechaActualizacion")
         if not cargos.exists():
             return Response(
                 {"detail": "No se encontraron cargos para este IDP"},
@@ -74,7 +96,7 @@ class CargoViewSet(viewsets.ModelViewSet):
             data.append({
                 "cargo": {
                     "id": cargo.id,
-                    "idp": cargo.idp.numero,
+                    "idp": cargo.idp.idp_id,
                     "nombre": cargo.cargoNombre.nombre,
                     "centro":  cargo.centro.nombre if cargo.centro else None,
                     "fechaCreacion": cargo.fechaCreacion,
@@ -96,6 +118,11 @@ class CargoViewSet(viewsets.ModelViewSet):
             })
 
         return Response(data, status=status.HTTP_200_OK)
+class CargoFuncionViewSet(viewsets.ModelViewSet):
+   
+    queryset = CargoFuncion.objects.all()
+    serializer_class = CargoFuncionSerializer
+
 
 class CargoUsuarioViewSet(viewsets.ModelViewSet):
   
@@ -110,11 +137,9 @@ class CargoUsuarioViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=["get"], url_path="por-idp/(?P<idp>[^/.]+)")
     def por_idp(self, request, idp=None):
         # filtrar los CargoUsuario cuyo cargo tenga ese idp
-        cargos_usuario = self.get_queryset().filter(cargo__idp__numero=idp)
+        cargos_usuario = self.get_queryset().filter(cargo__idp__idp_id=idp)
         serializer = self.get_serializer(cargos_usuario, many=True)
         return Response(serializer.data)
-    
-    
 
 # VISTA PARA SUBIR POR EXCEL
 class CargoUploadView(APIView):

@@ -9,7 +9,6 @@ document.getElementById("buscarCargo").addEventListener("keypress", function (ev
 // Detectar click en el botón
 document.getElementById("btnBuscar").addEventListener("click", buscarPorIdp);
 
-
 // Función para buscar cargos por IDP
 async function buscarPorIdp() {
   const id = document.getElementById("buscarCargo").value.trim();

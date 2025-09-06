@@ -4,6 +4,7 @@ django-ckeditor
 
 -- Pylint relative dirs imports está bugeado
     A continuación los comandos de pylint
-     para evitar que pylint declare error:
+     usados para evitar que pylint declare error:
      
     - # pylint: disable=import-error
+    - #pylint:disable=relative-beyond-top-level

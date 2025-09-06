@@ -18,6 +18,39 @@
   <link rel="stylesheet" href="{% static 'css/login.css' %}">
 </head>
 <body>
+<!-- Nodo para respuestas (Inicio sesión)-->
+          <div id="response-node" style="
+            position: fixed; 
+            top: 0; left: 0; 
+            display: none; 
+            z-index: 10; 
+            width: 100vw; 
+            height: 100vh; 
+            background-color: rgba(0, 0, 0, 0.6);
+            align-items: center; 
+            justify-content: center;
+          ">
+            <div style="
+                max-height: 50%; 
+                background-color: #ffffff; 
+                border-radius: 0.375rem; 
+                width: 25%; 
+                padding: 1.5rem; 
+                text-align: center;
+            ">
+              <p style="margin-bottom: 1rem; font-size: clamp(14px, 0.8rem+0.5w, 30px);"></p>
+              <button type="button" style="
+                  background-color: #1d4ed8; 
+                  color: #fff; 
+                  border: none; 
+                  padding: 0.5rem 1rem; 
+                  border-radius: 0.375rem; 
+                  cursor: pointer;
+              ">
+                Aceptar
+              </button>
+            </div>
+          </div>
   <!--  INICIO CONTENEDOR PRINCIPAL -->
   <div class="container">
     <!--  INICIO GRUPO IZQUIERDO -->
@@ -64,7 +97,6 @@
 
           <!-- Logo del sistema -->
        <img src="{% static 'img/logoSGC-SVG.svg' %}" alt="Logosgc" class="logosgc">
-
           <!-- INICIO TEXTO DEL LOGO -->
           <div class="logo-text">
             <div class="title_login">SGC</div> 
@@ -82,11 +114,19 @@
         <!-- FIN SECCIÓN DE LOGO -->
 
         <!--  INICIO FORMULARIO DE LOGIN -->
-        <form class="login-form">
+        <form class="login-form" id="login-form">
+            
           <!-- Campo de usuario -->
           <div class="form-group">
             <label for="usuario">Usuario</label>
             <input type="text" id="usuario" placeholder="Ingrese usuario">
+            <div style="position: absolute; top: 90%; left: 52%; transform: translate(-50%, 50%); width:100%;">
+              <!-- Nodo para respuestas (Olvidé contraseña) -->
+              <span id="olvideContraseñaResponse" style="color:#b50000; white-space: nowrap; overflow: 
+              hidden; text-overflow: ellipsis; font-size: clamp(1px, 0.8rem + 0.5vw, 24px);" {% comment "" %}no permite saltos de línea, oculta el exceso si no cabe, agrega "..." si se corta, achica letra si es necesario{% endcomment %}
+              > 
+              </span>
+            </div>
           </div>
 
           <!-- Campo de contraseña -->
@@ -132,6 +172,7 @@
   </div>
 </div>
 <!-- FIN MODAL -->
-  <script src="{% static 'js/modal.js' %}"></script>
+  <script defer src="{% static 'js/login.js'%}" type="module"></script>
+
 </body>
 </html>

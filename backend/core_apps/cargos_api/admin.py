@@ -10,8 +10,8 @@ from django.contrib import admin
 # ======================
 @admin.register(Idp)
 class IdpAdmin(admin.ModelAdmin):
-    list_display = ("id", "numero", "fechaCreacion")
-    search_fields = ("numero",)
+    list_display = ("idp_id", "fechaCreacion")
+    search_fields = ("idp_id",)
     list_filter = ("fechaCreacion",)
     date_hierarchy = "fechaCreacion"
     ordering = ("-fechaCreacion",)
