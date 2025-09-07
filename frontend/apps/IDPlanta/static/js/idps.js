@@ -15,7 +15,7 @@ export function idpRow(idp, cargos) {
           <div class="border-r pe-2">${state}</div>
           <p class="border-r-2 pe-2 border-black"><strong>${cargosIDP}&nbsp;</strong>Cargos activos</p>
           <strong>Acciones:</strong>
-          <button ${cargosIDP > 0 ? 'disabled' : ''} data-idp=${idp.idp_id} class="min-w-32 text-white rounded-xl px-2 ${cargosIDP < 1 ? (idp.estado ? 'bg-red-500 hover:bg-red-700 ' :'bg-green-600  hover:bg-green-700' ): 'font-bold bg-gray-500/50 pointer-events-none opacity-[0.5]'}">
+          <button data-estado="${idp.estado ? 0 : 1}" id=${idp.idp_id} ${cargosIDP > 0 ? 'disabled' : ''} data-idp=${idp.idp_id} class="min-w-32 text-white rounded-xl px-2 ${cargosIDP < 1 ? (idp.estado ? 'bg-red-500 hover:bg-red-700 ' :'bg-green-600  hover:bg-green-700' ): 'font-bold bg-gray-500/50 pointer-events-none opacity-[0.5]'}">
             ${idp.estado ? 'DESACTIVAR': 'ACTIVAR '}
           </button> 
           
@@ -41,7 +41,6 @@ export async function cargarIdps(cargos) {
       const tr = document.createElement("tr")
       tr.classList.add("hover:bg-gray-100")
       tr.innerHTML = idpRow(idp, cargos)
-      
 
       tbody.appendChild(tr)
     })
@@ -52,7 +51,34 @@ export async function cargarIdps(cargos) {
 document.addEventListener("click", (e) => {
         if (e.target.matches("[data-idp]")) {
           const idp = e.target.dataset.idp
-          toggleIdpState(idp)
+          const estado = e.target.dataset.estado == 0 ? 'desactivar' : 'activar'
+
+          const confirmHtml = `
+            <div id="confirm-estado" class="bg-black/50 inset-0 z-50 w-screen h-screen fixed overflow-y-hidden">
+            <div class="flex items-center h-full">
+              <div class="w-1/3 h-28 rounded-md bg-white mx-auto py-4">
+               <p class="text-center font-semibold text-xl">¿Estas seguro de ${estado} esta IDP?</p>
+                <div class="flex justify-center mt-5 font-bold gap-5">
+                  <button id="accept" class="rounded-md px-2 text-green-600 hover:text-white hover:bg-green-600  border border-green-600">Aceptar</button>
+                  <button id="decline" class="rounded-md px-2 text-red-600 hover:text-white hover:bg-red-600 border border-red-600 ">Cancelar</button>
+                </div>
+              </div>
+              </div>
+            </div>
+          `
+          const cambiarEstado = async (e)=>{
+              if(e.target == modal.querySelector('#accept')){
+                document.querySelector('#confirm-estado').remove()
+                toggleIdpState(idp)
+                document.removeEventListener('click', cambiarEstado)
+              } else if (e.target == modal.querySelector('#decline')) {
+                document.querySelector('#confirm-estado').remove()
+                document.removeEventListener('click', cambiarEstado)
+              }
+          }
+          document.querySelector('body').insertAdjacentHTML('afterbegin', confirmHtml)
+          const modal = document.getElementById('confirm-estado')
+          document.addEventListener('click', cambiarEstado)
         }
       })
 document.addEventListener("DOMContentLoaded", async () => {
