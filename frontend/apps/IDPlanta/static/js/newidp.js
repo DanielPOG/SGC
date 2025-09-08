@@ -29,15 +29,12 @@ document.addEventListener('DOMContentLoaded',()=>{
                     return
                 }
             try {
+                const formData = new FormData()
+                formData.append('idp_id', numero)
+                formData.append('fechaCreacion', fecha)
                 const response = await fetch('http://127.0.0.1:8001/api/cargos/idps/', {
                     method: 'POST',
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        idp_id: numero, 
-                        fechaCreacion: fecha,
-                    })
+                    body: formData
                 });
 
                 if (!response.ok) {

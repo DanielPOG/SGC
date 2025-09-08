@@ -3,6 +3,7 @@ from .models import CargoNombre, EstadoCargo, Cargo, CargoFuncion, CargoUsuario,
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
+from rest_framework.parsers import MultiPartParser
 import pandas as pd
 from core_apps.usuarios_api.models import Usuario
 from rest_framework.decorators import action
@@ -20,20 +21,19 @@ from .serializers import (
 )
 
 class CargoNombreViewSet(viewsets.ModelViewSet):
-   
     queryset = CargoNombre.objects.all()
     serializer_class = CargoNombreSerializer
 
 
 class EstadoCargoViewSet(viewsets.ModelViewSet):
-    
     queryset = EstadoCargo.objects.all()
     serializer_class = EstadoCargoSerializer
-    
+
 class IdpViewSet(viewsets.ModelViewSet):
     queryset = Idp.objects.all()
     serializer_class = IdpSerializer
     http_method_names = ['get', 'post', 'patch']
+    parser_classes = [MultiPartParser]
     def create(self, request):
         serializer = IdpSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -51,13 +51,53 @@ class IdpViewSet(viewsets.ModelViewSet):
         except Idp.DoesNotExist as e:
             print(f'Error al cambiar estado: {e}')
             return Response({'error':'Error al cambiar el estado de la IDP'}, status=404)
-        if Cargo.objects.filter(idp=idp.idp_id).exists():
+        if Cargo.objects.filter(idp=idp.idp_id).exists() and Cargo.objects.filter(idp.estado==idp.estado) is True:
             return Response({'error':'No es posible desactivar una IDP con cargos activos'}, status=400)
         idp.estado = not idp.estado
         idp.save()
         text = 'IDP Desactivado' if idp.estado is False else 'IDP Activado'
         return Response({"msg":text},status=200)
-        
+
+    @action(methods=['post'], detail=False)
+    def cargarExcel(self, request):
+        file = request.FILES.get('file')
+        if not file:
+            return Response({"error": "No se envió ningún archivo"},
+                            status=status.HTTP_400_BAD_REQUEST)
+        try:
+            #leer el archivo y captar dataframe
+            df = pd.read_excel(file)
+            creados, actualizados, errores = 0,0,[]
+            for i, row in df.iterrows():
+                try:
+                    fecha = row.get("fechaCreacion")
+                    idp = row.get("idp_id")
+                    estado = row.get("estado")
+                    if not idp:
+                        errores.append({"fila":i+2, "error":"IDP Vacío"})
+                        continue
+                    obj, created = Idp.objects.update_or_create(
+                        idp_id=idp,
+                        defaults={
+                            "fechaCreacion": fecha,
+                            "estado": estado
+                        }
+                    )
+                    if created:
+                        creados += 1
+                    else:
+                        actualizados += 1
+                except Exception as e:
+                    errores.append({"fila":i+2, "error":str(e)})
+                return Response({
+                "msg": "Archivo procesado",
+                "creados": creados,
+                "actualizados": actualizados,
+                "errores": errores
+                }, status=status.HTTP_201_CREATED)
+        except Exception as e: #pylint=disable:broad-exception-caught
+            return Response({"error": f"Error procesando el archivo: {str(e)}"},
+                            status=status.HTTP_400_BAD_REQUEST)
 
 
 

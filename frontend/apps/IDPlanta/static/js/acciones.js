@@ -13,12 +13,11 @@ function showMessage(msg) {
 }
 export default async function toggleIdpState(idp) {
   try {
+    const formData = new FormData()
+    formData.append('idp_id',idp)
     const res = await fetch("http://127.0.0.1:8001/api/cargos/idps/cambiarEstado/", {
       method: "PATCH",
-      body: JSON.stringify({ idp_id: idp }),
-      headers: {
-        "Content-Type": "application/json",
-      },
+      body: formData
     })
     if(!res){
     showMessage("Error al actualizar estado")

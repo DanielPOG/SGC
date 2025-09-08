@@ -5,7 +5,7 @@ export function idpRow(idp, cargos) {
     ? `<div class="mx-auto w-fit px-0 text-white font-bold rounded-full text-green-600/80 min-w-28 -me-5">ACTIVO</div>`
     : `<div class="mx-auto w-fit px-0 text-white font-bold rounded-full text-red-600/80 min-w-28 -me-5">INACTIVO</div>`
 
-  const cargosIDP = cargos.filter(c => c.idp.idp_id === idp.idp_id).length
+  const cargosIDP = cargos.filter(c =>c.idp.idp_id === idp.idp_id).length
   return (
     ` 
       <td class="px-4 py-2 border text-center">${idp.idp_id}</td>
@@ -48,6 +48,8 @@ export async function cargarIdps(cargos) {
     console.error("Error al cargar idps:", e)
   }
 }
+
+// Cambiar el estado de una IDP
 document.addEventListener("click", (e) => {
         if (e.target.matches("[data-idp]")) {
           const idp = e.target.dataset.idp
@@ -56,7 +58,7 @@ document.addEventListener("click", (e) => {
           const confirmHtml = `
             <div id="confirm-estado" class="bg-black/50 inset-0 z-50 w-screen h-screen fixed overflow-y-hidden">
             <div class="flex items-center h-full">
-              <div class="w-1/3 h-28 rounded-md bg-white mx-auto py-4">
+              <div class="w-1/3 h-fit rounded-md bg-white mx-auto py-4">
                <p class="text-center font-semibold text-xl">¿Estas seguro de ${estado} esta IDP?</p>
                 <div class="flex justify-center mt-5 font-bold gap-5">
                   <button id="accept" class="rounded-md px-2 text-green-600 hover:text-white hover:bg-green-600  border border-green-600">Aceptar</button>

@@ -78,18 +78,24 @@
       <!-- Input archivo -->
       <label class="flex items-center cursor-pointer">
         <span class="px-4 py-2 bg-blue-900 text-white rounded">Subir Excel</span>
-        <input type="file" accept=".xlsx,.xls" class="hidden" id="fileInput">
+        <input type="file" accept=".xlsx,.xls" class="hidden" id="file-input" />
         <span id="fileName" class="text-gray-600 bg-gray-200 px-1 py-1 rounded w-48">Ningún archivo</span>
       </label>
+      <div class="grid">
+        <button id="upload-excel" class="bg-blue-900 active:bg-blue-900 hover:bg-blue-600  text-white rounded px-5 py-1 mx-auto mt-5">
+          Subir
+        </button>
+      </div>
 
     </div>
   </div>
 
-  <!-- Script para abrir el modal --> <script>
+  <!-- Script para abrir el modal input excel--> 
+  <script>
     const load_excel = document.getElementById('load_excel');
     const closeModal = document.getElementById('closeModal');
     const modalExcel = document.getElementById('modalExcel');
-    const fileInput = document.getElementById('fileInput');
+    const fileInput = document.getElementById('file-input');
     const fileName = document.getElementById('fileName');
 
     load_excel.addEventListener('click', () => {
@@ -107,89 +113,10 @@
     });
   </script>
 
-  {% comment %}
-  <!-- Script para manejar el menú desplegable -->
-  <script>
-    
-  </script> {% endcomment %}
 
-
-  <!-- segundo modal para agregar nuevo funcionario   -->
-<div id="nuevoModal" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50">
-  <div class="bg-white rounded-lg w-96 p-6 relative h-134"> 
-    <!-- Botón para cerrar el nuevo modal -->
-    <button id="closeNuevoModal" class="absolute top-2 right-3 text-gray-600 hover:text-black text-xl font-bold">×</button>
-    
-    <!-- Formulario -->
-    <form action="#" method="post">
-      <div class="mb-4">
-        <label class="font-semibold block mb-1">Tipo de formaciòn</label>
-        <input type="text" value="1098765432" class="w-full border rounded-full px-3 py-2" />
-      </div>
-
-      <div class="mb-4">
-        <label class="font-semibold block mb-1">Nombre del Curso</label>
-        <input type="text" value="Instructor" class="w-full border rounded-full px-3 py-2" />
-      </div>
-
-     
-      <div class="mb-4">
-        <label class="font-semibold block mb-1">institucion</label>
-        <input type="text" value="Instructor" class="w-full border rounded-full px-3 py-2" />
-      </div>
-      
-
-      <div class="mb-4">
-  <label class="font-semibold block mb-1">Fecha de Inicio</label>
-  <input type="date" value="2023-01-01" class="w-full border rounded-full px-3 py-2" />
-</div>
-
-
-  <div class="mb-4">
-  <label class="font-semibold block mb-1">Fecha Fin </label>
-  <input type="date" value="2023-01-01" class="w-full border rounded-full px-3 py-2" />
-</div>
-
-      <div class="mb-4">
-        <label class="font-semibold block mb-1">Resolución</label>
-        <input type="file" class="w-full border rounded-full px-3 py-2" />
-      </div>
-
-      
-      <div class="flex justify-end -mt-1">
-        <button type="submit" class="px-3 py-2 bg-green-600 text-white rounded-2xl hover:bg-green-700 ">
-          Aceptar
-        </button>
-      </div>
-    </form>
-  </div>
-</div>
-
-{% comment %} <script>
-  // Abrir el nuevo modal
-  const openNuevoModal = document.getElementById('openNuevoModal');
-  const nuevoModal = document.getElementById('nuevoModal');
-  const closeNuevoModal = document.getElementById('closeNuevoModal');
-
-  openNuevoModal.addEventListener('click', () => {
-    nuevoModal.classList.remove('hidden');
-    nuevoModal.classList.add('flex');
-  });
-
-  // Cerrar el nuevo modal
-  closeNuevoModal.addEventListener('click', () => {
-    nuevoModal.classList.add('hidden');
-  });
-
-  // Cerrar el modal si se hace clic fuera del contenido
-  window.addEventListener('click', (e) => {
-    if (e.target === nuevoModal) {
-      nuevoModal.classList.add('hidden');
-    }
-  });
-</script> {% endcomment %}
 <script defer type="module" src="{% static "js/idps.js" %}"></script>
 <script defer type="module" src="{% static "js/acciones.js" %}"></script>
+<script defer type="module" src="{% static "js/excel.js" %}"></script>
   {% include "./newidp_modal.html" %}
 
  </body>
