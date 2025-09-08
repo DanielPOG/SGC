@@ -115,7 +115,7 @@
 
         <!--  INICIO FORMULARIO DE LOGIN -->
         <form class="login-form" id="login-form">
-            
+            {% csrf_token %}
           <!-- Campo de usuario -->
           <div class="form-group">
             <label for="usuario">Usuario</label>
