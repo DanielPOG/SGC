@@ -188,6 +188,29 @@
             </a>
         </footer>
     </div>
+    <script>
+    function layout() {
+        return {
+            sidebarOpen: false,
+            init() {
+                // Recuperar el estado del sidebar desde cookies
+                const cookieValue = document.cookie
+                    .split('; ')
+                    .find(row => row.startsWith('sidebarOpen='))
+                    ?.split('=')[1];
+                
+                if (cookieValue !== undefined) {
+                    this.sidebarOpen = cookieValue === 'true';
+                }
+                
+                // Escuchar cambios en el estado para guardarlos
+                this.$watch('sidebarOpen', (value) => {
+                    document.cookie = `sidebarOpen=${value}; path=/; max-age=${60*60*24*30}`; // 30 días
+                });
+            }
+        }
+    }
+</script>
 
 </body>
 </html>
