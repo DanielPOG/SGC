@@ -37,11 +37,12 @@
                 USERNAME
             </span>
         </div>
-  <button @click="sidebarOpen = !sidebarOpen" 
-            class="relative top-4 left-5 z-50 p-2 rounded hover:bg-gray-700 bg-gray-800 text-white -translate-y-9"> 
+        <button @click="sidebarOpen = !sidebarOpen" 
+            class="relative top-16 -left-[.3em] z-50 p-2 rounded hover:bg-gray-700 bg-gray-800 text-white -translate-y-9"> 
             <svg xmlns="http://www.w3.org/2000/svg" 
                  class="h-6 w-6" fill="none" 
-                 viewBox="0 0 24 24" stroke="currentColor">
+                 viewBox="0 0 24 24" stroke="currentColor"
+            >
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                       d="M4 6h16M4 12h16M4 18h16"/>
             </svg>
@@ -154,7 +155,7 @@
     <a title="Salir" id="logout"
        class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 mt-auto mb-4
               rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
-              justify-center md:justify-center lg:max-h-fit lg:py-2"
+              justify-center md:justify-center max-h-fit lg:py-2"
        :class="sidebarOpen ? 'w-48 sm:w-56 lg:w-60 px-2 sm:px-3' : 'w-12 sm:w-14 lg:w-16 px-1 sm:px-2'">
        <img src="{% static 'img/salir.png' %}" alt="Salir" 
              class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">

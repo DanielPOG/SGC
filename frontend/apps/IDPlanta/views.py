@@ -15,3 +15,6 @@ def editar_asig_idp(request):
 
 def editar_idp(request):
     return render(request, 'pages/editar_idp.html')
+
+def historial_idp(request):
+    return render(request, 'pages/historial.html')

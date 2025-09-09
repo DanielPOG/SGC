@@ -1,0 +1,19 @@
+{% extends "layout/sidebar.html" %} /* Hereda la estructura llamada "sidebar.html" */
+{% load static %}
+{% block title %}Historial IDP{% endblock %}
+
+{% block content %}
+
+  <!-- Modal para crear IDP -->
+  
+    <h1 class="text-4xl font-bold mb-6 ms-5">Historial de ID de planta</h1>
+    <a href="../id_planta" class="w-fit h-hit">
+    <button class="relative -top-1 text-green-600 border border-green-600 rounded-full px-4 py-1 mb-10 hover:bg-green-600 hover:text-white transition">
+    Volver
+    </button>
+    <a>
+    <table class="">
+
+    </table>
+    <script type="module" src="{% static 'js/historial.js'%}"></script>
+{% endblock %}

@@ -16,7 +16,8 @@ from .serializers import (
     CargoExcelSerializer,
     CargoNestedSerializer,
     CargoUsuarioNestedSerializer,
-    IdpSerializer
+    IdpSerializer,
+    IdpxCargoSerializer
 )
 
 class CargoNombreViewSet(viewsets.ModelViewSet):
@@ -59,7 +60,9 @@ class IdpViewSet(viewsets.ModelViewSet):
         idp.save()
         text = 'IDP Desactivado' if idp.estado is False else 'IDP Activado'
         return Response({"msg":text},status=200)
-
+    @action(methods=['get'], detail=False)
+    def historialCargos(self, request):
+        idp_id = request.query_params.get('idp_id')
     @action(methods=['post'], detail=False)
     def cargarExcel(self, request):
         file = request.FILES.get('file')

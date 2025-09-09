@@ -6,7 +6,8 @@ from core_apps.general.models import Centro
 from core_apps.usuarios_api.models import Usuario
 from core_apps.usuarios_api.serializers import UsuarioSerializer
 from .models import (
-    CargoNombre, EstadoCargo, Cargo, CargoFuncion, CargoUsuario, Idp, EstadoVinculacion
+    CargoNombre, EstadoCargo, Cargo, CargoFuncion, CargoUsuario, Idp, EstadoVinculacion,
+    IdpxCargo
 )
 from core_apps.general.views import CentroSerializer
 
@@ -101,4 +102,11 @@ class CargoUsuarioNestedSerializer(serializers.ModelSerializer):
     estado = EstadoCargoSerializer(read_only=True)
     class Meta:
         model = CargoUsuario
+        fields = '__all__'
+
+class IdpxCargoSerializer(serializers.ModelSerializer):
+    idp_id = serializers.PrimaryKeyRelatedField(queryset=Idp.objects.all())
+    cargo = serializers.PrimaryKeyRelatedField(queryset=Cargo.objects.all())
+    class Meta:
+        model = IdpxCargo
         fields = '__all__'
