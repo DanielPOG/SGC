@@ -1306,9 +1306,6 @@
   .w-16 {
     width: calc(var(--spacing) * 16);
   }
-  .w-20 {
-    width: calc(var(--spacing) * 20);
-  }
   .w-40 {
     width: calc(var(--spacing) * 40);
   }
@@ -1327,9 +1324,6 @@
   .w-64 {
     width: calc(var(--spacing) * 64);
   }
-  .w-65 {
-    width: calc(var(--spacing) * 65);
-  }
   .w-70 {
     width: calc(var(--spacing) * 70);
   }
@@ -1339,26 +1333,8 @@
   .w-96 {
     width: calc(var(--spacing) * 96);
   }
-  .w-100 {
-    width: calc(var(--spacing) * 100);
-  }
   .w-200 {
     width: calc(var(--spacing) * 200);
-  }
-  .w-250 {
-    width: calc(var(--spacing) * 250);
-  }
-  .w-270 {
-    width: calc(var(--spacing) * 270);
-  }
-  .w-280 {
-    width: calc(var(--spacing) * 280);
-  }
-  .w-300 {
-    width: calc(var(--spacing) * 300);
-  }
-  .w-1000 {
-    width: calc(var(--spacing) * 1000);
   }
   .w-\[65px\] {
     width: 65px;
@@ -1432,12 +1408,6 @@
   .items-center {
     align-items: center;
   }
-  .items-start {
-    align-items: flex-start;
-  }
-  .items-stretch {
-    align-items: stretch;
-  }
   .justify-between {
     justify-content: space-between;
   }
@@ -1481,9 +1451,6 @@
   .gap-x-6 {
     column-gap: calc(var(--spacing) * 6);
   }
-  .gap-x-8 {
-    column-gap: calc(var(--spacing) * 8);
-  }
   :where(.space-x-2 > :not(:last-child)) {
     --tw-space-x-reverse: 0;
     margin-inline-start: calc(calc(var(--spacing) * 2) * var(--tw-space-x-reverse));
@@ -1496,9 +1463,6 @@
   }
   .gap-y-4 {
     row-gap: calc(var(--spacing) * 4);
-  }
-  .gap-y-12 {
-    row-gap: calc(var(--spacing) * 12);
   }
   :where(.divide-y > :not(:last-child)) {
     --tw-divide-y-reverse: 0;
@@ -1644,9 +1608,6 @@
   }
   .p-8 {
     padding: calc(var(--spacing) * 8);
-  }
-  .px-0 {
-    padding-inline: calc(var(--spacing) * 0);
   }
   .px-1 {
     padding-inline: calc(var(--spacing) * 1);
@@ -1865,16 +1826,6 @@
     }
   }
   @media (hover: hover) {
-    .hover\:border-\[\#0084ff\]:hover {
-      border-color: #0084ff;
-    }
-  }
-  @media (hover: hover) {
-    .hover\:border-\[\#084c8b\]:hover {
-      border-color: #084c8b;
-    }
-  }
-  @media (hover: hover) {
     .hover\:bg-gray-100:hover {
       background-color: var(--color-gray-100);
     }
@@ -2031,11 +1982,6 @@
   @media (width >= 40rem) {
     .sm\:max-w-lg {
       max-width: var(--container-lg);
-    }
-  }
-  @media (width >= 40rem) {
-    .sm\:grid-cols-1 {
-      grid-template-columns: repeat(1, minmax(0, 1fr));
     }
   }
   @media (width >= 40rem) {
@@ -2229,25 +2175,8 @@
     }
   }
   @media (width >= 64rem) {
-    .lg\:grid-cols-1 {
-      grid-template-columns: repeat(1, minmax(0, 1fr));
-    }
-  }
-  @media (width >= 64rem) {
     .lg\:grid-cols-2 {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-  @media (width >= 64rem) {
-    .lg\:grid-cols-4 {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-  }
-  @media (width >= 64rem) {
-    :where(.lg\:space-y-0 > :not(:last-child)) {
-      --tw-space-y-reverse: 0;
-      margin-block-start: calc(calc(var(--spacing) * 0) * var(--tw-space-y-reverse));
-      margin-block-end: calc(calc(var(--spacing) * 0) * calc(1 - var(--tw-space-y-reverse)));
     }
   }
   @media (width >= 64rem) {
@@ -2258,10 +2187,10 @@
     }
   }
   @media (width >= 64rem) {
-    :where(.lg\:space-y-4 > :not(:last-child)) {
+    :where(.lg\:space-y-2 > :not(:last-child)) {
       --tw-space-y-reverse: 0;
-      margin-block-start: calc(calc(var(--spacing) * 4) * var(--tw-space-y-reverse));
-      margin-block-end: calc(calc(var(--spacing) * 4) * calc(1 - var(--tw-space-y-reverse)));
+      margin-block-start: calc(calc(var(--spacing) * 2) * var(--tw-space-y-reverse));
+      margin-block-end: calc(calc(var(--spacing) * 2) * calc(1 - var(--tw-space-y-reverse)));
     }
   }
   @media (width >= 64rem) {
@@ -2277,6 +2206,11 @@
   @media (width >= 64rem) {
     .lg\:py-2 {
       padding-block: calc(var(--spacing) * 2);
+    }
+  }
+  @media (width >= 64rem) {
+    .lg\:py-3 {
+      padding-block: calc(var(--spacing) * 3);
     }
   }
   @media (width >= 64rem) {
