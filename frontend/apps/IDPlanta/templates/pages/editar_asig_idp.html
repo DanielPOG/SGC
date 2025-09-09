@@ -1,0 +1,127 @@
+ {% extends "layout/sidebar.html" %} /* Hereda la estructura llamada "sidebar.html" */
+
+{% block title %} Editar  Asignaciòn IDP {% endblock %}
+
+{% block content %}
+
+
+  <!-- Título -->
+  <h1 class="text-5xl font-bold mb-4">Editar Asignaciòn IDP </h1>
+
+
+  
+  <!-- Botón Volver -->
+  <form action="{% url 'asignar_idp' %}" method="get">
+  <button class="relative -top-1 text-green-600 border border-green-600 rounded-full px-4 py-1 mb-10 hover:bg-green-600 hover:text-white transition">
+    Volver
+  </button>
+</form>
+
+  <!-- Formulario -->
+  <div class="w-full max-w-4xl bg-gray-100 p-8 rounded-md shadow ml-10">
+    <div class="grid grid-cols-2 gap-6 mb-6">
+      
+      <!-- Nombre  -->
+      <div>
+        <label class="block font-medium mb-1">Nombre:</label>
+          <input 
+          type="text" 
+          class="w-full border border-gray-600 rounded-2xl px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/>
+      </div>
+
+      <!-- Apellido  -->
+       <div>
+        <label class="block font-medium mb-1">Apellido :</label>
+          <input 
+          type="text" 
+          class="w-full border border-gray-600 rounded-2xl px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/>
+      </div>
+
+
+      <!-- numero de documento -->
+        <div>
+        <label class="block font-medium mb-1">Nùmero de Documento :</label>
+          <input 
+          type="text" 
+          class="w-full border border-gray-600 rounded-2xl px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/>
+      </div>
+
+        
+<!-- dependecia  -->
+   <div>
+        <label class="block font-medium mb-1">Dependencia:</label>
+          <input 
+          type="text" 
+          class="w-full border border-gray-600 rounded-2xl px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/>
+      </div>
+
+
+      <!-- cargo -->
+        <div>
+        <label class="block font-medium mb-1">Cargo:</label>
+          <input 
+          type="text" 
+          class="w-full border border-gray-600 rounded-2xl px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/>
+      </div>
+
+<!-- ID Planta Title -->
+<div class="col-span-2">
+  <label class="block text-lg font-semibold text-gray-700 mb-1">ID Planta</label>
+  <div class="w-70 border-b-2 border-green-500 mb-4"></div>
+</div>
+
+
+
+ <!-- Nùmero IDP  -->
+<div>
+    <label class="block font-medium mb-1">Nùmero de IDP :</label>
+    <input 
+    type="text" 
+     class="w-full border border-gray-600 rounded-2xl px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/>
+ </div>
+
+ <!-- estado  -->
+ <div>
+    <label class="block font-medium mb-1">Estado:</label>
+    <input 
+    type="text" 
+     class="w-full border border-gray-600 rounded-2xl px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/>
+ </div>
+
+
+ 
+   <!-- fecha  asisgnacion  -->
+        <div class="mb-6 flex justify-center">
+  <div class="w-full">
+    <label for="fechaIngreso" class="block font-medium mb-1">Fecha de  Asignaciòn:</label>
+    <input 
+      id="fechaIngreso"
+      type="date" 
+      class="w-full border border-gray-600 rounded-full px-4 py-2 text-gray-900 
+             focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+             appearance-none" />
+  </div>
+</div>
+
+<!-- observacion -->
+<div class="mb-6">
+  <label class="block font-medium mb-1">Observaciones:</label>
+  <textarea
+    rows="2"
+    class="w-full border border-gray-600 rounded-2xl px-3 py-2 text-gray-900 placeholder-gray-400 
+           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+    placeholder="Escribe tus observaciones aquí..."></textarea>
+</div>
+
+
+    <!-- Botones -->
+    <div class="col-span-2 flex justify-center mt-6">
+  <button class="bg-green-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-green-700 transition">
+    Guardar
+  </button>
+</div>
+    </div>
+
+
+    
+{% endblock %}

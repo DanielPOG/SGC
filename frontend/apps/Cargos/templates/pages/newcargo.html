@@ -1,18 +1,9 @@
 {% extends "layout/sidebar.html" %} /* Hereda la estructura llamada "sidebar.html" */
-{% load static %}
+
 {% block title %} Crear Cargo{% endblock %}
 
 {% block content %}
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <title>Crear Cargo</title>
-  <script src="{% static 'js/cargo_form.js' %}"></script>
-</head>
-<body class="bg-white min-h-screen flex flex-col items-center p-8">
+
 
   <!-- Título -->
   <h1 class="text-5xl font-bold mb-4">Crear Cargo</h1>
@@ -20,87 +11,98 @@
 
   
   <!-- Botón Volver -->
- 
+  <form action="{% url 'cargo' %}" method="get">
   <button class="relative -top-1 text-green-600 border border-green-600 rounded-full px-4 py-1 mb-10 hover:bg-green-600 hover:text-white transition">
-    <a href="{% url 'cargoIndex' %}">Volver</a>
+    Volver
   </button>
-
+</form>
 
   <!-- Formulario -->
-  <form id="cargoForm" data-mode="{{ mode }}" data-id="{{ cargo_id|default:'' }}">
   <div class="w-full max-w-4xl bg-gray-100 p-8 rounded-md shadow ml-10">
     <div class="grid grid-cols-2 gap-6 mb-6">
       
       <!-- Nombre Cargo -->
-      <div>
+    <div>
         <label class="block font-medium mb-1">Nombre Cargo:</label>
-          <select  id="cargoNombre" name="cargoNombre" class="w-full border border-gray-600 rounded-2xl px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-            <option value="">-- Selecciona --</option>
-          </select>
+          <input 
+          type="text" 
+          class="w-full border border-gray-600 rounded-2xl px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/>
       </div>
 
       <!-- IDP -->
      <div>
         <label class="block font-medium mb-1">IDP:</label>
-          <select id="idp" name="idp" class="w-full border border-gray-600 rounded-2xl px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-            <option value="">-- Selecciona --</option>
-          </select>
-        </div>
+          <input 
+          type="text" 
+          class="w-full border border-gray-600 rounded-2xl px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/>
+      </div>
 
 
       <!-- Centro -->
         <div>
   <label for="opcion" class="block font-medium mb-1">Centro</label>
   <select 
-    id="centro" name="centro"
+    id="opcion"
     class="w-full border border-gray-500 rounded-2xl px-3 py-2 text-gray-900 bg-gray 
            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
     <option value="">-- Selecciona --</option>
+    <option value="opcion1">CC</option>
+    <option value="opcion2">TI </option>
+   
   </select>
 </div>
 
-      <!-- Estado Cargo -->
+      <!-- Estado -->
             <div>
   <label for="opcion" class="block font-medium mb-1">Estado</label>
   <select 
-    id="estadoCargo" name="estadoCargo"
+    id="opcion"
     class="w-full border border-gray-500 rounded-2xl px-3 py-2 text-gray-900 bg-gray 
            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
     <option value="">-- Selecciona --</option>
+    <option value="opcion1">CC</option>
+    <option value="opcion2">TI </option>
+   
   </select>
 </div>
-    <!-- Resolución -->
-    <div>
-    <label for="resolucion_archivo" class="block font-medium mb-1">Resolución:</label>
-    <input type="text" id="resolucion_numero" name="resolucion_numero" placeholder="Número de resolución" />
 
-    <input 
-    id="resolucion_archivo" name="resolucion_archivo"
+      <!-- Funcionario -->
+      <div>
+        <label class="block font-medium mb-1">Funcionario</label>
+          <input 
+          type="text" 
+          class="w-full border border-gray-600 rounded-2xl px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/>
+      </div>
+
+
+      <!-- Resolución -->
+         <div>
+  <label for="resolucion" class="block font-medium mb-1">Resolución:</label>
+  <input 
+    id="resolucion"
     type="file" 
     class="w-full border border-gray-600 rounded-full px-4 py-2 text-sm text-gray-900 
            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
-    
-    </div>
+</div>
 
     <!-- Fecha de ingreso -->
-    <div class="mb-19 flex justify-center">
-      <div class="w-full">
-        <label for="fechaCreacion" class="block font-medium mb-1">Fecha  Creación</label>
-        <input 
-          id="fechaCreacion" name="fechaCreacion"
-          type="date" 
-          class="w-full border border-gray-600 rounded-full px-4 py-2 text-gray-900 
-                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
-                appearance-none" />
-      </div>
-    </div>
+         <div class="mb-19 flex justify-center">
+  <div class="w-full">
+    <label for="fechaIngreso" class="block font-medium mb-1">Fecha  Ingreso</label>
+    <input 
+      id="fechaIngreso"
+      type="date" 
+      class="w-full border border-gray-600 rounded-full px-4 py-2 text-gray-900 
+             focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+             appearance-none" />
+  </div>
+</div>
     </div>
 
     <!-- Observación -->
 <div class="mb-6">
   <!-- Botón de observación -->
   <button
-    type="button"
     onclick="toggleTextarea()"
     class="flex items-center text-lg font-medium text-black hover:text-green-600 transition"
   >
@@ -118,23 +120,25 @@
   </div>
 </div>
 
-<!-- Botones -->
-<div class="flex flex-col items-center gap-2">
-  <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-green-700 transition">
-    Crear Cargo
-  </button>
-  <!-- Script para alternar visibilidad -->
-  <script>
-    function toggleTextarea() {
-      const textareaDiv = document.getElementById("textarea-observacion");
-      textareaDiv.classList.toggle("hidden");
-    }
-  </script>
+<!-- Script para alternar visibilidad -->
+<script>
+  function toggleTextarea() {
+    const textareaDiv = document.getElementById("textarea-observacion");
+    textareaDiv.classList.toggle("hidden");
+  }
+</script>
+
+
+
+    <!-- Botones -->
+    <div class="flex flex-col items-center gap-2">
+      <button class="bg-green-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-green-700 transition">
+        Crear Cargo
+      </button>
       
     </div>
   </div>
-</form>
-</body>
-</html>
+
+
 
 {% endblock %}
