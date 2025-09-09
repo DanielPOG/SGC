@@ -3,7 +3,6 @@ from .models import CargoNombre, EstadoCargo, Cargo, CargoFuncion, CargoUsuario,
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
-from rest_framework.parsers import MultiPartParser
 import pandas as pd
 from core_apps.usuarios_api.models import Usuario
 from rest_framework.decorators import action
@@ -51,8 +50,11 @@ class IdpViewSet(viewsets.ModelViewSet):
         except Idp.DoesNotExist as e:
             print(f'Error al cambiar estado: {e}')
             return Response({'error':'Error al cambiar el estado de la IDP'}, status=404)
-        if Cargo.objects.filter(idp=idp.idp_id).exists() and Cargo.objects.filter(idp.estado==idp.estado) is True:
-            return Response({'error':'No es posible desactivar una IDP con cargos activos'}, status=400)
+        cargo_exists = Cargo.objects.filter(idp=idp.idp_id).exists()
+        if cargo_exists:
+            c_obj = Cargo.objects.filter(idp=idp.idp_id).get()
+            if c_obj.idp.estado is True:
+                return Response({'error':'No es posible desactivar una IDP con cargos activos'}, status=400)
         idp.estado = not idp.estado
         idp.save()
         text = 'IDP Desactivado' if idp.estado is False else 'IDP Activado'

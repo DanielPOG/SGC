@@ -4,10 +4,9 @@
 
 {% block content %}
 
-<h1 class="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 ">
+<h1 class="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-center">
   Agregar Formación Complementaria
 </h1>
-<br>
   <!-- Formulario -->
 <div class="w-full max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-3xl xl:max-w-4xl bg-gray-200 p-4 sm:p-6 md:p-8 rounded-md shadow mx-auto">
     <div class="grid grid-cols-2 gap-6 mb-6">
@@ -74,7 +73,7 @@
   </button>
 </div>
   <!-- segundo modal para agregar nuevo funcionario   -->
-<div id="nuevoModal" class="fixed inset-0  bg-black/50 hidden justify-center items-center z-50">
+<div id="nuevoModal" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50">
   <div class="bg-white rounded-lg w-96 p-6 relative h-100"> 
     <!-- Botón para cerrar el nuevo modal -->
     <button id="closeNuevoModal" class="absolute top-2 right-3 text-gray-600 hover:text-black text-xl font-bold">×</button>
@@ -136,7 +135,5 @@
   });
 </script>
    
-
-
 
 {% endblock %}

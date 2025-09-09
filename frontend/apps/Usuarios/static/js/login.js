@@ -47,7 +47,10 @@ document.addEventListener('DOMContentLoaded', ()=>{
                 return
             }
             console.log("Respuesta del servidor:", data)
-            LResponse({text:'Sesión iniciada correctamente', valid:true})
+           
+            await LResponse({text:'Sesión iniciada correctamente', valid:true})
+            localStorage.setItem('access', data.access)
+            localStorage.setItem('refresh', data.refresh)
             formNode.reset()
         }catch(e){
             console.warn(`Hubo un error al procesar el formulario ${e}`)

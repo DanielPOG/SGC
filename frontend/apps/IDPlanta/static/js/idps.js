@@ -2,8 +2,8 @@ import toggleIdpState from "./acciones.js"
 
 export function idpRow(idp, cargos) {
   const state = idp.estado
-    ? `<div class="mx-auto w-fit px-0 text-white font-bold rounded-full text-green-600/80 min-w-28 -me-5">ACTIVO</div>`
-    : `<div class="mx-auto w-fit px-0 text-white font-bold rounded-full text-red-600/80 min-w-28 -me-5">INACTIVO</div>`
+    ? `<div class="mx-auto w-fit px-0 font-bold rounded-full text-green-600/80 min-w-28 -me-5">ACTIVO</div>`
+    : `<div class="mx-auto w-fit px-0 font-bold rounded-full text-red-600/80 min-w-28 -me-5">INACTIVO</div>`
 
   const cargosIDP = cargos.filter(c =>c.idp.idp_id === idp.idp_id).length
   return (
@@ -12,7 +12,7 @@ export function idpRow(idp, cargos) {
       <td class="px-4 py-2 border text-center hidden md:table-cell">${idp.fechaCreacion}</td>
       <td class="px-4 py-2 border text-center ">
         <div class="flex justify-center items-center gap-2 "> 
-          <div class="border-r pe-2">${state}</div>
+          <div class="border-r  pe-2">${state}</div>
           <p class="border-r-2 pe-2 border-black"><strong>${cargosIDP}&nbsp;</strong>Cargos activos</p>
           <strong>Acciones:</strong>
           <button data-estado="${idp.estado ? 0 : 1}" id=${idp.idp_id} ${cargosIDP > 0 ? 'disabled' : ''} data-idp=${idp.idp_id} class="min-w-32 text-white rounded-xl px-2 ${cargosIDP < 1 ? (idp.estado ? 'bg-red-500 hover:bg-red-700 ' :'bg-green-600  hover:bg-green-700' ): 'font-bold bg-gray-500/50 pointer-events-none opacity-[0.5]'}">
