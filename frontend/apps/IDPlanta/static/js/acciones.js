@@ -1,4 +1,3 @@
-import apiFetch from "../../../../static/js/global_script.js";
 import { cargarIdps } from "./idps.js";
 function showMessage(msg) {
   const node = `

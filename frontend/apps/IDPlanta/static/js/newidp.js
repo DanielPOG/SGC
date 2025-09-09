@@ -1,4 +1,4 @@
-import apiFetch from "../../../../static/js/global_script.js"
+
 import { cargarIdps, idpRow } from "./idps.js"
 
 document.addEventListener('DOMContentLoaded',()=>{

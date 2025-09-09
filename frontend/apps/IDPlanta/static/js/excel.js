@@ -1,4 +1,4 @@
-  import apiFetch from "../../../../static/js/global_script.js"
+
 import { cargarIdps } from "./idps.js"
     const fileInput = document.getElementById('file-input')
     const submitButton = document.getElementById('upload-excel')

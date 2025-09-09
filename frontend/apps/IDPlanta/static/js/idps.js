@@ -1,4 +1,4 @@
-import apiFetch from "../../../../static/js/global_script.js"
+
 import toggleIdpState from "./acciones.js"
 
 export function idpRow(idp, cargos) {
@@ -30,7 +30,6 @@ export async function cargarIdps(cargos) {
   try {
     const res = await apiFetch("http://127.0.0.1:8001/api/cargos/idps/", {
       method: "GET",
-      headers: { "Content-Type": "application/json" },
     })
     if (!res.ok) throw new Error(`ERROR HTTP GET IDPS ${res.status} / ${res.statusText}`)
     const data = await res.json()
@@ -107,9 +106,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       }`,
       {
         method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
       }
     )
       .then((res) => {

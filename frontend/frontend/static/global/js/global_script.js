@@ -1,10 +1,10 @@
 async function tokenRefresh(){
   const refresh = localStorage.getItem('refresh')
 
-  const res = await fetch('http://127.0.0.1:8001/api/token/refresh', {
-    headers: {"Content-Type":"application/json"},
+  const res = await fetch('http://127.0.0.1:8001/api/usuarios/token-refresh/', {
+    headers: {"Content-Type":"application/json", "Accept":"application/json"},
     method:'POST',
-    body: JSON.stringify({refresh})
+    body: JSON.stringify({refresh:refresh})
   })
 
   if(!res.ok){
@@ -17,12 +17,14 @@ async function tokenRefresh(){
   return data.access
 }
 
-export const apiFetch = async (url, options={}) => {
+window.apiFetch = async (url, options={}) => {
   let token = localStorage.getItem('access')
 
+  const isFData = options.body instanceof FormData
   options.headers = {
     ...(options.headers || {}),
-    "Content-Type":"application/json",
+    ...(isFData ? {} : {"Content-Type":"application/json"}),
+    "Accept": "application/json",
     "Authorization":`Bearer ${token}`
   }
 
