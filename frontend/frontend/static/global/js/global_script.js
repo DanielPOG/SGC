@@ -1,3 +1,15 @@
+// Listener para validacion de acceso
+document.addEventListener("DOMContentLoaded", () => {
+  const access = localStorage.getItem("access")
+  const refresh = localStorage.getItem("refresh")
+
+  if (!access || !refresh) {
+    localStorage.removeItem("access")
+    localStorage.removeItem("refresh")
+    window.location.href = "http://127.0.0.1:8000/login"
+  }
+})
+
 async function tokenRefresh(){
   const refresh = localStorage.getItem('refresh')
 
@@ -46,3 +58,16 @@ window.apiFetch = async (url, options={}) => {
 }
 
 export default apiFetch
+
+
+
+// Listener para cerrar sesión
+document.getElementById('logout').addEventListener('click', ()=>{
+  if(!localStorage.getItem('access') && !localStorage.getItem('refresh')) {
+    console.warn(`No hay sesión que cerrar`)
+    return
+  }
+  localStorage.removeItem('access')
+  localStorage.removeItem('refresh')
+  return location.href = location.href
+})
