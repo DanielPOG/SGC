@@ -3,15 +3,20 @@
     const responseNode = document.getElementById('response-node')
     const paragraphNode = document.querySelector('#response-node p')
     const closeResponseNode = document.querySelector('#response-node button')
-export const checkSessions = ()=>{
-  const access = localStorage.getItem("access")
+
+    
+    // Validacion: Comprueba si ya hay una sesión iniciada
+window.checkSessions = ()=>{
+    const access = localStorage.getItem("access")
     const refresh = localStorage.getItem("refresh")
 
     if (access || refresh) {
         window.location.href = "http://127.0.0.1:8000/principal"
     }
 }
-export const LResponse = async(newVal)=>{
+
+    // Creación de un state para loginResponse
+window.LResponse = async(newVal)=>{
         responseNode.style.display = 'flex'
         paragraphNode.innerText = newVal.text
         if(newVal.valid){
@@ -27,8 +32,7 @@ export const LResponse = async(newVal)=>{
         closeResponseNode.addEventListener('click', handleClose)
     }
 
-export const setRecoverResponse = (text, valid)=>{
-        const recoverResponse = {text:text, valid:valid}
+window.setRecoverResponse = (recoverResponse ,text, valid)=>{
 
         if(typeof text !== 'string' || typeof valid !== 'boolean'){
             console.error(`
@@ -40,5 +44,4 @@ export const setRecoverResponse = (text, valid)=>{
         recoverResponse.text = text
         recoverResponse.valid = valid
         recoverResponseNode.innerText = recoverResponse.text
-        return recoverResponse
     }
