@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', ()=>{
 
     // Validacion: Comprueba si ya hay una sesión iniciada
+    // TODO: Convertir a modulo de exportacion
     const access = localStorage.getItem("access")
     const refresh = localStorage.getItem("refresh")
 
@@ -20,6 +21,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
     console.log('Nodes loaded')
 
     // Creación de un state para loginResponse
+    // TODO: Convertir a modulo de exportacion
     const LResponse = async(newVal)=>{
         responseNode.style.display = 'flex'
         paragraphNode.innerText = newVal.text
@@ -45,7 +47,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
                 return
             }
             const res = await fetch("http://127.0.0.1:8001/api/usuarios/login/", {
-                method:'POST',
+                method:'POST', 
                 headers: {"Content-Type":"application/json"},
                 body: JSON.stringify({correo, password})
             })
@@ -69,6 +71,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
 
     // Creación de un state para recoverResponse de contraseña debajo del input usuario 
+    // TODO: Convertir a modulo de exportacion
     const recoverResponse = {text:'', valid:false}
     const setRecoverResponse = (text, valid)=>{
         if(typeof text !== 'string' || typeof valid !== 'boolean'){
