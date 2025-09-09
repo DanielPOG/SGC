@@ -99,16 +99,20 @@ from rest_framework.exceptions import ValidationError as DRFValidationError
 from core_apps.usuarios_api.models import Usuario
 
 class CargoUsuarioSerializer(serializers.ModelSerializer):
-    num_doc = serializers.CharField(write_only=True)
+    # Para asignar usuario desde el frontend usando num_doc
+    num_doc = serializers.CharField(write_only=True, required=True)
 
-    # aceptar cargo_id en el input y exponer cargo solo como lectura
+    # Para asignar cargo desde el frontend con el ID
     cargo_id = serializers.PrimaryKeyRelatedField(
-        source="cargo", queryset=Cargo.objects.all(), write_only=True
+        source="cargo", queryset=Cargo.objects.all(), required=True
     )
-    cargo = serializers.PrimaryKeyRelatedField(read_only=True)
 
-    cargo_destino_id = serializers.IntegerField(required=False)
-    fechaRetiro = serializers.DateField(required=False, allow_null=True)
+    # Para mostrar cargo como string (usa __str__ de Cargo)
+    cargo = serializers.StringRelatedField(read_only=True)
+
+    cargo_destino_id = serializers.IntegerField(required=False, allow_null=True)
+    fechaRetiro = serializers.DateTimeField(required=False, allow_null=True)
+
     resolucion_archivo = serializers.FileField(required=False, allow_null=True)
 
     class Meta:
@@ -122,10 +126,13 @@ class CargoUsuarioSerializer(serializers.ModelSerializer):
         extra_kwargs = {"usuario": {"read_only": True}}
 
     def create(self, validated_data):
-        num_doc = validated_data.pop("num_doc")
+        num_doc = validated_data.pop("num_doc", None)
         cargo_destino_id = validated_data.pop("cargo_destino_id", None)
         self.context["cargo_destino_id"] = cargo_destino_id
 
+        # Buscar usuario por documento
+        if not num_doc:
+            raise serializers.ValidationError({"num_doc": "Este campo es obligatorio"})
         try:
             usuario = Usuario.objects.get(num_doc=num_doc)
         except Usuario.DoesNotExist:
@@ -137,7 +144,8 @@ class CargoUsuarioSerializer(serializers.ModelSerializer):
         validated_data.setdefault("fechaInicio", timezone.now())
 
         # Validación: no permitir TEMPORAL si ya hay PLANTA activo en ese cargo
-        if validated_data.get("estadoVinculacion") and getattr(validated_data["estadoVinculacion"], "estado", "").upper() == "TEMPORAL":
+        estado_vinc = validated_data.get("estadoVinculacion")
+        if estado_vinc and getattr(estado_vinc, "estado", "").upper() == "TEMPORAL":
             activo_planta = CargoUsuario.objects.filter(
                 cargo=validated_data["cargo"],
                 estadoVinculacion__estado__iexact="PLANTA",
@@ -161,16 +169,21 @@ class CargoUsuarioSerializer(serializers.ModelSerializer):
         hoy = timezone.now()
         usuario = instance.usuario
         cargo = instance.cargo
-        estado = instance.estadoVinculacion.estado.upper()
+        estado = getattr(instance.estadoVinculacion, "estado", "").upper()
 
         # cerrar cargos abiertos del usuario
-        abiertos = CargoUsuario.objects.filter(usuario=usuario, fechaRetiro__isnull=True).exclude(pk=instance.pk)
+        abiertos = CargoUsuario.objects.filter(
+            usuario=usuario, fechaRetiro__isnull=True
+        ).exclude(pk=instance.pk)
         for abierto in abiertos:
             abierto.fechaRetiro = hoy
             abierto.save(update_fields=["fechaRetiro"])
 
         if estado == "PLANTA":
-            titulares = CargoUsuario.objects.filter(cargo=cargo, fechaRetiro__isnull=True).exclude(pk=instance.pk)
+            # cerrar otros en el mismo cargo
+            titulares = CargoUsuario.objects.filter(
+                cargo=cargo, fechaRetiro__isnull=True
+            ).exclude(pk=instance.pk)
             for titular in titulares:
                 titular.fechaRetiro = hoy
                 titular.save(update_fields=["fechaRetiro"])
@@ -180,11 +193,11 @@ class CargoUsuarioSerializer(serializers.ModelSerializer):
                     titular.usuario.save(update_fields=["cargo"])
                 elif titular.estadoVinculacion.estado.upper() == "TEMPORAL":
                     from core_apps.cargos_api.logic.cascada_helpers import devolver_a_planta
-                    devolver_a_planta(titular.usuario, hoy=hoy, visited=None, context=self.context)
+                    devolver_a_planta(titular.usuario, visited=None, context=self.context)
 
+            # resetear último planta para no dejar huella
             ultimo_planta = CargoUsuario.objects.filter(
-                cargo=cargo,
-                estadoVinculacion__estado__iexact="PLANTA"
+                cargo=cargo, estadoVinculacion__estado__iexact="PLANTA"
             ).exclude(usuario=usuario).order_by("-fechaInicio").first()
             if ultimo_planta:
                 ultimo_planta.usuario.cargo = None
@@ -195,9 +208,7 @@ class CargoUsuarioSerializer(serializers.ModelSerializer):
 
         elif estado == "TEMPORAL":
             planta_activa = CargoUsuario.objects.filter(
-                usuario=usuario,
-                estadoVinculacion__estado__iexact="PLANTA",
-                fechaRetiro__isnull=True
+                usuario=usuario, estadoVinculacion__estado__iexact="PLANTA", fechaRetiro__isnull=True
             ).exclude(pk=instance.pk)
             for p in planta_activa:
                 p.fechaRetiro = hoy
@@ -205,9 +216,10 @@ class CargoUsuarioSerializer(serializers.ModelSerializer):
                 p.usuario.cargo = None
                 p.usuario.save(update_fields=["cargo"])
 
-        if instance.estadoVinculacion.estado.upper() == "TEMPORAL" and instance.fechaRetiro is not None:
+        # cascada si se cierra temporal
+        if estado == "TEMPORAL" and instance.fechaRetiro is not None:
             from core_apps.cargos_api.logic.cascada_helpers import devolver_a_planta
-            devolver_a_planta(usuario, hoy=hoy, visited=None, context=self.context)
+            devolver_a_planta(usuario, visited=None, context=self.context)
 
 
 class CargoExcelSerializer(serializers.ModelSerializer):

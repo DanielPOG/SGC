@@ -98,9 +98,11 @@ def _normalize_date(date_str):
         return None
     from datetime import datetime
     try:
-        return datetime.strptime(date_str[:10], "%Y-%m-%d").date()
+        # Si viene solo YYYY-MM-DD → lo convertimos a datetime con hora 00:00:00
+        return datetime.strptime(date_str[:10], "%Y-%m-%d")
     except Exception:
         return None
+
 
 def aplicar_decisiones_cascada(root_usuario_id, cargo_destino_id, decisiones):
     """
@@ -111,16 +113,16 @@ def aplicar_decisiones_cascada(root_usuario_id, cargo_destino_id, decisiones):
     - Validaciones preventivas
     """
     resultados = []
-    hoy = timezone.now().date()
+    hoy = timezone.now()
     visited = set()
 
     if not isinstance(decisiones, list):
         raise serializers.ValidationError({"decisiones": "Debe ser una lista"})
 
-    # Deduplicar por num_doc: si hay duplicados, se aplica la última decisión
+    # Deduplicar por num_doc
     decisiones_por_doc = {}
     for d in decisiones:
-        num_doc = d.get("num_doc") or d.get("numDocumento") or d.get("numero_documento")
+        num_doc = d.get("num_doc")
         if not num_doc:
             raise serializers.ValidationError({"num_doc": "Obligatorio en cada decisión"})
         decisiones_por_doc[str(num_doc)] = d
@@ -142,97 +144,60 @@ def aplicar_decisiones_cascada(root_usuario_id, cargo_destino_id, decisiones):
                     "detalle": f"Faltan campos en decisión {tipo} usuario {num_doc}: {', '.join(faltantes)}"
                 })
 
-            # Buscar o crear usuario
             usuario, _ = Usuario.objects.get_or_create(num_doc=num_doc)
 
             if tipo == "planta":
                 # Intentar tomar último PLANTA histórico
                 ultimo_planta = CargoUsuario.objects.filter(
-                    usuario=usuario,
-                    estadoVinculacion__estado__iexact="PLANTA"
+                    usuario=usuario, estadoVinculacion__estado__iexact="PLANTA"
                 ).order_by("-fechaInicio").first()
 
                 if ultimo_planta:
-                    cargo_pk = ultimo_planta.cargo.pk
-                    estado_pk = ultimo_planta.estadoVinculacion.pk
-                    salario_val = ultimo_planta.salario
-                    grado_val = ultimo_planta.grado
-                    resolucion_val = ultimo_planta.resolucion
-                    fecha_inicio_val = _normalize_date(d.get("fechaInicio")) or ultimo_planta.fechaInicio
-                else:
-                    # Usuario nuevo: asignar cargo_destino_id como PLANTA
-                    if not cargo_destino_id:
-                        raise serializers.ValidationError({"cargo_destino_id": "Requerido para asignación PLANTA a usuario nuevo"})
-                    cargo_pk = cargo_destino_id
-                    # Validar cargo existe
-                    try:
-                        cargo_obj = Cargo.objects.get(pk=cargo_pk)
-                    except Cargo.DoesNotExist:
-                        raise serializers.ValidationError({"cargo": f"No existe cargo {cargo_pk}"})
-                    estado_obj = EstadoVinculacion.objects.filter(estado__iexact="PLANTA").first()
-                    if not estado_obj:
-                        raise serializers.ValidationError({"estadoVinculacion": "No existe estado PLANTA en la base de datos"})
-                    estado_pk = estado_obj.pk
-                    salario_val = d.get("salario")
-                    grado_val = d.get("grado")
-                    resolucion_val = d.get("resolucion")
-                    fecha_inicio_val = _normalize_date(d.get("fechaInicio"))
-
-                observacion_val = d.get("observacion") or "Reasignado por devolución escalonada"
-                resol_archivo_val = d.get("resolucion_archivo", None)
+                    datos = {
+                        "num_doc": num_doc,
+                        "cargo_id": ultimo_planta.cargo.id,
+                        "estadoVinculacion": ultimo_planta.estadoVinculacion.id,
+                        "salario": ultimo_planta.salario,
+                        "grado": ultimo_planta.grado,
+                        "resolucion": ultimo_planta.resolucion,
+                        "observacion": d.get("observacion") or "Reasignado por devolución escalonada",
+                        "fechaInicio": _normalize_date(d.get("fechaInicio")) or ultimo_planta.fechaInicio,
+                        "fechaRetiro": None,
+                        "resolucion_archivo": d.get("resolucion_archivo"),
+                    }
+                    serializer = CargoUsuarioSerializer(data=datos)
+                    serializer.is_valid(raise_exception=True)
+                    instance = serializer.save()
+                    usuario.cargo = instance.cargo
+                    usuario.save(update_fields=["cargo"])
+                    resultados.append(instance)
 
             else:  # temporal
                 cargo_pk = d.get("cargo_id")
                 if not cargo_pk:
                     raise serializers.ValidationError({"cargo_id": "Obligatorio para decisiones tipo 'temporal'"})
-                try:
-                    Cargo.objects.get(pk=cargo_pk)
-                except Cargo.DoesNotExist:
-                    raise serializers.ValidationError({"cargo": f"No existe cargo {cargo_pk}"})
 
-                estado_pk = d.get("estadoVinculacion")
-                try:
-                    EstadoVinculacion.objects.get(pk=estado_pk)
-                except EstadoVinculacion.DoesNotExist:
-                    raise serializers.ValidationError({"estadoVinculacion": f"No existe estado {estado_pk}"})
+                datos = {
+                    "num_doc": num_doc,
+                    "cargo_id": int(cargo_pk),
+                    "estadoVinculacion": d.get("estadoVinculacion"),
+                    "salario": d.get("salario"),
+                    "grado": d.get("grado"),
+                    "resolucion": d.get("resolucion"),
+                    "observacion": d.get("observacion", ""),
+                    "fechaInicio": _normalize_date(d.get("fechaInicio")),
+                    "fechaRetiro": _normalize_date(d.get("fechaRetiro")),
+                    "resolucion_archivo": d.get("resolucion_archivo"),
+                }
+                serializer = CargoUsuarioSerializer(data=datos, context={"cargo_destino_id": cargo_destino_id})
+                serializer.is_valid(raise_exception=True)
+                instance = serializer.save()
+                usuario.cargo = instance.cargo
+                usuario.save(update_fields=["cargo"])
+                resultados.append(instance)
 
-                salario_val = d.get("salario")
-                grado_val = d.get("grado")
-                resolucion_val = d.get("resolucion")
-                fecha_inicio_val = _normalize_date(d.get("fechaInicio"))
-                observacion_val = d.get("observacion", "")
-                resol_archivo_val = d.get("resolucion_archivo")
-
-            # Payload para serializer
-            datos = {
-                "cargo_id": cargo_pk,
-                "num_doc": num_doc,
-                "estadoVinculacion": estado_pk,
-                "salario": salario_val,
-                "grado": grado_val,
-                "resolucion": resolucion_val,
-                "observacion": observacion_val,
-                "fechaInicio": fecha_inicio_val,
-            }
-            if d.get("fechaRetiro"):
-                datos["fechaRetiro"] = _normalize_date(d.get("fechaRetiro"))
-            if resol_archivo_val:
-                datos["resolucion_archivo"] = resol_archivo_val
-
-            # Validación y creación
-            serializer = CargoUsuarioSerializer(data=datos, context={"cargo_destino_id": cargo_destino_id})
-            serializer.is_valid(raise_exception=True)
-            instance = serializer.save()
-
-            # Siempre actualizar usuario.cargo
-            usuario.cargo = instance.cargo
-            usuario.save(update_fields=["cargo"])
-
-            resultados.append(instance)
-
-            # Si temporal con fechaRetiro, intentar devolver a planta
-            if tipo == "temporal" and getattr(instance, "fechaRetiro", None):
-                from core_apps.cargos_api.logic.cascada_helpers import devolver_a_planta
-                devolver_a_planta(instance.usuario, hoy=hoy, visited=visited, context={"cargo_destino_id": cargo_destino_id})
+                # Si temporal con fechaRetiro, devolver a PLANTA
+                if datos.get("fechaRetiro"):
+                    devolver_a_planta(usuario, hoy=hoy, visited=visited, context={"cargo_destino_id": cargo_destino_id})
 
     return resultados

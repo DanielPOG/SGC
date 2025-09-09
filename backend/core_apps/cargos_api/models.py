@@ -40,7 +40,8 @@ class CargoUsuario(models.Model):
     cargo = models.ForeignKey('Cargo', on_delete=models.CASCADE)
     usuario = models.ForeignKey('usuarios_api.Usuario', on_delete=models.CASCADE)
     fechaInicio = models.DateTimeField(default=timezone.now)
-    fechaRetiro = models.DateField(blank=True, null=True)
+    fechaRetiro = models.DateTimeField(blank=True, null=True)
+
     salario = models.DecimalField(max_digits=10, decimal_places=2)
     grado = models.CharField(max_length=100)
     resolucion= models.CharField(max_length=100)
