@@ -19,13 +19,13 @@
             transition-all duration-300 z-50 overflow-hidden">
     
     <div class="flex items-center justify-between p-4 border-b border-gray-700 ">
-        <div class="flex items-center gap-2 transition-all"
+     
+       <div class="flex items-center gap-2 transition-all"
              :class="sidebarOpen ? 'justify-start' : 'justify-center w-full'">
-
             <img src="{% static 'img/usuario.png' %}" alt="Foto de usuario"
                  x-show="sidebarOpen" x-cloak
                  class="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 xl:w-24 xl:h-24 
-                        rounded-full object-cover border-2 border-white">
+                        rounded-full object-cover border-2 border-white bg-white">
             <span x-show="sidebarOpen" x-cloak
                   class="font-bold bg-black 
                          px-2 sm:px-2 md:px-3 lg:px-3 
