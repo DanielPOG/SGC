@@ -1,4 +1,5 @@
-  import { cargarIdps } from "./idps.js"
+  import apiFetch from "../../../../static/js/global_script.js"
+import { cargarIdps } from "./idps.js"
     const fileInput = document.getElementById('file-input')
     const submitButton = document.getElementById('upload-excel')
 
@@ -14,7 +15,7 @@
     formData.append("file", file)
 
     try {
-      const res = await fetch("http://127.0.0.1:8001/api/cargos/idps/cargarExcel/", {
+      const res = await apiFetch("http://127.0.0.1:8001/api/cargos/idps/cargarExcel/", {
         method: "POST",
         body: formData
       })

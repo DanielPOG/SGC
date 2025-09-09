@@ -1,3 +1,4 @@
+import apiFetch from "../../../../static/js/global_script.js"
 import { cargarIdps, idpRow } from "./idps.js"
 
 document.addEventListener('DOMContentLoaded',()=>{
@@ -32,7 +33,7 @@ document.addEventListener('DOMContentLoaded',()=>{
                 const formData = new FormData()
                 formData.append('idp_id', numero)
                 formData.append('fechaCreacion', fecha)
-                const response = await fetch('http://127.0.0.1:8001/api/cargos/idps/', {
+                const response = await apiFetch('http://127.0.0.1:8001/api/cargos/idps/', {
                     method: 'POST',
                     body: formData
                 });
@@ -54,7 +55,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 
                 newIdpRes.innerText = 'IDP Creado correctamente'
                    
-                if( newIdpRes.classList.contains('bg-red-600')) newIdpRes.classList.remove('bg-red-600')
+            if( newIdpRes.classList.contains('bg-red-600')) newIdpRes.classList.remove('bg-red-600')
                 newIdpRes.classList.add('bg-green-600')
                 console.log("IDP creado:", data);
                 const tbody = document.querySelector("table tbody")

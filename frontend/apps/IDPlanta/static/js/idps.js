@@ -1,3 +1,4 @@
+import apiFetch from "../../../../static/js/global_script.js"
 import toggleIdpState from "./acciones.js"
 
 export function idpRow(idp, cargos) {
@@ -27,7 +28,7 @@ export function idpRow(idp, cargos) {
 }
 export async function cargarIdps(cargos) {
   try {
-    const res = await fetch("http://127.0.0.1:8001/api/cargos/idps/", {
+    const res = await apiFetch("http://127.0.0.1:8001/api/cargos/idps/", {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     })
@@ -85,7 +86,7 @@ document.addEventListener("click", (e) => {
       })
 document.addEventListener("DOMContentLoaded", async () => {
   try {
-    const res = await fetch('http://127.0.0.1:8001/api/cargos/cargos/')
+    const res = await apiFetch('http://127.0.0.1:8001/api/cargos/cargos/')
     if (!res.ok) throw new Error(`ERROR HTTP GET CARGOS ${res.status}`)
     const data = await res.json()
     window.cargos = [...data]
@@ -101,7 +102,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       await cargarIdps(window.cargos)
       return
       }
-    fetch(
+    apiFetch(
       `http://localhost:8001/api/cargos/idps/${buscarForm.querySelector("#numero").value
       }`,
       {

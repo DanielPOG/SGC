@@ -1,3 +1,4 @@
+import apiFetch from "../../../../static/js/global_script.js";
 import { cargarIdps } from "./idps.js";
 function showMessage(msg) {
   const node = `
@@ -15,20 +16,16 @@ export default async function toggleIdpState(idp) {
   try {
     const formData = new FormData()
     formData.append('idp_id',idp)
-    const res = await fetch("http://127.0.0.1:8001/api/cargos/idps/cambiarEstado/", {
+    const res = await apiFetch("http://127.0.0.1:8001/api/cargos/idps/cambiarEstado/", {
       method: "PATCH",
       body: formData
     })
-    if(!res){
-    showMessage("Error al actualizar estado")
-    }
+    if(!res) showMessage("Error al actualizar estado")
+    
     const data = await res.json()
 
-    if (data.error) {
-      showMessage(data.error)
-    } else if(data.msg) {
-      showMessage(`${data.msg} correctamente`)
-    }
+    if (data.error) showMessage(data.error) 
+    else if(data.msg) showMessage(`${data.msg} correctamente`)
 
     await cargarIdps(window.cargos)
   } catch (e) {
