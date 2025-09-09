@@ -1,13 +1,8 @@
+import { checkSessions } from "./exports"
 document.addEventListener('DOMContentLoaded', ()=>{
 
     // Validacion: Comprueba si ya hay una sesión iniciada
-    // TODO: Convertir a modulo de exportacion
-    const access = localStorage.getItem("access")
-    const refresh = localStorage.getItem("refresh")
-
-    if (access || refresh) {
-        window.location.href = "http://127.0.0.1:8000/principal"
-    }
+    checkSessions()    
 
     const inputMailNode = document.getElementById('usuario')
     const formNode = document.getElementById('login-form')
