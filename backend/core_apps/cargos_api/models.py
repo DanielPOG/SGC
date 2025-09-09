@@ -49,3 +49,11 @@ class CargoUsuario(models.Model):
     observacion = models.TextField(blank=True, null=True)
     def __str__(self):
         return f"{self.cargo} - {self.usuario}"
+    
+class RelacionCascada(models.Model):
+    cargo_padre = models.ForeignKey('Cargo', on_delete=models.CASCADE, related_name='cargos_dependientes')
+    cargo_hijo = models.ForeignKey('Cargo', on_delete=models.CASCADE, related_name='cargos_superiores')
+
+    def __str__(self):
+        return f"{self.cargo_padre} → {self.cargo_hijo}"
+

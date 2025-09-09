@@ -16,7 +16,6 @@
     window.urlHistorialCargo = "{% url 'cargohistorial' %}".replace("0/", "");
   </script>
   <script src="{% static 'js/asignarCargo.js' %}"></script>
-  <script src="{% static 'js/pruebaAsignar.js' %}"></script>
 </head>
 <body class="bg-white p-8 scrollbar">
 
@@ -137,13 +136,12 @@
     
     <!-- Formulario -->
     <form id="formAsignarFuncionario">
-      <input type="hidden" id="cargoIdSeleccionado" name="cargo_id" />
-
+      <input type="hidden" id="cargoIdSeleccionado" name="cargo" />
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <!-- Número de documento -->
         <div class="mb-4">
           <label class="font-semibold block mb-1" for="usuarioId">Usuario</label>
-          <input id="usuarioId" name="usuario_id" type="number" class="w-full border rounded-full px-3 py-2" />
+          <input id="usuarioId" name="num_doc" type="number" class="w-full border rounded-full px-3 py-2" />
         </div>
 
         <!-- Grado -->
@@ -197,9 +195,6 @@
     </form>
   </div>
 </div>
-
-
-
 <!-- Modal escalonado -->
 <div id="escalonModal" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50 px-4">
   <div class="bg-white rounded-lg w-full max-w-xl p-6 relative">
@@ -207,17 +202,13 @@
     <h3 class="text-lg font-bold mb-3">Devolución escalonada</h3>
 
     <div id="escalonContent">
-      <!-- Aquí se renderiza la sugerencia actual -->
       <p id="escalonTexto" class="mb-4"></p>
 
-      <div id="escalonOpciones" class="flex gap-3">
+      <div class="flex gap-3">
         <button id="btnDevolverPlanta" class="px-3 py-2 bg-green-600 text-white rounded">Devolver a planta</button>
         <button id="btnAsignarOtro" class="px-3 py-2 bg-yellow-600 text-white rounded">Asignar a otro temporal</button>
-        <button id="btnOmitir" class="px-3 py-2 bg-gray-400 text-white rounded">Omitir</button>
-        <button id="btnDevolverTodo" class="px-3 py-2 bg-red-600 text-white rounded">Devolver todo</button>
       </div>
 
-      <!-- selector de cargos (solo visible si eligen Asignar otro) -->
       <div id="selectorCargos" class="mt-4 hidden">
         <label for="selectCargos" class="block mb-1">Selecciona cargo temporal:</label>
         <select id="selectCargos" class="w-full border rounded px-2 py-1"></select>
@@ -226,6 +217,54 @@
     </div>
   </div>
 </div>
+<!-- Modal para datos de asignación temporal -->
+<div id="temporalModal" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50 px-4">
+  <div class="bg-white rounded-lg w-full max-w-3xl p-6 relative h-auto">
+    <button id="closeTemporalModal" class="absolute top-2 right-3 text-gray-600 hover:text-black text-xl font-bold">X</button>
+    <h3 class="text-lg font-bold mb-4">Datos para asignación temporal</h3>
+
+    <form id="formTemporalAsignacion">
+      <input type="hidden" id="temporalCargoId" />
+      <input type="hidden" id="temporalUsuarioId" />
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label for="temporalGrado">Grado</label>
+          <input id="temporalGrado" type="number" class="w-full border rounded px-3 py-2" />
+        </div>
+        <div>
+          <label for="temporalSalario">Salario</label>
+          <input id="temporalSalario" type="number" class="w-full border rounded px-3 py-2" />
+        </div>
+        <div>
+          <label for="temporalResolucion">Resolución</label>
+          <input id="temporalResolucion" type="text" class="w-full border rounded px-3 py-2" />
+        </div>
+        <div>
+          <label for="temporalArchivo">Archivo Resolución</label>
+          <input id="temporalArchivo" type="file" class="w-full border rounded px-3 py-2" />
+        </div>
+        <div>
+          <label for="temporalEstado">Estado de vinculación</label>
+          <select id="temporalEstado" class="w-full border rounded px-3 py-2">
+            <option value="">-- Selecciona --</option>
+          </select>
+        </div>
+        <div>
+          <label for="temporalFechaInicio">Fecha de inicio</label>
+          <input id="temporalFechaInicio" type="date" class="w-full border rounded px-3 py-2" />
+        </div>
+        <div class="md:col-span-2">
+          <label for="temporalObservacion">Observación</label>
+          <textarea id="temporalObservacion" rows="2" class="w-full border rounded px-3 py-2"></textarea>
+        </div>
+      </div>
+      <div class="flex justify-end mt-4">
+        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">Confirmar asignación</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 
 </body>
 </html>

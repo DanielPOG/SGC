@@ -8,6 +8,13 @@ from core_apps.usuarios_api.serializers import UsuarioSerializer
 from .models import CargoNombre, EstadoCargo, Cargo, CargoUsuario, Idp, EstadoVinculacion
 from core_apps.general.views import CentroSerializer
 from django.utils import timezone
+
+
+from django.db import transaction
+from django.utils import timezone
+from rest_framework.exceptions import ValidationError as DRFValidationError
+from core_apps.cargos_api.models import EstadoVinculacion
+
 class CargoNombreSerializer(serializers.ModelSerializer):
     class Meta:
         model = CargoNombre
@@ -38,34 +45,99 @@ class CargoSerializer(serializers.ModelSerializer):
         model = Cargo
         fields = '__all__'
 
+from rest_framework import serializers
+class PayloadRootSerializer(serializers.Serializer):
+    usuario = serializers.CharField()
+    cargo_id = serializers.IntegerField()  # 👈 usar cargo_id, no cargo
+    num_doc = serializers.CharField()
+    estadoVinculacion = serializers.IntegerField()
+    salario = serializers.DecimalField(max_digits=10, decimal_places=2)
+    grado = serializers.CharField()
+    resolucion = serializers.CharField()
+    resolucion_archivo = serializers.FileField(required=False, allow_null=True)  # 👈 ahora archivo real
+    observacion = serializers.CharField(allow_blank=True, required=False)
+    fechaInicio = serializers.DateField()
+    fechaRetiro = serializers.DateField(allow_null=True, required=False)
+
+from rest_framework import serializers
+import json
+
+class ConfirmacionCascadaSerializer(serializers.Serializer):
+    root_usuario_id = serializers.IntegerField()
+    cargo_destino_id = serializers.IntegerField()
+    decisiones = serializers.ListField(child=serializers.DictField(), required=False)
+    payload_root = serializers.DictField(required=False)
+    resolucion_archivo = serializers.FileField(required=False, allow_null=True)
+
+    def to_internal_value(self, data):
+        """
+        Convierte campos JSON que vienen como string desde FormData
+        """
+        ret = super().to_internal_value(data)
+
+        # parsear payload_root si viene como string
+        if "payload_root" in data and isinstance(data["payload_root"], str):
+            try:
+                ret["payload_root"] = json.loads(data["payload_root"])
+            except json.JSONDecodeError:
+                self.fail("invalid", field_name="payload_root")
+
+        # parsear decisiones si vienen como string
+        if "decisiones" in data and isinstance(data["decisiones"], str):
+            try:
+                ret["decisiones"] = json.loads(data["decisiones"])
+            except json.JSONDecodeError:
+                self.fail("invalid", field_name="decisiones")
+
+        return ret
+
+
+from rest_framework import serializers
+from django.utils import timezone
+from rest_framework.exceptions import ValidationError as DRFValidationError
+
+from core_apps.usuarios_api.models import Usuario
+
 class CargoUsuarioSerializer(serializers.ModelSerializer):
     num_doc = serializers.CharField(write_only=True)
+
+    # aceptar cargo_id en el input y exponer cargo solo como lectura
+    cargo_id = serializers.PrimaryKeyRelatedField(
+        source="cargo", queryset=Cargo.objects.all(), write_only=True
+    )
+    cargo = serializers.PrimaryKeyRelatedField(read_only=True)
+
+    cargo_destino_id = serializers.IntegerField(required=False)
+    fechaRetiro = serializers.DateField(required=False, allow_null=True)
+    resolucion_archivo = serializers.FileField(required=False, allow_null=True)
 
     class Meta:
         model = CargoUsuario
         fields = [
-            "id", "cargo", "usuario", "num_doc",
+            "id", "cargo", "cargo_id", "usuario", "num_doc", "cargo_destino_id",
             "estadoVinculacion", "salario", "grado",
             "resolucion", "resolucion_archivo",
             "observacion", "fechaInicio", "fechaRetiro"
         ]
         extra_kwargs = {"usuario": {"read_only": True}}
 
-    # ---------------------------
-    # create / update
-    # ---------------------------
     def create(self, validated_data):
         num_doc = validated_data.pop("num_doc")
+        cargo_destino_id = validated_data.pop("cargo_destino_id", None)
+        self.context["cargo_destino_id"] = cargo_destino_id
+
         try:
             usuario = Usuario.objects.get(num_doc=num_doc)
         except Usuario.DoesNotExist:
             raise serializers.ValidationError({"usuario": "No existe un usuario con ese documento"})
 
         validated_data["usuario"] = usuario
-        validated_data["fechaInicio"] = timezone.now()
+
+        # Si no viene fechaInicio, usar ahora
+        validated_data.setdefault("fechaInicio", timezone.now())
 
         # Validación: no permitir TEMPORAL si ya hay PLANTA activo en ese cargo
-        if validated_data["estadoVinculacion"].estado.upper() == "TEMPORAL":
+        if validated_data.get("estadoVinculacion") and getattr(validated_data["estadoVinculacion"], "estado", "").upper() == "TEMPORAL":
             activo_planta = CargoUsuario.objects.filter(
                 cargo=validated_data["cargo"],
                 estadoVinculacion__estado__iexact="PLANTA",
@@ -85,9 +157,6 @@ class CargoUsuarioSerializer(serializers.ModelSerializer):
         self._post_create_update_logic(instance, validated_data=validated_data)
         return instance
 
-    # ---------------------------
-    # Lógica principal (igual que antes)
-    # ---------------------------
     def _post_create_update_logic(self, instance, validated_data=None):
         hoy = timezone.now()
         usuario = instance.usuario
@@ -110,7 +179,8 @@ class CargoUsuarioSerializer(serializers.ModelSerializer):
                     titular.usuario.cargo = None
                     titular.usuario.save(update_fields=["cargo"])
                 elif titular.estadoVinculacion.estado.upper() == "TEMPORAL":
-                    self._devolver_a_planta(titular.usuario, hoy)
+                    from core_apps.cargos_api.logic.cascada_helpers import devolver_a_planta
+                    devolver_a_planta(titular.usuario, hoy=hoy, visited=None, context=self.context)
 
             ultimo_planta = CargoUsuario.objects.filter(
                 cargo=cargo,
@@ -136,115 +206,9 @@ class CargoUsuarioSerializer(serializers.ModelSerializer):
                 p.usuario.save(update_fields=["cargo"])
 
         if instance.estadoVinculacion.estado.upper() == "TEMPORAL" and instance.fechaRetiro is not None:
-            self._devolver_a_planta(usuario, hoy)
+            from core_apps.cargos_api.logic.cascada_helpers import devolver_a_planta
+            devolver_a_planta(usuario, hoy=hoy, visited=None, context=self.context)
 
-    # ---------------------------
-    # NUEVO: construir sugerencias con opciones
-    # ---------------------------
-    def build_escalon_sugerencias(self, usuario, hoy=None, visited=None):
-        if hoy is None:
-            hoy = timezone.now()
-
-        if visited is None:
-            visited = set()
-
-        sugerencias = []
-        if usuario.pk in visited:
-            return sugerencias
-        visited.add(usuario.pk)
-
-        planta_original = CargoUsuario.objects.filter(
-            usuario=usuario,
-            estadoVinculacion__estado__iexact="PLANTA"
-        ).order_by("-fechaInicio").first()
-
-        if not planta_original:
-            return sugerencias
-
-        opciones = []
-
-        # opción 1 → volver a planta
-        opciones.append({
-            "cargo_id": planta_original.cargo.pk,
-            "cargo_nombre": planta_original.cargo.cargoNombre.nombre if planta_original.cargo.cargoNombre else None,
-            "tipo": "planta"
-        })
-
-        # opción 2 → cargos libres para asignar como temporal
-        cargos_ocupados = CargoUsuario.objects.filter(fechaRetiro__isnull=True).values("cargo_id")
-        cargos_temporales_libres = Cargo.objects.exclude(id__in=cargos_ocupados)
-        for cargo in cargos_temporales_libres:
-            opciones.append({
-                "cargo_id": cargo.pk,
-                "cargo_nombre": cargo.cargoNombre.nombre if cargo.cargoNombre else None,
-                "tipo": "temporal"
-            })
-
-        # recursivo: si hay alguien ocupando el cargo de planta
-        temporal_en_planta = CargoUsuario.objects.filter(
-            cargo=planta_original.cargo,
-            estadoVinculacion__estado__iexact="TEMPORAL",
-            fechaRetiro__isnull=True
-        ).first()
-
-        if temporal_en_planta:
-            # solo si hay alguien ocupando el cargo de planta → sugerencias en cascada
-            sugerencias.append({
-                "usuario_id": usuario.pk,
-                "usuario_nombre": getattr(usuario, "nombre", str(usuario)),
-                "opciones": opciones
-            })
-            siguiente = self.build_escalon_sugerencias(temporal_en_planta.usuario, hoy, visited=visited)
-            sugerencias.extend(siguiente)
-
-        return sugerencias
-
-
-    # ---------------------------
-    # devolver a planta (auto)
-    # ---------------------------
-    def _devolver_a_planta(self, usuario, hoy, visited=None, modo="auto"):
-        if visited is None:
-            visited = set()
-        if usuario.pk in visited:
-            return
-        visited.add(usuario.pk)
-
-        planta_original = CargoUsuario.objects.filter(
-            usuario=usuario,
-            estadoVinculacion__estado__iexact="PLANTA"
-        ).order_by("-fechaInicio").first()
-
-        if planta_original:
-            if modo == "escalonado":
-                return self.build_escalon_sugerencias(usuario, hoy, visited)
-
-            nuevo = CargoUsuario.objects.create(
-                usuario=usuario,
-                cargo=planta_original.cargo,
-                estadoVinculacion=planta_original.estadoVinculacion,
-                salario=planta_original.salario,
-                grado=planta_original.grado,
-                resolucion=planta_original.resolucion,
-                resolucion_archivo=planta_original.resolucion_archivo,
-                observacion="Retorno automático a su cargo de planta",
-                fechaInicio=hoy
-            )
-            usuario.cargo = planta_original.cargo
-            usuario.save(update_fields=["cargo"])
-
-            temporal_en_planta = CargoUsuario.objects.filter(
-                cargo=planta_original.cargo,
-                estadoVinculacion__estado__iexact="TEMPORAL",
-                fechaRetiro__isnull=True
-            ).first()
-            if temporal_en_planta:
-                temporal_en_planta.fechaRetiro = hoy
-                temporal_en_planta.save(update_fields=["fechaRetiro"])
-                self._devolver_a_planta(temporal_en_planta.usuario, hoy, visited=visited, modo=modo)
-        else:
-            usuario.cargo = None
-            usuario.save(update_fields=["cargo"])
 
 class CargoExcelSerializer(serializers.ModelSerializer):
     cargoNombre = serializers.SlugRelatedField(
@@ -288,3 +252,32 @@ class CargoUsuarioNestedSerializer(serializers.ModelSerializer):
     class Meta:
         model = CargoUsuario
         fields = '__all__'
+
+
+
+
+
+
+# Serializer simple para devolver lo creado
+class CargoUsuarioSimpleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CargoUsuario
+        fields = [
+            "id", "usuario", "cargo", "estadoVinculacion",
+            "fechaInicio", "fechaRetiro", "salario", "grado", "resolucion"
+        ]
+
+
+class SimulacionInputSerializer(serializers.Serializer):
+    root_usuario_id = serializers.IntegerField()
+
+
+class DecisionItemSerializer(serializers.Serializer):
+    usuario_id = serializers.IntegerField()
+    cargo_id = serializers.IntegerField()
+    tipo = serializers.ChoiceField(choices=["planta", "temporal"])
+
+
+class ConfirmacionCascadaSerializer(serializers.Serializer):
+    root_usuario_id = serializers.IntegerField()
+    decisiones = DecisionItemSerializer(many=True)

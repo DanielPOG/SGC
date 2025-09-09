@@ -7,6 +7,13 @@ import pandas as pd
 from core_apps.usuarios_api.models import Usuario
 from rest_framework.decorators import action
 from django.utils import timezone
+from rest_framework.exceptions import ValidationError
+from rest_framework import serializers
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from rest_framework import status
+from django.db import transaction
+from rest_framework.exceptions import ValidationError
 
 from .serializers import (
     CargoNombreSerializer,
@@ -17,9 +24,16 @@ from .serializers import (
     CargoNestedSerializer,
     CargoUsuarioNestedSerializer,
     IdpSerializer,
-    EstadoVinculacionSerializer
+    EstadoVinculacionSerializer,
+    CargoUsuarioSimpleSerializer,
+    SimulacionInputSerializer,
+    ConfirmacionCascadaSerializer,
 )
-
+from core_apps.cargos_api.services.cascada import (
+    build_escalon_sugerencias,
+    aplicar_decisiones_cascada,
+    _normalize_date
+)
 class CargoNombreViewSet(viewsets.ModelViewSet):
    
     queryset = CargoNombre.objects.all()
@@ -97,42 +111,124 @@ class CargoViewSet(viewsets.ModelViewSet):
             })
 
         return Response(data, status=status.HTTP_200_OK)
+from rest_framework import viewsets, status
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
+from rest_framework.exceptions import ValidationError
+
 
 class CargoUsuarioViewSet(viewsets.ModelViewSet):
     queryset = CargoUsuario.objects.all()
     serializer_class = CargoUsuarioSerializer
-    
+    parser_classes = [MultiPartParser, FormParser, JSONParser]  # 👈 aceptar JSON + archivos
+
     def get_serializer_class(self):
         if self.action in ["list", "retrieve", "por_idp"]:
             return CargoUsuarioNestedSerializer
         return CargoUsuarioSerializer
 
     def perform_create(self, serializer):
-        modo = self.request.query_params.get("modo", "auto")
-        instance = serializer.save()
-        
-        if modo == "escalonado":
-            sugerencias = serializer.build_escalon_sugerencias(
-                instance.usuario, timezone.now()
-            )
-            if sugerencias:
-                self.sugerencias = sugerencias
+        self.instance_creada = serializer.save()
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+        self.instance_creada = None
+        data = request.data.copy()
+
+        # 🔑 Normalización: si mandan "cargo" en form-data, mapear a cargo_id
+        if "cargo" in data and "cargo_id" not in data:
+            data["cargo_id"] = data.pop("cargo")
+
+        serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
 
-        headers = self.get_success_headers(serializer.data)
-        response_data = serializer.data
+        v = serializer.validated_data
+        cargo_destino_id = getattr(v.get("cargo"), "id", v.get("cargo_id")) or data.get("cargo_id")
+        tipo_decision = v.get("estadoVinculacion").estado.upper()
 
-        if hasattr(self, "sugerencias") and self.sugerencias:
-            response_data = {
-                "cargo_usuario": serializer.data,
-                "sugerencias": self.sugerencias
-            }
+        # Verificar si el cargo destino está ocupado
+        ocupacion_actual = CargoUsuario.objects.filter(
+            cargo_id=cargo_destino_id,
+            fechaRetiro__isnull=True
+        ).select_related("usuario").first()
 
-        return Response(response_data, status=status.HTTP_201_CREATED, headers=headers)
+        if not ocupacion_actual:
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+        usuario_id = ocupacion_actual.usuario.id
+        sugerencias = build_escalon_sugerencias(usuario_id, cargo_destino_id, tipo_decision)
+
+        if not sugerencias:
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+        return Response(
+            {
+                "requiere_confirmacion": True,
+                "cargo_usuario": {"usuario": usuario_id},
+                "sugerencias": sugerencias
+            },
+            status=status.HTTP_200_OK
+        )
+
+    @action(detail=False, methods=["post"], url_path="confirmacion")
+    def confirmacion(self, request, *args, **kwargs):
+        """
+        Confirma asignaciones escalonadas:
+        - payload_root → asignación principal
+        - decisiones → aplicar en cascada
+        """
+        serializer_in = ConfirmacionCascadaSerializer(data=request.data)
+        serializer_in.is_valid(raise_exception=True)
+        data = serializer_in.validated_data
+
+        root_usuario_id = data["root_usuario_id"]
+        cargo_destino_id = data.get("cargo_destino_id")
+        decisiones = data.get("decisiones", [])
+        payload_root = serializer_in.initial_data.get("payload_root") or data.get("payload_root")
+        print("Payload Root:", payload_root)
+
+        if not payload_root:
+            return Response({"error": "payload_root requerido"}, status=400)
+
+        # Normalizar cargo_id en payload_root
+        if "cargo_id" not in payload_root and "cargo" in payload_root:
+            payload_root["cargo_id"] = payload_root.pop("cargo")
+
+        # Adjuntar archivo si viene
+        if "resolucion_archivo" in data and data["resolucion_archivo"]:
+            payload_root["resolucion_archivo"] = data["resolucion_archivo"]
+
+        try:
+            with transaction.atomic():
+                # Crear asignación raíz
+                root_serializer = CargoUsuarioSerializer(
+                    data=payload_root,
+                    context={"cargo_destino_id": cargo_destino_id}
+                )
+                root_serializer.is_valid(raise_exception=True)
+                root_instance = root_serializer.save()
+
+                # Aplicar decisiones en cascada
+                resultados = aplicar_decisiones_cascada(
+                    root_usuario_id=root_usuario_id,
+                    cargo_destino_id=cargo_destino_id,
+                    decisiones=decisiones
+                )
+
+        except serializers.ValidationError as e:
+            return Response({"error": e.detail}, status=400)
+        except Exception as e:
+            return Response({"error": str(e)}, status=500)
+
+        return Response({
+            "root": CargoUsuarioSerializer(root_instance).data,
+            "decisiones": CargoUsuarioSerializer(resultados, many=True).data
+        }, status=status.HTTP_201_CREATED)
+
 
 # VISTA PARA SUBIR POR EXCEL
 class CargoUploadView(APIView):
