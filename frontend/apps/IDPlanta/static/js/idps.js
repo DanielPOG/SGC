@@ -1,27 +1,35 @@
-
 import toggleIdpState from "./acciones.js"
 
+export const colorDiv = (color, text = '')=>{
+  if(!color) return;
+  const divClass = `
+  hover:bg-${color}-600/5 border-${color}-600/10 text-${color}-600/80 mx-auto 
+  w-fit px-0 py-[.40em] text-[13px] font-bold rounded-r-none 
+  rounded-md min-w-20 -me-5 border-2 border-r-0
+  `
+  return (`<div class="${divClass}">${text}</div>`)
+}
+
 export function idpRow(idp, cargos) {
-  const state = idp.estado
-    ? `<div class="mx-auto w-fit px-0 py-[.40em] text-[13px] font-bold rounded-md rounded-r-none hover:bg-green-600/4 border-2 border-r-0 border-green-600/10 text-green-600/80 min-w-20 -me-5">ACTIVO</div>`
-    : `<div class="mx-auto w-fit px-0 py-[.40em] text-[13px] font-bold rounded-md rounded-r-none hover:bg-red-600/4 border-2 border-r-0 border-red-600/10 text-red-600/80 min-w-20 -me-5">INACTIVO</div>`
+  const state = idp.estado ? colorDiv('green', 'ACTIVO') : colorDiv('red', 'INACTIVO')
   const cargosIDP = cargos.filter(c =>c.idp.idp_id === idp.idp_id).length
   return (
     ` 
-      <td class="px-4 py-2 border text-center">${idp.idp_id}</td>
+      <td class="px-4 py-2 border text-center">${idp.idp_id}</td>  
       <td class="px-4 py-2 border text-center hidden md:table-cell">${idp.fechaCreacion}</td>
       <td class="px-4 py-2 border text-center ">
         <div class="flex justify-center items-center gap-2 "> 
-          <div class="border-r border-black/10 relative pe-5">${state}</div>
-          <p class="border-r-1 rounded-r-sm border-black/70 -ms-2 font-semibold">
-          
-            <a href="http://127.0.0.1:8000/idplanta/historial/?idp_id=${idp.idp_id}" class="hover:bg-black/25 px-2 py-1 pb-[.30em] rounded-e-md border-y-2 border-black/50">Historial</a>
+          <div class="border-r border-black/10 relative pe-5">
+            ${state}
+          </div>
+          <p class=" border-r-2 rounded-r-[.7rem] border-black/20 -ms-2 font-semibold shadow-md">
+            <a href="http://127.0.0.1:8000/idplanta/historial/?idp_id=${idp.idp_id}" class="hover:bg-black/25 px-2 py-1 pb-[.30em] rounded-e-md border-y-2 border-black/50 pe-3 rounded-r-[10rem]">Historial</a>
           </p>
           <strong class="border-l-2 ps-1" >Acciones:</strong>
-          <button data-estado="${idp.estado ? 0 : 1}" id=${idp.idp_id} ${cargosIDP > 0 ? 'disabled' : ''} data-idp=${idp.idp_id} class="min-w-32 text-white rounded-xl px-2 ${cargosIDP < 1 ? (idp.estado ? 'bg-red-500 hover:bg-red-700 ' :'bg-green-600  hover:bg-green-700' ): 'font-bold bg-gray-500/50 pointer-events-none opacity-[0.5]'}">
-            ${idp.estado ? 'DESACTIVAR': 'ACTIVAR '}
+          <button data-estado="${idp.estado ? 0 : 1}" id=${idp.idp_id} ${cargosIDP > 0 ? 'disabled' : ''} data-idp=${idp.idp_id} class="min-w-32 text-white rounded-xl px-2 ${cargosIDP < 1 ? (idp.estado ? 'bg-red-500/80 hover:bg-red-700 font-semibold' :'bg-green-600/80  hover:bg-green-600 font-semibold' ): 'font-bold bg-gray-500/50 pointer-events-none opacity-[0.5]'}">
+            ${idp.estado ? (cargosIDP > 0 ? 'OCUPADO' : 'DESACTIVAR') : 'ACTIVAR'}
           </button> 
-          
+
         </div>
       </td>
     `
