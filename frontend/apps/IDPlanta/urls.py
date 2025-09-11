@@ -9,4 +9,5 @@ urlpatterns = [
     path('editar_asig_idp/', views.editar_asig_idp, name='editar_asig_idp'),
 
     path('editar_idp/', views.editar_idp, name='editar_idp'),
+    path('historial/', views.historial_idp, name='historial_idp'),
 ]

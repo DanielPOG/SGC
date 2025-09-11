@@ -7,10 +7,14 @@ from rest_framework.permissions import AllowAny
 from rest_framework.decorators import api_view, action #pylint:disable=unused-import
 from rest_framework.response import Response
 from django.core.mail import send_mail
-from .models import Usuario, FormacionComplementaria, Bitacora, Solicitud
+from .models import (
+    Usuario, FormacionComplementaria, Bitacora, Solicitud,
+    PermisosUsuario, Permiso, Autorizacion
+) 
 from .serializers import (
     UsuarioSerializer, FormacionComplementariaSerializer,
-    BitacoraSerializer, SolicitudSerializer
+    BitacoraSerializer, SolicitudSerializer, PermisoxUsuarioSerializer,
+    PermisoSerializer, AuthSerializer
 )
 
 class LoginView(TokenObtainPairView):
@@ -94,3 +98,21 @@ class SolicitudViewSet(viewsets.ModelViewSet):
     queryset = Solicitud.objects.all() #pylint:disable=no-member
     serializer_class = SolicitudSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+class PermisoUsuarioViewSet(viewsets.ModelViewSet):
+    queryset = PermisosUsuario.objects.all() #pylint:disable=no-member
+    serializer_class = PermisoxUsuarioSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    @action(methods=['post'], detail=False)
+    def crearPermisoUsuario(self, request):
+        usuario_id = request.data.get('usuario_id')
+        permiso_slug = request.data.get('slug')
+        if not Permiso.objects.filter(codigo=permiso_slug).exists():
+            return Response({'error':'Permiso no disponible.'})
+        try:
+            usuario = Usuario.objects.get(id=usuario_id)
+        except Usuario.DoesNotExist:
+            return Response({"error":"Hubo un error al dar permisos al usuario"})
+        permiso = Permiso.objects.get(codigo=permiso_slug)
+        if PermisosUsuario.objects.filter(usuario=usuario.id, permiso=permiso.id).exists():
+            return Response({"error":"Este usuario ya cuenta con "})

@@ -33,16 +33,13 @@ class Cargo(models.Model):
     def __str__(self):
         return str(self.idp)
 
-class CargoFuncion(models.Model):
-    funcion = models.TextField()
-    cargo = models.ForeignKey('Cargo', on_delete=models.CASCADE)
-    def __str__(self):
-        return f'{self.cargo} - {self.funcion[:30]}...'
+
 class CargoUsuario(models.Model):
     cargo = models.ForeignKey('Cargo', on_delete=models.CASCADE)
     usuario = models.ForeignKey('usuarios_api.Usuario', on_delete=models.CASCADE)
-    fechaInicio = models.DateField(auto_now_add=True)
-    fechaRetiro = models.DateField(blank=True, null=True)
+    fechaInicio = models.DateTimeField(default=timezone.now)
+    fechaRetiro = models.DateTimeField(blank=True, null=True)
+
     salario = models.DecimalField(max_digits=10, decimal_places=2)
     grado = models.CharField(max_length=100)
     resolucion= models.CharField(max_length=100)
@@ -50,3 +47,20 @@ class CargoUsuario(models.Model):
     estadoVinculacion = models.ForeignKey('EstadoVinculacion', on_delete=models.CASCADE )
     def __str__(self):
         return f"{self.cargo} - {self.usuario}"
+
+# TODO: Una idp por cargo activo y un cargo activo para idp
+class IdpxCargo(models.Model):
+    idp_id = models.ForeignKey("Idp", verbose_name=("Idp en cargo"), on_delete=models.CASCADE)
+    cargo = models.ForeignKey("Cargo", verbose_name=("Cargo en idp"),  on_delete=models.CASCADE)
+    class Meta:
+        unique_together = ['idp_id', 'cargo']
+    def __str__(self):
+        return f"{self.idp_id.idp_id} - {self.cargo.nombre}"
+    
+class RelacionCascada(models.Model):
+    cargo_padre = models.ForeignKey('Cargo', on_delete=models.CASCADE, related_name='cargos_dependientes')
+    cargo_hijo = models.ForeignKey('Cargo', on_delete=models.CASCADE, related_name='cargos_superiores')
+
+    def __str__(self):
+        return f"{self.cargo_padre} → {self.cargo_hijo}"
+

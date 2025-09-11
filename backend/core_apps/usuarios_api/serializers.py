@@ -1,7 +1,8 @@
 from rest_framework import serializers
 from .models import (
     Usuario, TipoCertificado, FormacionComplementaria,
-    Bitacora, EstadoSolicitud, TipoSolicitud, Solicitud
+    Bitacora, EstadoSolicitud, TipoSolicitud, Solicitud,
+    Autorizacion, Permiso, PermisosUsuario
 )
 
 class UsuarioSerializer(serializers.ModelSerializer):
@@ -60,3 +61,26 @@ class SolicitudSerializer(serializers.ModelSerializer):
             'tipo', 'fechaCreacion', 'fechaAprovada', 'estado'
         )
         read_only_fields = ('fechaCreacion',)
+
+#    Autorizacion, Permiso, PermisosRol
+class AuthSerializer(serializers.ModelSerializer):
+    nombre=serializers.CharField()
+    class Meta:
+        fields = '__all__'
+        model = Autorizacion
+
+class PermisoSerializer(serializers.ModelSerializer):
+    autorizacion = serializers.PrimaryKeyRelatedField(queryset=Autorizacion.objects.all())
+    nombre=serializers.CharField()
+    codigo= serializers.SlugField(allow_unicode=True)
+    class Meta:
+        fields = '__all__'
+        model = Permiso
+
+class PermisoxUsuarioSerializer(serializers.ModelSerializer):
+    usuario = serializers.PrimaryKeyRelatedField(queryset=Usuario.objects.all())
+    permiso = serializers.PrimaryKeyRelatedField(queryset=Permiso.objects.all())
+    class Meta:
+        fields = '__all__'
+        model = PermisosUsuario
+        read_only_fields = ('otorgado_en')

@@ -1,58 +1,49 @@
 {% load static %}
-<div class="new-idp-modal fixed inset-0 flex justify-center items-center -ms-6 -mt-8 bg-black/60 hidden z-10">
-  <!-- Formulario -->
-  
-      <div class="flex fixed w-full h-full justify-center top-[40px]">
-        <h3 class="text-4xl font-bold mb-4 inset-0">Creación de IDP </h3>
-      </div>
-      <div class="flex gap-2 justify-center">
-      <div class="grid grid-row gap-6 mb-10">
-      
-    <form id="crear-nueva-idp" class="grid justify-center min-w-2/4 w-fit h-fit bg-gray-100 p-8 rounded-md shadow relative z-20">
-        <p id="new-idp-response" class="whitespace-nowrap absolute top-0 text-center w-full py-0 rounded-t-md  text-white font-bold"></p>
-          <label class="font-medium mb-1 flex">
-            <p class="text-red-600 text-[19px] me-1">*</p>Codigo IDP:
-          </label>
-          <input 
-            id="numero-new"
-            type="text" 
-            class="w-full border border-gray-600 rounded-2xl px-3 py-2 text-gray-900 placeholder-gray-400 
-            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          />
+<div class="new-idp-modal fixed inset-0 flex justify-center items-center bg-black/60 z-0 hidden">
+  <form id="crear-nueva-idp" 
+        class="bg-gray-100 p-8 rounded-md shadow-lg w-full max-w-md relative z-20 grid gap-6">
+    <h3 class="text-4xl font-bold mb-4 text-center">Creación de IDP</h3>
 
-        <div>
-          <label class="block font-medium mb-1">Fecha Creación:</label>
-          <input
-            id="fecha"
-            value=""
-            type="date" 
-            class="w-full border border-gray-600 rounded-2xl px-3 py-2 text-gray-900 placeholder-gray-400 
-            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          />
-        </div>
-        <!-- Botones -->
-      <div class="flex flex-col items-center gap-2">
-        <button  type="submit" class="bg-green-600 text-white px-6 py-[5px] mb-2 mt-6 rounded-full font-semibold hover:bg-green-700 transition">
-          Guardar
-        </button>
-        </div>
+    <p id="new-idp-response" class="absolute top-0 left-0 right-0 text-center py-2 rounded-t-md text-white font-bold"></p>
 
-        <!-- Botón Volver --> 
-      <div class="flex flex-col items-center gap-2">
+    <div>
+      <label for="numero-new" class="font-medium flex items-center gap-1 mb-1">
+        <span class="text-red-600 text-[19px]">*</span> Codigo IDP:
+      </label>
+      <input 
+        id="numero-new"
+        type="text" 
+        class="w-full border border-gray-600 rounded-2xl px-3 py-2 text-gray-900 placeholder-gray-400 
+               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+      />
+    </div>
 
-        <button type="button" class="close relative -top-0 text-red-600 border border-red-600 rounded-full px-7 py-1 hover:bg-red-600 hover:text-white transition">
-          Cerrar
-        </button>
-        </div>
-      </div>
-    </form>
-      </div>
+    <div>
+      <label for="fecha" class="block font-medium mb-1">Fecha Creación:</label>
+      <input
+        id="fecha"
+        type="date" 
+        class="w-full border border-gray-600 rounded-2xl px-3 py-2 text-gray-900 placeholder-gray-400 
+               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+      />
+    </div>
+
+    <div class="flex flex-col items-center gap-2">
+      <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-green-700 transition w-full">
+        Guardar
+      </button>
+
+      <button type="button" class="close text-red-600 border border-red-600 rounded-full px-7 py-1 hover:bg-red-600 hover:text-white transition w-full">
+        Cerrar
+      </button>
+    </div>
+  </form>
 </div>
+
       
 <script defer type="module" src="{% static "js/newidp.js" %}"></script>
-  
-</div>
-  
+
+
 <script>
   const hoy = new Date()
   const yyyy = hoy.getFullYear();

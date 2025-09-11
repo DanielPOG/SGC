@@ -106,8 +106,8 @@ class UsuarioManager(BaseUserManager):
         rol, _ = Rol.objects.get_or_create(nombre='ADMIN')
         estado, _ = Estado.objects.get_or_create(nombre='Activo')
         dep, _ = Dependencia.objects.get_or_create(codigoDependencia='000', defaults={'nombre': 'General'})
-        cargo_nombre, _ = CargoNombre.objects.get_or_create(nombre="ADMIN")
-        idp_obj, _ = Idp.objects.get_or_create(idp_id="ADMIN", defaults={'idp_id': 'ADMIN'})
+        cargo_nombre, _ = CargoNombre.objects.get_or_create(nombre="ADMIN", funcion="Administrador del sistema")
+        idp_obj, _ = Idp.objects.get_or_create(idp_id="1001", defaults={'idp_id': '1001'})
         estado_cargo, _ = EstadoCargo.objects.get_or_create(estado="ACTIVO")
         centro = Centro.objects.first()
 
@@ -271,3 +271,54 @@ class Solicitud(models.Model):
     fechaCreacion = models.DateTimeField(auto_now_add=True)
     fechaAprobada = models.DateTimeField(null=True, blank=True)  
     estado = models.ForeignKey('EstadoSolicitud', on_delete=PROTECT)
+
+class Autorizacion(models.Model):
+    """
+    Categoría principal de autorización.
+     Funcionario, Cargo, Grupo SENA, Reportes, ID Planta, Solicitudes, Autorizaciones.
+    """
+    nombre = models.CharField(max_length=100, unique=True)
+
+    class Meta:
+        verbose_name = "Autorización"
+        verbose_name_plural = "Autorizaciones"
+        ordering = ["nombre"]
+
+    def __str__(self):
+        return self.nombre
+
+
+class Permiso(models.Model):
+    """
+    Sub-permisos asociados a una Autorización.
+     Agregar Funcionario, Editar Cargo, Consultar Solicitudes, etc.
+    """
+    autorizacion = models.ForeignKey(
+        Autorizacion,
+        related_name="permisos",
+        on_delete=models.CASCADE
+    )
+    nombre = models.CharField(max_length=150)
+    codigo = models.CharField(
+        max_length=150,
+        unique=True,
+        help_text="Identificador único interno (ejemplo: funcionario_agregar, cargo_editar)"
+    )
+
+    class Meta:
+        verbose_name = "Permiso"
+        verbose_name_plural = "Permisos"
+        ordering = ["autorizacion", "nombre"]
+
+    def __str__(self):
+        return f"{self.autorizacion.nombre} - {self.nombre}"
+
+class PermisosUsuario(models.Model):
+    usuario = models.ForeignKey("Usuario", verbose_name=("Usuario"), on_delete=models.CASCADE)
+    permiso = models.ForeignKey("Permiso", verbose_name=("Autorizaciones"), on_delete=models.CASCADE)
+    otorgado_en = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = ['usuario', 'permiso']
+    def __str__(self):
+        return f"{self.usuario.nombre} - {self.permiso.nombre}"
