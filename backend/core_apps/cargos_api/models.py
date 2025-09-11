@@ -54,8 +54,8 @@ class CargoUsuario(models.Model):
 class IdpxCargo(models.Model):
     idp_id = models.ForeignKey("Idp", verbose_name=("Idp en cargo"), on_delete=models.CASCADE)
     cargo = models.ForeignKey("Cargo", verbose_name=("Cargo en idp"),  on_delete=models.CASCADE)
-    fecha_asignacion = models.DateTimeField(default=timezone.now)
-    fecha_desasignación = models.DateTimeField(blank=True, null=True)
+    class Meta:
+        unique_together = ['idp_id', 'cargo']
     def __str__(self):
         return f"{self.idp_id.idp_id} - {self.cargo.nombre}"
     

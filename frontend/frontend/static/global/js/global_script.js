@@ -62,25 +62,7 @@ window.apiFetch = async (url, options={}) => {
   return res
 }
 
-window.getDRFHtml= async (url) => {
-  let token = localStorage.getItem("access");
-
-  const headers = {
-    "Authorization": `Bearer ${token}`,
-    "Accept": "text/html"
-  };
-
-  let res = await apiFetch(url, { method: "GET", headers });
-
-  if (res.ok) {
-    return await res.text();  // 👈🏼 HTML como string
-  } else {
-    throw new Error(`Error al obtener HTML: ${res.status}`);
-  }
-}
-
-
-export default( apiFetch, getDRFHtml)
+export default apiFetch
 
 
 

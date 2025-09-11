@@ -251,21 +251,6 @@
   </div>
 </div>
 
-<script>
-  const h1 = document.querySelector('h1')
-  const HTML = `
-    <button id="cargos-api" class="p-3 bg-gray-800 text-white text-xl rounded-md mb-5">
-      API PANEL
-    </button>
-  `
-  h1.insertAdjacentHTML('afterend', HTML)
 
-  const btn = document.getElementById('cargos-api')
-
-  btn.addEventListener('click', ()=>{
-    location.href = 'http://127.0.0.1:8001/api/cargos'
-  })
-
-</script>
 
 {% endblock %}

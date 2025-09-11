@@ -6,7 +6,8 @@ from .views import (
     CargoViewSet,
     CargoUsuarioViewSet,
     CargoUploadView,
-    IdpViewSet
+    IdpViewSet,
+    EstadoVinculacionViewSet
 )
 
 router = DefaultRouter()
@@ -15,6 +16,7 @@ router.register(r'estado-cargo', EstadoCargoViewSet, basename='estado-cargo')
 router.register(r'cargos', CargoViewSet, basename='cargo')
 router.register(r'cargo-usuarios', CargoUsuarioViewSet, basename='cargo-usuario')
 router.register(r'idps', IdpViewSet, basename='idp')
+router.register(r'estado-vinculacion', EstadoVinculacionViewSet, basename='estado-vinculacion')
 # Aquí defines las URL manuales
 custom_urls = [
     path('upload/', CargoUploadView.as_view(), name='cargo-upload'),
