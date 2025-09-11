@@ -1,41 +1,23 @@
-
-from core_apps.cargos_api.services.cascada import (
-    build_escalon_sugerencias,
-    aplicar_decisiones_cascada,
-    _normalize_date
-)
 from rest_framework import viewsets, status
-from .models import CargoNombre, EstadoCargo, Cargo, CargoUsuario, Idp, EstadoVinculacion
+from .models import CargoNombre, EstadoCargo, Cargo, CargoFuncion, CargoUsuario, Idp
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 import pandas as pd
 from core_apps.usuarios_api.models import Usuario
 from rest_framework.decorators import action
-from django.utils import timezone
-from rest_framework.exceptions import ValidationError
-from rest_framework import serializers
-from rest_framework.decorators import action
-from rest_framework.response import Response
-from rest_framework import status
-from django.db import transaction
-from rest_framework.exceptions import ValidationError
-import json
+
 from .serializers import (
     CargoNombreSerializer,
     EstadoCargoSerializer,
     CargoSerializer,
+    CargoFuncionSerializer,
     CargoUsuarioSerializer,
     CargoExcelSerializer,
     CargoNestedSerializer,
     CargoUsuarioNestedSerializer,
     IdpSerializer,
-    IdpxCargoSerializer,
-    EstadoVinculacionSerializer,
-    CargoUsuarioSimpleSerializer,
-    SimulacionInputSerializer,
-    ConfirmacionCascadaSerializer,
-    DecisionSerializer,
+    IdpxCargoSerializer
 )
 
 class CargoNombreViewSet(viewsets.ModelViewSet):
@@ -46,10 +28,6 @@ class CargoNombreViewSet(viewsets.ModelViewSet):
 class EstadoCargoViewSet(viewsets.ModelViewSet):
     queryset = EstadoCargo.objects.all()
     serializer_class = EstadoCargoSerializer
-
-class EstadoVinculacionViewSet(viewsets.ModelViewSet):
-    queryset = EstadoVinculacion.objects.all()
-    serializer_class = EstadoVinculacionSerializer
 
 class IdpViewSet(viewsets.ModelViewSet):
     queryset = Idp.objects.all()
@@ -185,143 +163,21 @@ class CargoViewSet(viewsets.ModelViewSet):
             })
 
         return Response(data, status=status.HTTP_200_OK)
-from rest_framework import viewsets, status
-from rest_framework.decorators import action
-from rest_framework.response import Response
-from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
-from rest_framework.exceptions import ValidationError
+class CargoFuncionViewSet(viewsets.ModelViewSet):
+   
+    queryset = CargoFuncion.objects.all()
+    serializer_class = CargoFuncionSerializer
 
 
 class CargoUsuarioViewSet(viewsets.ModelViewSet):
+  
     queryset = CargoUsuario.objects.all()
-    parser_classes = [MultiPartParser, FormParser, JSONParser]
-
+    serializer_class = CargoUsuarioSerializer
+    
     def get_serializer_class(self):
         if self.action in ["list", "retrieve", "por_idp"]:
-            return CargoUsuarioNestedSerializer
-        return CargoUsuarioSerializer
-
-    def perform_create(self, serializer):
-        self.instance_creada = serializer.save()
-
-    def create(self, request, *args, **kwargs):
-        data = request.data.dict()  # solo campos normales
-        archivo_root = request.FILES.get("resolucion_archivo")
-
-        if "cargo" in data and "cargo_id" not in data:
-            data["cargo_id"] = data.pop("cargo")
-
-        serializer = self.get_serializer(data=data)
-        serializer.is_valid(raise_exception=True)
-        v = serializer.validated_data
-
-        cargo_destino_id = getattr(v.get("cargo"), "id", v.get("cargo_id")) or data.get("cargo_id")
-        tipo_decision = getattr(v.get("estadoVinculacion"), "estado", "").upper()
-
-        ocupacion_actual = CargoUsuario.objects.filter(
-            cargo_id=cargo_destino_id,
-            fechaRetiro__isnull=True
-        ).select_related("usuario").first()
-
-        if not ocupacion_actual:
-            if archivo_root:
-                serializer.validated_data["resolucion_archivo"] = archivo_root
-            self.perform_create(serializer)
-            headers = self.get_success_headers(serializer.data)
-            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-        usuario_id = ocupacion_actual.usuario.id
-        sugerencias = build_escalon_sugerencias(usuario_id, cargo_destino_id, tipo_decision)
-
-        if not sugerencias:
-            if archivo_root:
-                serializer.validated_data["resolucion_archivo"] = archivo_root
-            self.perform_create(serializer)
-            headers = self.get_success_headers(serializer.data)
-            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-        return Response({
-            "requiere_confirmacion": True,
-            "cargo_usuario": {"usuario": usuario_id},
-            "sugerencias": sugerencias
-        }, status=status.HTTP_200_OK)
-
-    @action(detail=False, methods=["post"], url_path="confirmacion")
-    def confirmacion(self, request, *args, **kwargs):
-        data = {k: v[0] if isinstance(v, list) else v for k, v in request.data.items() if not k.startswith("decisiones[")}
-
-        if "payload_root" in data and isinstance(data["payload_root"], str):
-            try:
-                data["payload_root"] = json.loads(data["payload_root"])
-            except json.JSONDecodeError:
-                return Response({"error": "Formato inválido en payload_root"}, status=400)
-
-        decisiones = []
-        for key in request.data:
-            if key.startswith("decisiones["):
-                try:
-                    decisiones.append(json.loads(request.data[key]))
-                except json.JSONDecodeError:
-                    return Response({"error": "Formato inválido en decisiones"}, status=400)
-
-        serializer_in = ConfirmacionCascadaSerializer(data={**data, "decisiones": decisiones})
-        serializer_in.is_valid(raise_exception=True)
-        validated = serializer_in.validated_data
-
-        root_usuario_id = validated["root_usuario_id"]
-        cargo_destino_id = validated.get("cargo_destino_id")
-        decisiones = validated.get("decisiones", [])
-        payload_root = data.get("payload_root", {})
-
-        archivo_root = request.FILES.get("resolucion_archivo")
-        if archivo_root:
-            payload_root["resolucion_archivo"] = archivo_root
-
-        if "cargo_id" not in payload_root and cargo_destino_id:
-            payload_root["cargo_id"] = cargo_destino_id
-
-        resultados = []
-        archivos_a_cerrar = []
-
-        try:
-            with transaction.atomic():
-                root_serializer = CargoUsuarioSerializer(
-                    data=payload_root,
-                    context={"cargo_destino_id": cargo_destino_id}
-                )
-                root_serializer.is_valid(raise_exception=True)
-                root_instance = root_serializer.save()
-
-                root_instance.usuario.cargo = root_instance.cargo
-                root_instance.usuario.save(update_fields=["cargo"])
-
-                for i, dec in enumerate(decisiones):
-                    dec_payload = dec.copy()
-                    archivo_dec = request.FILES.get(f"decisiones_archivo_{i}")
-                    if archivo_dec:
-                        dec_payload["resolucion_archivo"] = archivo_dec
-                        archivos_a_cerrar.append(archivo_dec)
-                    else:
-                        dec_payload["resolucion_archivo"] = None
-
-                    dec_serializer = CargoUsuarioSerializer(
-                        data=dec_payload,
-                        context={"cargo_destino_id": dec_payload.get("cargo_id")}
-                    )
-                    dec_serializer.is_valid(raise_exception=True)
-                    resultados.append(dec_serializer.save())
-
-        finally:
-            if archivo_root and not archivo_root.closed:
-                archivo_root.close()
-            for f in archivos_a_cerrar:
-                if f and not f.closed:
-                    f.close()
-
-        return Response({
-            "root": CargoUsuarioSerializer(root_instance).data,
-            "decisiones": CargoUsuarioSerializer(resultados, many=True).data
-        }, status=status.HTTP_201_CREATED)
+            return CargoUsuarioNestedSerializer  # para GET
+        return CargoUsuarioSerializer           # para POST/PUT/PATCH/DELETE
 
     @action(detail=False, methods=["get"], url_path="por-idp/(?P<idp>[^/.]+)")
     def por_idp(self, request, idp=None):
