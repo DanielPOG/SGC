@@ -78,8 +78,8 @@ class DecisionSerializer(serializers.Serializer):
 class ConfirmacionCascadaSerializer(serializers.Serializer):
     root_usuario_id = serializers.IntegerField()
     cargo_destino_id = serializers.IntegerField()
-    payload_root = PayloadRootSerializer()
-    decisiones = DecisionSerializer(many=True, required=False, default=list)
+    payload_root = serializers.JSONField()
+    decisiones = serializers.ListField(child=serializers.JSONField(), required=False, default=list)
 
     def to_internal_value(self, data):
         import json

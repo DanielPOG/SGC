@@ -77,6 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return true;
   }
 
+  // === POST Escalonado Inicial ===
   formAsignarFuncionario.addEventListener("submit", async e => {
     e.preventDefault();
     const camposRoot = [
@@ -112,13 +113,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       const formData = new FormData();
-      formData.append("payload_root", JSON.stringify(payloadRootBase));
+
+      // 🔹 DRF espera campos planos, no JSON
+      Object.entries(payloadRootBase).forEach(([key, value]) => {
+        formData.append(key, value);
+      });
+
+      // Archivo obligatorio
       formData.append("resolucion_archivo", archivoRoot);
 
       const res = await fetch("http://127.0.0.1:8001/api/cargos/cargo-usuarios/?modo=escalonado", {
         method: "POST",
         body: formData
       });
+
 
       const data = await res.json();
       if (!res.ok) {
@@ -214,7 +222,8 @@ document.addEventListener("DOMContentLoaded", () => {
     escalonModal.classList.remove("flex");
   });
 
-  async function enviarConfirmacion() {
+  // === POST Confirmación Final ===
+async function enviarConfirmacion() {
   if (!cargoIdInput.value) {
     alert("Error interno: no se detectó el cargo destino");
     return;
@@ -227,22 +236,15 @@ document.addEventListener("DOMContentLoaded", () => {
     formData.append("root_usuario_id", rootUsuarioId);
     formData.append("cargo_destino_id", parseInt(cargoIdInput.value));
 
-    // Construir payload_root con todos los campos + archivo
-    const payloadRootForm = payloadRootBase;
+    // 🔹 Mandar payload_root como JSON (el backend lo decodifica con json.loads)
+    formData.append("payload_root", JSON.stringify(payloadRootBase));
+
+    // Archivo raíz
     if (archivoRoot) {
-      payloadRootForm.resolucion_archivo = archivoRoot;
+      formData.append("resolucion_archivo", archivoRoot);
     }
 
-    // Añadir campos de payload_root individualmente al FormData
-    for (const key in payloadRootForm) {
-      if (payloadRootForm[key] instanceof File) {
-        formData.append(`payload_root[${key}]`, payloadRootForm[key]);
-      } else {
-        formData.append(`payload_root[${key}]`, payloadRootForm[key]);
-      }
-    }
-
-    // Añadir decisiones y sus archivos
+    // Decisiones (igual que antes)
     decisiones.forEach((d, i) => {
       const { resolucion_archivo, ...rest } = d;
       formData.append(`decisiones[${i}]`, JSON.stringify(rest));
@@ -251,7 +253,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    // Enviar POST
     const res = await fetch("http://127.0.0.1:8001/api/cargos/cargo-usuarios/confirmacion/", {
       method: "POST",
       body: formData
@@ -273,7 +274,7 @@ document.addEventListener("DOMContentLoaded", () => {
     nuevoModal.classList.add("hidden");
     nuevoModal.classList.remove("flex");
 
-    // Refrescar tabla / lista
+    // Refrescar vista si existe
     if (typeof buscarPorIdp === "function") buscarPorIdp();
 
   } catch (err) {
@@ -281,5 +282,6 @@ document.addEventListener("DOMContentLoaded", () => {
     alert("⚠️ Error de red al confirmar");
   }
 }
+
 
 });
