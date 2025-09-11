@@ -92,6 +92,9 @@ from rest_framework import serializers
 from core_apps.cargos_api.models import  CargoUsuario, Cargo, EstadoVinculacion
 from core_apps.cargos_api.serializers import CargoUsuarioSerializer
 from django.core.exceptions import ObjectDoesNotExist
+from core_apps.cargos_api.logic.cascada_helpers import (
+    devolver_a_planta,
+)
 
 def _normalize_date(date_str):
     if not date_str:

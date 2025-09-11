@@ -9,7 +9,6 @@ from rest_framework.exceptions import ValidationError as DRFValidationError
 
 from core_apps.cargos_api.models import CargoUsuario, EstadoVinculacion
 from core_apps.usuarios_api.models import Usuario
-
 from core_apps.cargos_api.serializers import CargoUsuarioSerializer
 
 
@@ -45,16 +44,26 @@ def devolver_a_planta(
 
     cargo_obj = planta_hist.cargo
 
+    try:
+        estado_planta = EstadoVinculacion.objects.get(estado__iexact="PLANTA")
+    except EstadoVinculacion.DoesNotExist:
+        raise DRFValidationError("No existe EstadoVinculacion 'PLANTA'")
+
+    # 🚨 Evitar duplicados: si ya tiene PLANTA activo en ese cargo, no hacer nada
+    ya_tiene_planta = CargoUsuario.objects.filter(
+        usuario=usuario,
+        cargo=cargo_obj,
+        estadoVinculacion=estado_planta,
+        fechaRetiro__isnull=True
+    ).exists()
+    if ya_tiene_planta:
+        return None
+
     # Buscar ocupante activo distinto al propio usuario
     ocupante = CargoUsuario.objects.filter(
         cargo=cargo_obj,
         fechaRetiro__isnull=True
     ).exclude(usuario=usuario).select_related("usuario").first()
-
-    try:
-        estado_planta = EstadoVinculacion.objects.get(estado__iexact="PLANTA")
-    except EstadoVinculacion.DoesNotExist:
-        raise DRFValidationError("No existe EstadoVinculacion 'PLANTA'")
 
     hoy = timezone.now()
 

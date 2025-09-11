@@ -14,7 +14,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.db import transaction
 from rest_framework.exceptions import ValidationError
-
+import json
 from .serializers import (
     CargoNombreSerializer,
     EstadoCargoSerializer,
@@ -28,6 +28,7 @@ from .serializers import (
     CargoUsuarioSimpleSerializer,
     SimulacionInputSerializer,
     ConfirmacionCascadaSerializer,
+    DecisionSerializer,
 )
 from core_apps.cargos_api.services.cascada import (
     build_escalon_sugerencias,
@@ -131,14 +132,9 @@ class CargoUsuarioViewSet(viewsets.ModelViewSet):
         self.instance_creada = serializer.save()
 
     def create(self, request, *args, **kwargs):
-        """
-        Crea un CargoUsuario:
-        - Si el cargo destino está libre → crea directamente.
-        - Si está ocupado → devuelve sugerencias escalonadas para confirmar.
-        """
-        data = request.data.copy()
+        data = request.data.dict()  # solo campos normales
+        archivo_root = request.FILES.get("resolucion_archivo")
 
-        # Mapear cargo → cargo_id si viene
         if "cargo" in data and "cargo_id" not in data:
             data["cargo_id"] = data.pop("cargo")
 
@@ -149,22 +145,24 @@ class CargoUsuarioViewSet(viewsets.ModelViewSet):
         cargo_destino_id = getattr(v.get("cargo"), "id", v.get("cargo_id")) or data.get("cargo_id")
         tipo_decision = getattr(v.get("estadoVinculacion"), "estado", "").upper()
 
-        # Revisar si hay ocupante activo
         ocupacion_actual = CargoUsuario.objects.filter(
             cargo_id=cargo_destino_id,
             fechaRetiro__isnull=True
         ).select_related("usuario").first()
 
         if not ocupacion_actual:
+            if archivo_root:
+                serializer.validated_data["resolucion_archivo"] = archivo_root
             self.perform_create(serializer)
             headers = self.get_success_headers(serializer.data)
             return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
-        # Construir sugerencias si hay ocupante
         usuario_id = ocupacion_actual.usuario.id
         sugerencias = build_escalon_sugerencias(usuario_id, cargo_destino_id, tipo_decision)
 
         if not sugerencias:
+            if archivo_root:
+                serializer.validated_data["resolucion_archivo"] = archivo_root
             self.perform_create(serializer)
             headers = self.get_success_headers(serializer.data)
             return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
@@ -177,88 +175,43 @@ class CargoUsuarioViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=["post"], url_path="confirmacion")
     def confirmacion(self, request, *args, **kwargs):
-        """
-        Confirma asignaciones escalonadas:
-        - payload_root → asignación principal
-        - decisiones → aplicar en cascada
-        """
+        data = {k: v[0] if isinstance(v, list) else v for k, v in request.data.items() if not k.startswith("decisiones[")}
 
-        data = request.data.copy()
-
-        # Parsear JSON si viene como string
-        import json
-        if "decisiones" in data and isinstance(data.get("decisiones"), str):
-            try:
-                data["decisiones"] = json.loads(data["decisiones"])
-            except json.JSONDecodeError:
-                return Response({"error": "Formato inválido en decisiones"}, status=400)
-
-        if "payload_root" in data and isinstance(data.get("payload_root"), str):
+        if "payload_root" in data and isinstance(data["payload_root"], str):
             try:
                 data["payload_root"] = json.loads(data["payload_root"])
             except json.JSONDecodeError:
                 return Response({"error": "Formato inválido en payload_root"}, status=400)
 
-        # Agrupar campos sueltos en payload_root si no viene
-        if "payload_root" not in data:
-            posibles_campos = [
-                "cargo_id", "cargo_destino_id", "num_doc", "estadoVinculacion",
-                "salario", "grado", "resolucion", "resolucion_archivo",
-                "observacion", "fechaInicio", "fechaRetiro"
-            ]
-            payload_root = {c: data.pop(c) for c in posibles_campos if c in data}
-            if payload_root:
-                data["payload_root"] = payload_root
+        decisiones = []
+        for key in request.data:
+            if key.startswith("decisiones["):
+                try:
+                    decisiones.append(json.loads(request.data[key]))
+                except json.JSONDecodeError:
+                    return Response({"error": "Formato inválido en decisiones"}, status=400)
 
-        # Validación inicial
-        serializer_in = ConfirmacionCascadaSerializer(data=data)
+        serializer_in = ConfirmacionCascadaSerializer(data={**data, "decisiones": decisiones})
         serializer_in.is_valid(raise_exception=True)
         validated = serializer_in.validated_data
 
         root_usuario_id = validated["root_usuario_id"]
         cargo_destino_id = validated.get("cargo_destino_id")
         decisiones = validated.get("decisiones", [])
-        for d in decisiones:
-            # asignar num_doc si solo viene usuario_id
-            if "num_doc" not in d and "usuario_id" in d:
-                usuario = Usuario.objects.filter(pk=d["usuario_id"]).first()
-                if usuario:
-                    d["num_doc"] = str(usuario.num_doc)
+        payload_root = data.get("payload_root", {})
 
-            # si es planta y faltan campos obligatorios, rellenar desde histórico
-            if d.get("tipo") == "planta":
-                usuario = Usuario.objects.get(num_doc=d["num_doc"])
-                ultimo_planta = CargoUsuario.objects.filter(
-                    usuario=usuario,
-                    estadoVinculacion__estado__iexact="PLANTA"
-                ).order_by("-fechaInicio").first()
-                if ultimo_planta:
-                    d.setdefault("estadoVinculacion", ultimo_planta.estadoVinculacion.id)
-                    d.setdefault("salario", ultimo_planta.salario)
-                    d.setdefault("grado", ultimo_planta.grado)
-                    d.setdefault("resolucion", ultimo_planta.resolucion)
-                    d.setdefault("fechaInicio", str(ultimo_planta.fechaInicio))
+        archivo_root = request.FILES.get("resolucion_archivo")
+        if archivo_root:
+            payload_root["resolucion_archivo"] = archivo_root
 
+        if "cargo_id" not in payload_root and cargo_destino_id:
+            payload_root["cargo_id"] = cargo_destino_id
 
-        payload_root = serializer_in.initial_data.get("payload_root", {})
-
-        # Normalizar cargo_id en payload_root
-        if "cargo_id" not in payload_root:
-            if "cargo" in payload_root:
-                payload_root["cargo_id"] = payload_root.pop("cargo")
-            elif cargo_destino_id:
-                payload_root["cargo_id"] = cargo_destino_id
-            else:
-                return Response({"error": {"cargo_id": ["Este campo es obligatorio"]}}, status=400)
-
-        # Adjuntar archivo si viene
-        if "resolucion_archivo" in data and data["resolucion_archivo"]:
-            payload_root["resolucion_archivo"] = data["resolucion_archivo"]
+        resultados = []
+        archivos_a_cerrar = []
 
         try:
             with transaction.atomic():
-                # Crear asignación raíz
-                payload_root["cargo_id"] = int(payload_root["cargo_id"])
                 root_serializer = CargoUsuarioSerializer(
                     data=payload_root,
                     context={"cargo_destino_id": cargo_destino_id}
@@ -266,26 +219,38 @@ class CargoUsuarioViewSet(viewsets.ModelViewSet):
                 root_serializer.is_valid(raise_exception=True)
                 root_instance = root_serializer.save()
 
-                # Actualizar usuario con cargo
                 root_instance.usuario.cargo = root_instance.cargo
                 root_instance.usuario.save(update_fields=["cargo"])
 
-                # Aplicar decisiones en cascada
-                resultados = aplicar_decisiones_cascada(
-                    root_usuario_id=root_usuario_id,
-                    cargo_destino_id=cargo_destino_id,
-                    decisiones=decisiones
-                ) or []
+                for i, dec in enumerate(decisiones):
+                    dec_payload = dec.copy()
+                    archivo_dec = request.FILES.get(f"decisiones_archivo_{i}")
+                    if archivo_dec:
+                        dec_payload["resolucion_archivo"] = archivo_dec
+                        archivos_a_cerrar.append(archivo_dec)
+                    else:
+                        dec_payload["resolucion_archivo"] = None
 
-        except Exception as e:
-            return Response({"error": str(e)}, status=500)
+                    dec_serializer = CargoUsuarioSerializer(
+                        data=dec_payload,
+                        context={"cargo_destino_id": dec_payload.get("cargo_id")}
+                    )
+                    dec_serializer.is_valid(raise_exception=True)
+                    resultados.append(dec_serializer.save())
+
+        finally:
+            if archivo_root and not archivo_root.closed:
+                archivo_root.close()
+            for f in archivos_a_cerrar:
+                if f and not f.closed:
+                    f.close()
 
         return Response({
             "root": CargoUsuarioSerializer(root_instance).data,
             "decisiones": CargoUsuarioSerializer(resultados, many=True).data
         }, status=status.HTTP_201_CREATED)
-        
-        
+
+
 # VISTA PARA SUBIR POR EXCEL
 class CargoUploadView(APIView):
     parser_classes = [MultiPartParser]

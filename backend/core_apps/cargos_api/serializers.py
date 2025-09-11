@@ -47,49 +47,62 @@ class CargoSerializer(serializers.ModelSerializer):
 
 from rest_framework import serializers
 class PayloadRootSerializer(serializers.Serializer):
-    usuario = serializers.CharField()
-    cargo_id = serializers.IntegerField()  # 👈 usar cargo_id, no cargo
+    cargo_id = serializers.IntegerField(required=False)
+    cargo_destino_id = serializers.IntegerField(required=False)
     num_doc = serializers.CharField()
     estadoVinculacion = serializers.IntegerField()
     salario = serializers.DecimalField(max_digits=10, decimal_places=2)
     grado = serializers.CharField()
     resolucion = serializers.CharField()
-    resolucion_archivo = serializers.FileField(required=False, allow_null=True)  # 👈 ahora archivo real
+    resolucion_archivo = serializers.FileField(required=False, allow_null=True)  # archivo real para root
     observacion = serializers.CharField(allow_blank=True, required=False)
-    fechaInicio = serializers.DateField()
-    fechaRetiro = serializers.DateField(allow_null=True, required=False)
+    fechaInicio = serializers.DateTimeField()
+    fechaRetiro = serializers.DateTimeField(allow_null=True, required=False)
 
 from rest_framework import serializers
 import json
 
+class DecisionSerializer(serializers.Serializer):
+    usuario_id = serializers.IntegerField(required=False)
+    cargo_id = serializers.IntegerField(required=False)
+    tipo = serializers.CharField(required=False)
+    num_doc = serializers.CharField(required=False)
+    estadoVinculacion = serializers.IntegerField(required=False)
+    salario = serializers.DecimalField(max_digits=10, decimal_places=2, required=False)
+    grado = serializers.CharField(required=False)
+    resolucion = serializers.CharField(required=False)
+    resolucion_archivo = serializers.FileField(required=False, allow_null=True)  # 👈 solo archivos reales
+    fechaInicio = serializers.DateTimeField(required=False)
+    fechaRetiro = serializers.DateTimeField(required=False, allow_null=True)
+    observacion = serializers.CharField(allow_blank=True, required=False)
 class ConfirmacionCascadaSerializer(serializers.Serializer):
     root_usuario_id = serializers.IntegerField()
     cargo_destino_id = serializers.IntegerField()
-    decisiones = serializers.ListField(child=serializers.DictField(), required=False)
-    payload_root = serializers.DictField(required=False)
-    resolucion_archivo = serializers.FileField(required=False, allow_null=True)
+    payload_root = PayloadRootSerializer()
+    decisiones = DecisionSerializer(many=True, required=False, default=list)
 
     def to_internal_value(self, data):
-        """
-        Convierte campos JSON que vienen como string desde FormData
-        """
-        ret = super().to_internal_value(data)
+        import json
+        data = data.copy()
 
-        # parsear payload_root si viene como string
         if "payload_root" in data and isinstance(data["payload_root"], str):
             try:
-                ret["payload_root"] = json.loads(data["payload_root"])
+                data["payload_root"] = json.loads(data["payload_root"])
             except json.JSONDecodeError:
-                self.fail("invalid", field_name="payload_root")
+                raise serializers.ValidationError({"payload_root": "Formato JSON inválido"})
 
-        # parsear decisiones si vienen como string
         if "decisiones" in data and isinstance(data["decisiones"], str):
             try:
-                ret["decisiones"] = json.loads(data["decisiones"])
+                decisiones = json.loads(data["decisiones"])
+                # 🔑 filtrar campos extras que no están en DecisionSerializer
+                allowed = set(DecisionSerializer().fields.keys())
+                data["decisiones"] = [
+                    {k: v for k, v in d.items() if k in allowed} for d in decisiones
+                ]
             except json.JSONDecodeError:
-                self.fail("invalid", field_name="decisiones")
+                raise serializers.ValidationError({"decisiones": "Formato JSON inválido"})
 
-        return ret
+        return super().to_internal_value(data)
 
 
 from rest_framework import serializers
@@ -112,7 +125,6 @@ class CargoUsuarioSerializer(serializers.ModelSerializer):
 
     cargo_destino_id = serializers.IntegerField(required=False, allow_null=True)
     fechaRetiro = serializers.DateTimeField(required=False, allow_null=True)
-
     resolucion_archivo = serializers.FileField(required=False, allow_null=True)
 
     class Meta:
@@ -159,6 +171,12 @@ class CargoUsuarioSerializer(serializers.ModelSerializer):
         instance = super().create(validated_data)
         self._post_create_update_logic(instance)
         return instance
+    def validate(self, attrs):
+        if not attrs.get("resolucion_archivo"):
+            raise serializers.ValidationError({
+                "resolucion_archivo": "El archivo de resolución es obligatorio."
+            })
+        return attrs
 
     def update(self, instance, validated_data):
         instance = super().update(instance, validated_data)
@@ -192,8 +210,9 @@ class CargoUsuarioSerializer(serializers.ModelSerializer):
                     titular.usuario.cargo = None
                     titular.usuario.save(update_fields=["cargo"])
                 elif titular.estadoVinculacion.estado.upper() == "TEMPORAL":
-                    from core_apps.cargos_api.logic.cascada_helpers import devolver_a_planta
-                    devolver_a_planta(titular.usuario, visited=None, context=self.context)
+                    # 👉 aquí ya NO llamamos a devolver_a_planta,
+                    # esa lógica vive solo en cascada_helpers
+                    pass
 
             # resetear último planta para no dejar huella
             ultimo_planta = CargoUsuario.objects.filter(
@@ -216,10 +235,6 @@ class CargoUsuarioSerializer(serializers.ModelSerializer):
                 p.usuario.cargo = None
                 p.usuario.save(update_fields=["cargo"])
 
-        # cascada si se cierra temporal
-        if estado == "TEMPORAL" and instance.fechaRetiro is not None:
-            from core_apps.cargos_api.logic.cascada_helpers import devolver_a_planta
-            devolver_a_planta(usuario, visited=None, context=self.context)
 
 
 class CargoExcelSerializer(serializers.ModelSerializer):
