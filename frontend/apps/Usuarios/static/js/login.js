@@ -8,15 +8,46 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
     console.log('Nodes loaded')
 
-    formNode.addEventListener('submit', async e =>{
-        e.preventDefault()
-        try {
-            const correo = formNode.usuario.value
-            const password = formNode.password.value
-            if(!correo || !password){
-                LResponse({text:'Todos los campos son obligatorios', valid:false})
-                return
-            }
+    // Creación de un state para loginResponse
+    const LResponse = async(newVal)=>{
+        responseNode.style.display = 'flex'
+        paragraphNode.innerText = newVal.text
+        if(newVal.valid){
+            closeResponseNode.style.display = 'none'
+            setTimeout(()=>location.href = '../principal', 800)
+            return
+        }
+        const handleClose = ()=>{
+            responseNode.style.display = 'none'
+            paragraphNode.innerText = ''
+            closeResponseNode.removeEventListener('click', handleClose)            
+        }
+        closeResponseNode.addEventListener('click', handleClose)
+    }
+formNode.addEventListener('submit', async e => {
+    e.preventDefault();
+    try {
+        const correo = formNode.usuario.value;
+        const password = formNode.password.value;
+        
+        if (!correo || !password) {
+            Swal.fire({
+                title: "Campos obligatorios",
+                text: "Por favor, completa todos los campos",
+                icon: "warning", // Icono 'warning'
+                showCancelButton: false, // No mostrar botón de cancelar
+                confirmButtonColor: "#3085d6", // Color del botón de confirmación
+                confirmButtonText: "Entendido", // Texto del botón de confirmación
+                backdrop: 'static', // Evitar que el modal se cierre al hacer clic fuera de él
+                allowOutsideClick: false, // Evita que se cierre si se hace clic fuera
+                willOpen: () => {
+                    const popup = Swal.getPopup();  // Obtener el modal
+                    popup.style.borderRadius = '15px';  // Aplicar redondeo al modal
+                    popup.style.padding = '20px';  // Ajustar el padding para que se vea mejor
+                }
+            });
+            return;
+        }
             const res = await fetch("http://127.0.0.1:8001/api/usuarios/login/", {
                 method:'POST', 
                 headers: {"Content-Type":"application/json"},
@@ -33,11 +64,26 @@ document.addEventListener('DOMContentLoaded', ()=>{
             localStorage.setItem('access', data.access)
             localStorage.setItem('refresh', data.refresh)
             formNode.reset()
-        }catch(e){
-            console.warn(`Hubo un error al procesar el formulario ${e}`)
-            LResponse({text:'Credenciales inválidas', valid:false})
+        } catch (e) {
+    console.warn(`Hubo un error al procesar el formulario ${e}`); // El mensaje sigue apareciendo en la consola
+
+    // Usamos SweetAlert2 para mostrar el mensaje de error
+    Swal.fire({
+        title: "Error",
+        text: "Credenciales inválidas, por favor revisa los datos", // Mensaje personalizado
+        icon: "warning", // Icono 'warning', que se mantiene como antes
+        showCancelButton: false, // No mostrar botón de cancelar
+        confirmButtonColor: "#d33", // Color del botón de confirmación
+        confirmButtonText: "Entendido", // Texto del botón de confirmación
+        backdrop: 'static', // Evitar que el modal se cierre al hacer clic fuera de él
+        allowOutsideClick: false, // Evita que se cierre si se hace clic fuera
+        willOpen: () => {
+            const popup = Swal.getPopup();  // Obtener el modal
+            popup.style.borderRadius = '15px';  // Aplicar redondeo al modal
+            popup.style.padding = '20px';  // Ajustar el padding para que se vea mejor
         }
-    })
+    });
+}
 
     
     const recoverResponse = {text:'', valid:false}
@@ -85,4 +131,5 @@ document.addEventListener('DOMContentLoaded', ()=>{
             window.setRecoverResponse(recoverResponse, 'No se pudo enviar correo de recuperación...', false)
         }
     })
+})  
 })

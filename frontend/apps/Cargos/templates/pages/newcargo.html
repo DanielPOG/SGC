@@ -3,6 +3,18 @@
 {% block title %} Crear Cargo{% endblock %}
 
 {% block content %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Crear Cargo</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <script src="{% static 'js/libs/sweetalert2.all.min.js' %}"></script>
+  <script src="{% static 'js/cargo_form.js' %}"></script>
+</head>
+<body class="bg-white min-h-screen flex flex-col items-center p-8">
 
   <!-- Título -->
   <h1 class="text-5xl font-bold mb-4">Crear Cargo</h1>
@@ -62,6 +74,7 @@
     <!-- Resolución -->
     <div>
     <label for="resolucion_archivo" class="block font-medium mb-1">Resolución:</label>
+    <div id="archivoActual" class="mb-2"></div>
     <input type="text" id="resolucion_numero" name="resolucion_numero" placeholder="Número de resolución" />
 
     <input 
