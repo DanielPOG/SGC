@@ -106,7 +106,7 @@ class UsuarioManager(BaseUserManager):
         rol, _ = Rol.objects.get_or_create(nombre='ADMIN')
         estado, _ = Estado.objects.get_or_create(nombre='Activo')
         dep, _ = Dependencia.objects.get_or_create(codigoDependencia='000', defaults={'nombre': 'General'})
-        cargo_nombre, _ = CargoNombre.objects.get_or_create(nombre="ADMIN")
+        cargo_nombre, _ = CargoNombre.objects.get_or_create(nombre="ADMIN", funcion="Administrador del sistema")
         idp_obj, _ = Idp.objects.get_or_create(idp_id="1001", defaults={'idp_id': '1001'})
         estado_cargo, _ = EstadoCargo.objects.get_or_create(estado="ACTIVO")
         centro = Centro.objects.first()
@@ -143,7 +143,7 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     tipo_doc = models.ForeignKey('TipoDocumento', on_delete=PROTECT)
     correo = models.EmailField(max_length=254, unique=True)
     genero = models.ForeignKey('Genero', on_delete=PROTECT)
-    cargo = models.ForeignKey('cargos_api.Cargo', on_delete=PROTECT)
+    cargo = models.ForeignKey('cargos_api.Cargo', on_delete=PROTECT, null=True , blank=True)
     estudioF = models.ForeignKey('EstudioFormal', on_delete=PROTECT)
     fechaInicio = models.DateField(auto_now_add=True)
     fechaActualizacion = models.DateField(auto_now=True, null=True, blank=True)
@@ -237,13 +237,18 @@ class Bitacora(models.Model):
     # Contexto extra
     ip_address = models.GenericIPAddressField(null=True, blank=True)
     user_agent = models.CharField(max_length=255, null=True, blank=True)
+
+    # Cambios realizados (solo en UPDATE)
     cambios = models.JSONField(null=True, blank=True)
+
+    descripcion = models.TextField(blank=True, null=True)  # ✅ Para registrar mensajes adicionales
 
     class Meta:
         """
             Abs Meta config
         """
         ordering = ['-fecha']
+
 class EstadoSolicitud(models.Model):
     """
         Entidad fija con los nombres de los estado de una solicitud

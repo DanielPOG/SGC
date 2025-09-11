@@ -77,8 +77,8 @@ async function buscarPorIdp() {
             <div id="dropdown-${cargo.cargo.id}" 
                 class="dropdown-menu z-10 hidden absolute bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700 dark:divide-gray-600 mt-2 -translate-x-20">
               <ul class="py-2 text-sm text-gray-700 dark:text-gray-200">
-                <li><a href="${window.urlHistorialCargo}" class="block px-4 py-2 hover:bg-gray-100">Historial</a></li>
-                <li><a href="#" id="openNuevoModal" class="block px-4 py-2 hover:bg-gray-100">Añadir Funcionario</a></li>
+                <li><a href="${window.urlHistorialCargo}"  class="block px-4 py-2 hover:bg-gray-100" >Historial</a></li>
+                <li><a href="#" data-cargo-id="${cargo.cargo.id}"  class="open-nuevo-modal block px-4 py-2 hover:bg-gray-100">Añadir Funcionario</a></li>
                 <li><a  href="${window.urlEditarCargoBase}${cargo.cargo.id}/"   class="block px-4 py-2 hover:bg-gray-100">Editar</a></li>
               </ul>
             </div>
@@ -91,28 +91,30 @@ async function buscarPorIdp() {
   }
 }
 
+//MENU DESPLEGABLE
 
-// Script para manejar el menú desplegable
-document.addEventListener("click", function (e) {
-  const button = e.target.closest("[data-dropdown-toggle]");
-  const menu = e.target.closest(".dropdown-menu");
+  // Script para manejar el menú desplegable
+  document.addEventListener("click", function (e) {
+    const button = e.target.closest("[data-dropdown-toggle]");
+    const menu = e.target.closest(".dropdown-menu");
 
-  // Si clic en botón → alternar menú
-  if (button) {
-    e.stopPropagation();
-    // cerrar todos antes de abrir el nuevo
-    document.querySelectorAll(".dropdown-menu").forEach(m => m.classList.add("hidden"));
+    // Si clic en botón → alternar menú
+    if (button) {
+      e.stopPropagation();
+      // cerrar todos antes de abrir el nuevo
+      document.querySelectorAll(".dropdown-menu").forEach(m => m.classList.add("hidden"));
 
-    const menuId = button.dataset.dropdownToggle;
-    const targetMenu = document.querySelector(`#${menuId}`);
-    targetMenu.classList.toggle("hidden");
-    return;
-  }
+      const menuId = button.dataset.dropdownToggle;
+      const targetMenu = document.querySelector(`#${menuId}`);
+      targetMenu.classList.toggle("hidden");
+      return;
+    }
 
-  // Si clic fuera → cerrar todos los menús
-  if (!menu) {
-    document.querySelectorAll(".dropdown-menu").forEach(m => m.classList.add("hidden"));
-  }
-});
+    // Si clic fuera → cerrar todos los menús
+    if (!menu) {
+      document.querySelectorAll(".dropdown-menu").forEach(m => m.classList.add("hidden"));
+    }
+  });
 
+//FIN MENU DESPLEGABLE
 });
