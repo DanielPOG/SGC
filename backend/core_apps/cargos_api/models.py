@@ -4,7 +4,6 @@ from django.utils import timezone
 
 class CargoNombre(models.Model):
     nombre = models.CharField(max_length=100, unique=True)
-    funcion = models.TextField(default="Sin función registrada")
     def __str__(self):
         return self.nombre
 class EstadoCargo(models.Model):
@@ -34,19 +33,22 @@ class Cargo(models.Model):
     def __str__(self):
         return str(self.idp)
 
+class CargoFuncion(models.Model):
+    funcion = models.TextField()
+    cargo = models.ForeignKey('Cargo', on_delete=models.CASCADE)
+    def __str__(self):
+        return f'{self.cargo} - {self.funcion[:30]}...'
 
 class CargoUsuario(models.Model):
     cargo = models.ForeignKey('Cargo', on_delete=models.CASCADE)
     usuario = models.ForeignKey('usuarios_api.Usuario', on_delete=models.CASCADE)
-    fechaInicio = models.DateTimeField(default=timezone.now)
-    fechaRetiro = models.DateTimeField(blank=True, null=True)
-
+    fechaInicio = models.DateField(auto_now_add=True)
+    fechaRetiro = models.DateField(blank=True, null=True)
     salario = models.DecimalField(max_digits=10, decimal_places=2)
     grado = models.CharField(max_length=100)
     resolucion= models.CharField(max_length=100)
     resolucion_archivo = models.FileField(upload_to="resolucionesCargoUsuario/", blank=True, null=True)
     estadoVinculacion = models.ForeignKey('EstadoVinculacion', on_delete=models.CASCADE )
-    observacion = models.TextField(blank=True, null=True)
     def __str__(self):
         return f"{self.cargo} - {self.usuario}"
 
@@ -58,11 +60,3 @@ class IdpxCargo(models.Model):
         unique_together = ['idp_id', 'cargo']
     def __str__(self):
         return f"{self.idp_id.idp_id} - {self.cargo.nombre}"
-    
-class RelacionCascada(models.Model):
-    cargo_padre = models.ForeignKey('Cargo', on_delete=models.CASCADE, related_name='cargos_dependientes')
-    cargo_hijo = models.ForeignKey('Cargo', on_delete=models.CASCADE, related_name='cargos_superiores')
-
-    def __str__(self):
-        return f"{self.cargo_padre} → {self.cargo_hijo}"
-
