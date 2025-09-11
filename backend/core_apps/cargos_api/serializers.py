@@ -6,7 +6,7 @@ from core_apps.general.models import Centro
 from core_apps.usuarios_api.models import Usuario
 from core_apps.usuarios_api.serializers import UsuarioSerializer
 from .models import (
-    CargoNombre, EstadoCargo, Cargo, CargoFuncion, CargoUsuario, Idp, EstadoVinculacion,
+    CargoNombre, EstadoCargo, Cargo, CargoUsuario, Idp, EstadoVinculacion,
     IdpxCargo
 )
 from rest_framework import serializers
@@ -91,7 +91,6 @@ class ConfirmacionCascadaSerializer(serializers.Serializer):
     decisiones = DecisionSerializer(many=True, required=False, default=list)
 
     def to_internal_value(self, data):
-        import json
         data = data.copy()
 
         if "payload_root" in data and isinstance(data["payload_root"], str):

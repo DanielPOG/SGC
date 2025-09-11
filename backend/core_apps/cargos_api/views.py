@@ -1,18 +1,31 @@
 from rest_framework import viewsets, status
-from .models import CargoNombre, EstadoCargo, Cargo, CargoFuncion, CargoUsuario, Idp
+from .models import CargoNombre, EstadoCargo, Cargo, CargoUsuario, Idp
+import json
+from core_apps.cargos_api.services.cascada import (
+    build_escalon_sugerencias,
+    aplicar_decisiones_cascada,
+    _normalize_date
+)
+from rest_framework import viewsets, status
+from .models import CargoNombre, EstadoCargo, Cargo, CargoUsuario, Idp, EstadoVinculacion, IdpxCargo
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 import pandas as pd
 from core_apps.usuarios_api.models import Usuario
 from rest_framework.decorators import action
-from django.db import IntegrityError
-
+from django.utils import timezone
+from rest_framework.exceptions import ValidationError
+from rest_framework import serializers
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from rest_framework import status
+from django.db import transaction
+from rest_framework.exceptions import ValidationError
 from .serializers import (
     CargoNombreSerializer,
     EstadoCargoSerializer,
     CargoSerializer,
-    CargoFuncionSerializer,
     CargoUsuarioSerializer,
     CargoExcelSerializer,
     CargoNestedSerializer,
@@ -86,10 +99,18 @@ class IdpViewSet(viewsets.ModelViewSet):
     @action(methods=['get'], detail=False)
     def historialCargos(self, request):
         idp_id = request.query_params.get('idp_id')
-        try:
-            idp = Idp.objects.get(idp_id)
-        except Idp.DoesNotExist:
-            return Response({''})
+
+        cargo_actual = Cargo.objects.filter(idp_id=idp_id)
+        idpxcargo = IdpxCargo.objects.filter(idp_id=idp_id)
+
+        data = {
+            "cargo_activo": CargoSerializer(cargo_actual, many=True).data if cargo_actual.exists() else "0",
+            "idp_historial": IdpxCargoSerializer(idpxcargo, many=True).data,
+        }
+
+        return Response(data)
+        
+        
     @action(methods=['post'], detail=False)
     def cargarExcel(self, request):
         file = request.FILES.get('file')
@@ -190,10 +211,7 @@ class CargoViewSet(viewsets.ModelViewSet):
             })
 
         return Response(data, status=status.HTTP_200_OK)
-class CargoFuncionViewSet(viewsets.ModelViewSet):
-   
-    queryset = CargoFuncion.objects.all()
-    serializer_class = CargoFuncionSerializer
+
 
 
 class CargoUsuarioViewSet(viewsets.ModelViewSet):
