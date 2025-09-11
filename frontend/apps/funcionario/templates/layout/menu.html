@@ -9,7 +9,7 @@
   
 </head>
 
-<body x-data="{ sidebarOpen: false }" class="flex bg-white min-h-screen text-black" x-data="layout()">
+<body  class="flex bg-white min-h-screen text-black" x-data="layout()">
    <aside 
      x-ref="sidebar"
      :class="sidebarOpen 
@@ -47,25 +47,18 @@
     </div>
     
   <nav class="flex-1 overflow-y-auto mt-1 flex flex-col items-center pr-0 space-y-2 lg:space-y-1">
-    <div class="flex flex-col flex-grow items-center w-full space-y-2 lg:space-y-2">
+  <div class="flex flex-col flex-grow items-center w-full space-y-2 lg:space-y-2">
 
+    <!-- boton de pr  -->
     
 
 
 
-      
+
+
+
 
 <!-- cambiar contraseña  -->
-<div x-data="{ showTip: false, pos: { top: 0, left: 0 } }"
-     x-init="$nextTick(() => {
-       const btn = $el.querySelector('a');
-       const rect = btn.getBoundingClientRect();
-       pos.top = rect.top + window.scrollY + rect.height / 2;
-       pos.left = rect.right + window.scrollX + 10;
-     })"
-     @mouseenter="showTip = true"
-     @mouseleave="showTip = false"
-     class="inline-block relative">
 
   <!-- Botón -->
  <a href="{% url 'actualizar_datos' %}" title="Actualizar Datos"
@@ -76,35 +69,13 @@
            <img src="{% static 'img/datos.png' %}" alt="Actualizar Datos" 
                  class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
            <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Cambiar Contraseña</span>
-        </a>
+    </a>
 
-  <!-- Tooltip flotante al lado -->
-<template x-if="showTip && !$store.layout.sidebarOpen">
-  <div x-transition
-       class="fixed px-3 py-2 bg-white text-black text-sm rounded shadow-lg z-[9999]"
-       :style="`top: ${pos.top}px; left: ${pos.left}px; transform: translateY(-50%)`">
-  Cambiar Contraseña
-  </div>
-</template>
-</div>
 
 
 
 
 <!-- actualizar datos  -->
-<div class="flex flex-col flex-grow items-center w-full space-y-2 lg:space-y-2">
-
-       <div x-data="{ showTip: false, pos: { top: 0, left: 0 } }"
-     x-init="$nextTick(() => {
-       const btn = $el.querySelector('a');
-       const rect = btn.getBoundingClientRect();
-       pos.top = rect.top + window.scrollY + rect.height / 2;
-       pos.left = rect.right + window.scrollX + 10;
-     })"
-     @mouseenter="showTip = true"
-     @mouseleave="showTip = false"
-     class="inline-block relative">
-        
         <a href="{% url 'actualizar_datos' %}" title="Actualizar Datos"
            class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
                   rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
@@ -114,32 +85,10 @@
                  class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
            <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Actualizar Datos</span>
         </a>
-          <!-- Tooltip flotante al lado -->
-<template x-if="showTip && !$store.layout.sidebarOpen">
-  <div x-transition
-       class="fixed px-3 py-2  bg-white text-black text-sm rounded shadow-lg z-[9999]"
-       :style="`top: ${pos.top}px; left: ${pos.left}px; transform: translateY(-50%)`">
-    Actualizar Datos
-  </div>
-</template>
-</div>
 
 
 
 <!-- agregar formacion  -->
- <div class="flex flex-col flex-grow items-center w-full space-y-2 lg:space-y-2">
-
-       <div x-data="{ showTip: false, pos: { top: 0, left: 0 } }"
-     x-init="$nextTick(() => {
-       const btn = $el.querySelector('a');
-       const rect = btn.getBoundingClientRect();
-       pos.top = rect.top + window.scrollY + rect.height / 2;
-       pos.left = rect.right + window.scrollX + 10;
-     })"
-     @mouseenter="showTip = true"
-     @mouseleave="showTip = false"
-     class="inline-block relative">
-
         <a  href="{% url 'agregar_formacion' %}" title="Agregar Formaciòn Complementaria"
            class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
                   rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
@@ -149,29 +98,9 @@
                  class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
            <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Agregar Formaciòn Complementaria</span>
         </a>
-     <template x-if="showTip && !$store.layout.sidebarOpen">
-  <div x-transition
-       class="fixed px-3 py-2 bg-white text-black text-sm rounded shadow-lg z-[9999]"
-       :style="`top: ${pos.top}px; left: ${pos.left}px; transform: translateY(-50%)`">
-    Agregar Formaciòn Complementaria
-  </div>
-</template>
-</div>
+
 
 <!-- historial de solicitudes -->
-  <div class="flex flex-col flex-grow items-center w-full space-y-2 lg:space-y-2">
-
-       <div x-data="{ showTip: false, pos: { top: 0, left: 0 } }"
-     x-init="$nextTick(() => {
-       const btn = $el.querySelector('a');
-       const rect = btn.getBoundingClientRect();
-       pos.top = rect.top + window.scrollY + rect.height / 2;
-       pos.left = rect.right + window.scrollX + 10;
-     })"
-     @mouseenter="showTip = true"
-     @mouseleave="showTip = false"
-     class="inline-block relative">
-
         <a href="{% url 'historial_solicitudes' %}" title="Historial de Solicitudes"
            class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
                   rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
@@ -181,17 +110,9 @@
                  class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
            <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Historial de Solicitudes</span>
         </a>
-   <template x-if="showTip && !$store.layout.sidebarOpen">
-  <div x-transition
-       class="fixed px-3 py-2 bg-white text-black text-sm rounded shadow-lg z-[9999]"
-       :style="`top: ${pos.top}px; left: ${pos.left}px; transform: translateY(-50%)`">
-    Historial de Solicitudes
-  </div>
-</template>
-</div>
+
 
     <!-- Botón de Opciones alineado -->
-     
     <div x-data="{ open: false }" class="relative left-4w-full">
       <button
         @click="open = !open"
@@ -319,13 +240,7 @@
             </a>
         </footer>
     </div>
-<script>
-  document.addEventListener('alpine:init', () => {
-    Alpine.store('layout', {
-      sidebarOpen: false
-    });
-  });
-</script>
+
 
     <!-- permite que al cambiar de pagina no se cierre  -->
     <script>
