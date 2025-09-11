@@ -6,6 +6,7 @@ from rest_framework.response import Response
 import pandas as pd
 from core_apps.usuarios_api.models import Usuario
 from rest_framework.decorators import action
+from django.db import IntegrityError
 
 from .serializers import (
     CargoNombreSerializer,
@@ -39,8 +40,30 @@ class IdpViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         if Idp.objects.filter(idp_id=request.data.get('idp_id')).exists():
             return Response({'error':'Ya existe una IDP con ese número'}, status=status.HTTP_409_CONFLICT)
+        if Cargo.objects.filter(idp=serializer.idp_id).exists():
+            return Response({'error':''})
         idp = serializer.save()
         return Response(IdpSerializer(idp).data, status=status.HTTP_201_CREATED)
+
+    @action(methods=['post'], detail=False)
+    def asignarCargo(self, request):
+        idp_id = request.data.get('idp_id')
+        cargo_id = request.data.get('cargo_id')
+
+        if Cargo.objects.filter(idp=idp_id).exists():
+            return Response({'error':'Esta IDP ya esta asignada a un cargo activo.'},
+                            status=status.HTTP_403_FORBIDDEN)
+        cargo = get_object_or_404(Cargo, id=cargo_id)
+        if cargo.idp:
+            return Response({'error':'Este cargo ya tiene una IDP asignada'}, status=status.HTTP_403_FORBIDDEN)
+        cargo.idp = idp_id
+        try:
+            cargo.save()
+        except IntegrityError as e:
+            print(f'Error guardando cargo: {e}')
+            return Response({"error":f"No fue posible asignar la IDP"}, status=status.HTTP_403_FORBIDDEN)
+        return Response({'msg':f'IDP {idp_id} asignada al cargo de {cargo.nombre}'})
+
     @action(methods=['patch'], detail=False)
     def cambiarEstado(self, request):
         idp_id = request.data.get('idp_id')
@@ -63,6 +86,10 @@ class IdpViewSet(viewsets.ModelViewSet):
     @action(methods=['get'], detail=False)
     def historialCargos(self, request):
         idp_id = request.query_params.get('idp_id')
+        try:
+            idp = Idp.objects.get(idp_id)
+        except Idp.DoesNotExist:
+            return Response({''})
     @action(methods=['post'], detail=False)
     def cargarExcel(self, request):
         file = request.FILES.get('file')

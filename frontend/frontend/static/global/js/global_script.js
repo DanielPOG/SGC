@@ -19,10 +19,13 @@ async function tokenRefresh(){
     body: JSON.stringify({refresh:refresh})
   })
 
-  if(!res.ok){
-    throw new Error("Sesión expirada, vuelva a inicar sesión.")
-  }
-
+  if (!res.ok) try 
+  {
+    localStorage.removeItem('access')
+    localStorage.removeItem('refresh')
+  } finally { window.location.reload() }
+  
+  
   const data = await res.json()
   localStorage.setItem('access', data.access)
 
