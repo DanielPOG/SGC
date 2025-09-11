@@ -28,7 +28,8 @@ export function idpRow(idp, cargos) {
           <strong class="border-l-2 ps-1" >Acciones:</strong>
           <button data-estado="${idp.estado ? 0 : 1}" id=${idp.idp_id} ${cargosIDP > 0 ? 'disabled' : ''} data-idp=${idp.idp_id} class="min-w-32 text-white rounded-xl px-2 ${cargosIDP < 1 ? (idp.estado ? 'bg-red-500/80 hover:bg-red-700 font-semibold' :'bg-green-600/80  hover:bg-green-600 font-semibold' ): 'font-bold bg-gray-500/50 pointer-events-none opacity-[0.5]'}">
             ${idp.estado ? (cargosIDP > 0 ? 'OCUPADO' : 'DESACTIVAR') : 'ACTIVAR'}
-          </button>
+          </button> 
+
         </div>
       </td>
     `

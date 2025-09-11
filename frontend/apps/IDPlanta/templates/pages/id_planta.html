@@ -4,10 +4,12 @@
 
 {% block content %}
 
+ 
+
   <!-- Modal para crear IDP -->
-  {% include "./newidp_modal.html" %}
   
   <h1 class="text-4xl font-bold mb-6 ms-5">IDPs</h1>
+
 
    <!-- Buscador -->
   <div class="flex items-center w-full max-w-8xl mb-6 border rounded-full px-8 py-3 shadow-sm">
@@ -109,5 +111,6 @@
 <script defer type="module" src="{% static "js/idps.js" %}"></script>
 <script defer type="module" src="{% static "js/acciones.js" %}"></script>
 <script defer type="module" src="{% static "js/excel.js" %}"></script>
+  {% include "./newidp_modal.html" %}
 
 {% endblock %}
