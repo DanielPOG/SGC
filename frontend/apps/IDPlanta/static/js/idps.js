@@ -12,8 +12,7 @@ export const colorDiv = (color, text = '')=>{
 
 export function idpRow(idp, cargos) {
   const state = idp.estado ? colorDiv('green', 'ACTIVO') : colorDiv('red', 'INACTIVO')
-  const cargosIDP = cargos.filter(c => c.idp && c.idp.idp_id === idp.idp_id).length
-
+  const cargosIDP = cargos.filter(c =>c.idp.idp_id === idp.idp_id).length
   return (
     ` 
       <td class="px-4 py-2 border text-center">${idp.idp_id}</td>  
