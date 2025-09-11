@@ -52,12 +52,12 @@ class CargoUsuario(models.Model):
 
 # TODO: Una idp por cargo activo y un cargo activo para idp
 class IdpxCargo(models.Model):
-    idp_id = models.ForeignKey("Idp", verbose_name=("Idp en cargo"), on_delete=models.CASCADE)
-    cargo = models.ForeignKey("Cargo", verbose_name=("Cargo en idp"),  on_delete=models.CASCADE)
+    idp = models.ForeignKey(Idp, verbose_name=("Idp en cargo"), on_delete=models.CASCADE)
+    cargo = models.ForeignKey(Cargo, verbose_name=("Cargo en idp"),  on_delete=models.CASCADE)
     fecha_asignacion = models.DateTimeField(default=timezone.now)
     fecha_desasignación = models.DateTimeField(blank=True, null=True)
     def __str__(self):
-        return f"{self.idp_id.idp_id} - {self.cargo.nombre}"
+        return f"{self.idp_id.idp} - {self.cargo.nombre}"
     
 class RelacionCascada(models.Model):
     cargo_padre = models.ForeignKey('Cargo', on_delete=models.CASCADE, related_name='cargos_dependientes')

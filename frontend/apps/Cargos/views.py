@@ -18,5 +18,4 @@ def cargoIndex(request):
 def editar_cargo(request, id):
     return render(request, 'pages/newcargo.html',  {"mode": "edit", "cargo_id": id})
 
-def api_view(request):
-    return render(request, 'pages/api_load.html' )
+
