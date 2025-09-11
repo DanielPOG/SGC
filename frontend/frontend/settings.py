@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'apps.Solicitudes',
     'apps.Autorizaciones',
     'apps.Bitacora',
+    'sweetify',
     'apps.funcionario',
 ]
 
@@ -60,6 +61,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+from django.contrib.messages import constants as messages
+MESSAGE_STORAGE = "django.contrib.messages.storage.session.SessionStorage"
 
 ROOT_URLCONF = 'frontend.urls'
 
@@ -83,13 +87,17 @@ WSGI_APPLICATION = 'frontend.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'SGC',
+        'USER': 'postgres',
+        'PASSWORD': 'root',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
+
 
 
 # Password validation
@@ -141,3 +149,6 @@ NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Sweetify configuration
+SWEETIFY_SWEETALERT_LIBRARY = 'sweetalert2'  # Usa 'sweetalert' si prefieres la versión anterior
