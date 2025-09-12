@@ -186,6 +186,144 @@ class CargoUsuarioViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(cargos_usuario, many=True)
         return Response(serializer.data)
 
+
+    def perform_create(self, serializer):
+        self.instance_creada = serializer.save()
+
+    def create(self, request, *args, **kwargs):
+        data = request.data.dict()  # solo campos normales
+        archivo_root = request.FILES.get("resolucion_archivo")
+
+        if "cargo" in data and "cargo_id" not in data:
+            data["cargo_id"] = data.pop("cargo")
+
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        v = serializer.validated_data
+
+        cargo_destino_id = getattr(v.get("cargo"), "id", v.get("cargo_id")) or data.get("cargo_id")
+        tipo_decision = getattr(v.get("estadoVinculacion"), "estado", "").upper()
+
+        ocupacion_actual = CargoUsuario.objects.filter(
+            cargo_id=cargo_destino_id,
+            fechaRetiro__isnull=True
+        ).select_related("usuario").first()
+
+        if not ocupacion_actual:
+            if archivo_root:
+                serializer.validated_data["resolucion_archivo"] = archivo_root
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+        usuario_id = ocupacion_actual.usuario.id
+        sugerencias = build_escalon_sugerencias(usuario_id, cargo_destino_id, tipo_decision)
+
+        if not sugerencias:
+            if archivo_root:
+                serializer.validated_data["resolucion_archivo"] = archivo_root
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+        return Response({
+            "requiere_confirmacion": True,
+            "cargo_usuario": {"usuario": usuario_id},
+            "sugerencias": sugerencias
+        }, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=["post"], url_path="confirmacion")
+    def confirmacion(self, request, *args, **kwargs):
+        """
+        Endpoint para confirmar la asignación en cascada:
+        - root_usuario_id -> ID del usuario principal
+        - cargo_destino_id -> ID del cargo destino
+        - payload_root -> datos del usuario principal (JSON)
+        - decisiones[i] -> lista de decisiones adicionales (JSON)
+        - resolucion_archivo -> archivo principal
+        - decisiones_archivo_i -> archivos asociados a decisiones
+        """
+        # --- Normalizar datos base ---
+        data = {k: v[0] if isinstance(v, list) else v 
+                for k, v in request.data.items() 
+                if not k.startswith("decisiones[")}
+
+        # Parsear payload_root si viene como string
+        if "payload_root" in data and isinstance(data["payload_root"], str):
+            try:
+                data["payload_root"] = json.loads(data["payload_root"])
+            except json.JSONDecodeError:
+                return Response({"error": "Formato inválido en payload_root"}, status=400)
+
+        payload_root = data.get("payload_root", {})
+        root_usuario_id = data.get("root_usuario_id")
+        cargo_destino_id = data.get("cargo_destino_id")
+
+        # --- Parsear decisiones ---
+        decisiones = []
+        for key, value in request.data.items():
+            if key.startswith("decisiones["):
+                try:
+                    decisiones.append(json.loads(value))
+                except json.JSONDecodeError:
+                    return Response({"error": f"Formato inválido en {key}"}, status=400)
+
+        # Incluir archivo principal si lo hay
+        archivo_root = request.FILES.get("resolucion_archivo")
+        if archivo_root:
+            payload_root["resolucion_archivo"] = archivo_root
+
+        # Asegurar cargo_id en root
+        if "cargo_id" not in payload_root and cargo_destino_id:
+            payload_root["cargo_id"] = cargo_destino_id
+
+        resultados = []
+        archivos_a_cerrar = []
+        root_instance = None
+
+        try:
+            with transaction.atomic():
+                # --- Procesar root ---
+                root_serializer = CargoUsuarioSerializer(
+                    data=payload_root,
+                    context={"cargo_destino_id": cargo_destino_id}
+                )
+                root_serializer.is_valid(raise_exception=True)
+                root_instance = root_serializer.save()
+
+                # Actualizar cargo en el usuario
+                if hasattr(root_instance, "usuario"):
+                    root_instance.usuario.cargo = root_instance.cargo
+                    root_instance.usuario.save(update_fields=["cargo"])
+
+                # --- Procesar decisiones ---
+                for i, dec in enumerate(decisiones):
+                    dec_payload = dec.copy()
+                    archivo_dec = request.FILES.get(f"decisiones_archivo_{i}")
+                    if archivo_dec:
+                        dec_payload["resolucion_archivo"] = archivo_dec
+                        archivos_a_cerrar.append(archivo_dec)
+                    else:
+                        dec_payload["resolucion_archivo"] = None
+
+                    dec_serializer = CargoUsuarioSerializer(
+                        data=dec_payload,
+                        context={"cargo_destino_id": dec_payload.get("cargo_id")}
+                    )
+                    dec_serializer.is_valid(raise_exception=True)
+                    resultados.append(dec_serializer.save())
+
+        finally:
+            if archivo_root and not archivo_root.closed:
+                archivo_root.close()
+            for f in archivos_a_cerrar:
+                if f and not f.closed:
+                    f.close()
+
+        return Response({
+            "root": CargoUsuarioSerializer(root_instance).data,
+            "decisiones": CargoUsuarioSerializer(resultados, many=True).data
+        }, status=status.HTTP_201_CREATED)
 # VISTA PARA SUBIR POR EXCEL
 class CargoUploadView(APIView):
     parser_classes = [MultiPartParser]
