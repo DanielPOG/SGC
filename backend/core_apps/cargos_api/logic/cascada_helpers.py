@@ -86,17 +86,17 @@ def devolver_a_planta(
 
         return nuevo
 
-
 def devolver_a_temporal(
     usuario: Usuario,
     cargo_destino: Cargo,
+    datos_temporal: dict,
     resolucion_archivo,
     context: Optional[dict] = None
 ):
     """
     Devuelve a un usuario a un cargo TEMPORAL.
-    - El archivo de resolución es obligatorio y siempre debe venir del frontend.
-    - Nunca usa histórico.
+    - El archivo de resolución es obligatorio.
+    - Se registra en CargoUsuario pero NO se cambia el usuario.cargo.
     """
 
     if not resolucion_archivo:
@@ -107,25 +107,24 @@ def devolver_a_temporal(
     except EstadoVinculacion.DoesNotExist:
         raise DRFValidationError("No existe EstadoVinculacion 'TEMPORAL'")
 
-    hoy = timezone.now()
+    hoy = timezone.now().date()
 
     datos = {
         "num_doc": usuario.num_doc,
         "cargo_id": cargo_destino.id,
-        "estadoVinculacion": estado_temp.id,
-        "salario": 0,
-        "grado": "",
-        "resolucion": "",
-        "resolucion_archivo": resolucion_archivo,  # 👈 obligatorio desde frontend
-        "observacion": "Devolución a TEMPORAL",
-        "fechaInicio": hoy,
+        "estadoVinculacion": datos_temporal.get("estadoVinculacion", estado_temp.id),
+        "salario": datos_temporal.get("salario", 0),
+        "grado": datos_temporal.get("grado", ""),
+        "resolucion": datos_temporal.get("resolucion", ""),
+        "resolucion_archivo": resolucion_archivo,
+        "observacion": datos_temporal.get("observacion", "Devolución a TEMPORAL"),
+        "fechaInicio": datos_temporal.get("fechaInicio", hoy),
     }
 
     ser = CargoUsuarioSerializer(data=datos, context=context or {})
     ser.is_valid(raise_exception=True)
     nuevo_temp = ser.save()
 
-    usuario.cargo = cargo_destino
-    usuario.save(update_fields=["cargo"])
-
+    # 👇 IMPORTANTE: No tocar usuario.cargo
     return nuevo_temp
+

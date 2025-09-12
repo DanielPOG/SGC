@@ -267,7 +267,6 @@ document.addEventListener("DOMContentLoaded", () => {
       if (archivoRoot) {
         formData.append("resolucion_archivo", archivoRoot);
       }
-      console.log(decisiones)
       decisiones.forEach((d, i) => {
         const { resolucion_archivo, ...rest } = d;
         formData.append(`decisiones[${i}]`, JSON.stringify(rest));

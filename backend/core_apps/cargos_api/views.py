@@ -179,10 +179,18 @@ class CargoUsuarioViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=["post"], url_path="confirmacion")
     def confirmacion(self, request, *args, **kwargs):
-
+        """
+        Endpoint para confirmar la asignación en cascada:
+        - root_usuario_id -> ID del usuario principal
+        - cargo_destino_id -> ID del cargo destino
+        - payload_root -> datos del usuario principal (JSON)
+        - decisiones[i] -> lista de decisiones adicionales (JSON)
+        - resolucion_archivo -> archivo principal
+        - decisiones_archivo_i -> archivos asociados a decisiones
+        """
         # --- Normalizar datos base ---
-        data = {k: v[0] if isinstance(v, list) else v 
-                for k, v in request.data.items() 
+        data = {k: v[0] if isinstance(v, list) else v
+                for k, v in request.data.items()
                 if not k.startswith("decisiones[")}
 
         if "payload_root" in data and isinstance(data["payload_root"], str):
@@ -213,7 +221,6 @@ class CargoUsuarioViewSet(viewsets.ModelViewSet):
             payload_root["cargo_id"] = cargo_destino_id
 
         resultados = []
-        archivos_a_cerrar = []
         root_instance = None
 
         try:
@@ -226,9 +233,10 @@ class CargoUsuarioViewSet(viewsets.ModelViewSet):
                 root_serializer.is_valid(raise_exception=True)
                 root_instance = root_serializer.save()
 
-                if hasattr(root_instance, "usuario"):
-                    root_instance.usuario.cargo = root_instance.cargo
-                    root_instance.usuario.save(update_fields=["cargo"])
+                if hasattr(root_instance, "usuario") and \
+                    root_instance.estadoVinculacion.estado.upper() == "PLANTA":
+                        root_instance.usuario.cargo = root_instance.cargo
+                        root_instance.usuario.save(update_fields=["cargo"])
 
                 # --- Procesar decisiones ---
                 for i, dec in enumerate(decisiones):
@@ -255,8 +263,15 @@ class CargoUsuarioViewSet(viewsets.ModelViewSet):
                         except Cargo.DoesNotExist:
                             return Response({"error": f"Cargo {cargo_id} no encontrado"}, status=400)
 
-                        nuevo = devolver_a_temporal(usuario, cargo_destino, archivo_dec, context={"request": request})
+                        nuevo = devolver_a_temporal(
+                            usuario=usuario,
+                            cargo_destino=cargo_destino,
+                            datos_temporal=dec,
+                            resolucion_archivo=archivo_dec,
+                            context={"request": request}
+                        )
                         resultados.append(nuevo)
+
 
                     else:
                         return Response({"error": f"Tipo de decisión inválido: {tipo}"}, status=400)
@@ -264,7 +279,7 @@ class CargoUsuarioViewSet(viewsets.ModelViewSet):
         finally:
             if archivo_root and not archivo_root.closed:
                 archivo_root.close()
-            for f in archivos_a_cerrar:
+            for f in request.FILES.values():
                 if f and not f.closed:
                     f.close()
 
