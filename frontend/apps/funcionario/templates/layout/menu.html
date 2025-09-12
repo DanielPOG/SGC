@@ -49,67 +49,118 @@
   <nav class="flex-1 overflow-y-auto mt-1 flex flex-col items-center pr-0 space-y-2 lg:space-y-1">
   <div class="flex flex-col flex-grow items-center w-full space-y-2 lg:space-y-2">
 
-    <!-- boton de pr  -->
+    <!--  cambiar contraseña  -->
+<div x-data="{ tooltipVisible: false, tooltipX: 0, tooltipY: 0 }" 
+     @mousemove="!sidebarOpen && (tooltipX = $event.clientX + 10, tooltipY = $event.clientY + 10)">
+
+    <a href="{% url 'cambiar_contra' %}"
+       @mouseenter="!sidebarOpen && (tooltipVisible = true)"
+       @mouseleave="tooltipVisible = false"
+       class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
+              rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
+              justify-center md:justify-center lg:max-h-fit lg:py-4"
+       :class="sidebarOpen ? 'w-48 sm:w-56 lg:w-60 px-2 sm:px-3' : 'w-12 sm:w-14 lg:w-16 px-1 sm:px-2'">
+        
+        <img src="{% static 'img/contraseña.png' %}" alt="cambiar contraseña" 
+              class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
+        
+        <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Cambiar Contraseña</span>
+    </a>
+
+    <div x-show="tooltipVisible"
+         x-cloak
+         class="fixed z-50 p-2 text-xs  text-black bg-white rounded-md"
+         :style="`left: ${tooltipX}px; top: ${tooltipY}px;`">
+        Cambiar Contraseña
+    </div>
+
+</div>
     
 
 
+<!-- actualizar datos  -->
+<div x-data="{ tooltipVisible: false, tooltipX: 0, tooltipY: 0 }" 
+     @mousemove="!sidebarOpen && (tooltipX = $event.clientX + 10, tooltipY = $event.clientY + 10)">
 
-
-
-
-
-<!-- cambiar contraseña  -->
-
-  <!-- Botón -->
- <a href="{% url 'actualizar_datos' %}" title="Actualizar Datos"
-           class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
-                  rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
-                  justify-center md:justify-center lg:max-h-fit lg:py-4"
-           :class="sidebarOpen ? 'w-48 sm:w-56 lg:w-60 px-2 sm:px-3' : 'w-12 sm:w-14 lg:w-16 px-1 sm:px-2'">
-           <img src="{% static 'img/datos.png' %}" alt="Actualizar Datos" 
-                 class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
-           <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Cambiar Contraseña</span>
+    <a href="{% url 'actualizar_datos' %}"
+       @mouseenter="!sidebarOpen && (tooltipVisible = true)"
+       @mouseleave="tooltipVisible = false"
+       class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
+              rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
+              justify-center md:justify-center lg:max-h-fit lg:py-4"
+       :class="sidebarOpen ? 'w-48 sm:w-56 lg:w-60 px-2 sm:px-3' : 'w-12 sm:w-14 lg:w-16 px-1 sm:px-2'">
+        
+        <img src="{% static 'img/datos.png' %}" alt="Actualizar Datos" 
+              class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
+        
+        <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Actualizar Datos </span>
     </a>
 
+    <div x-show="tooltipVisible"
+         x-cloak
+         class="fixed z-50 p-2 text-xs text-black bg-white rounded-md"
+         :style="`left: ${tooltipX}px; top: ${tooltipY}px;`">
+        Actualizar Datos
+    </div>
 
-
-
-
-<!-- actualizar datos  -->
-        <a href="{% url 'actualizar_datos' %}" title="Actualizar Datos"
-           class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
-                  rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
-                  justify-center md:justify-center lg:max-h-fit lg:py-4"
-           :class="sidebarOpen ? 'w-48 sm:w-56 lg:w-60 px-2 sm:px-3' : 'w-12 sm:w-14 lg:w-16 px-1 sm:px-2'">
-           <img src="{% static 'img/datos.png' %}" alt="Actualizar Datos" 
-                 class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
-           <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Actualizar Datos</span>
-        </a>
-
+</div>
 
 
 <!-- agregar formacion  -->
-        <a  href="{% url 'agregar_formacion' %}" title="Agregar Formaciòn Complementaria"
-           class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
-                  rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
-                  justify-center md:justify-center lg:max-h-fit lg:py-4"
-           :class="sidebarOpen ? 'w-48 sm:w-56 lg:w-60 px-2 sm:px-3' : 'w-12 sm:w-14 lg:w-16 px-1 sm:px-2'">
-           <img src="{% static 'img/formacion.png' %}" alt="Agregar Formaciòn Complementaria" 
-                 class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
-           <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Agregar Formaciòn Complementaria</span>
-        </a>
+<div x-data="{ tooltipVisible: false, tooltipX: 0, tooltipY: 0 }" 
+     @mousemove="!sidebarOpen && (tooltipX = $event.clientX + 10, tooltipY = $event.clientY + 10)">
+
+    <a href="{% url 'agregar_formacion' %}"
+       @mouseenter="!sidebarOpen && (tooltipVisible = true)"
+       @mouseleave="tooltipVisible = false"
+       class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
+              rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
+              justify-center md:justify-center lg:max-h-fit lg:py-4"
+       :class="sidebarOpen ? 'w-48 sm:w-56 lg:w-60 px-2 sm:px-3' : 'w-12 sm:w-14 lg:w-16 px-1 sm:px-2'">
+        
+        <img src="{% static 'img/formacion.png' %}" alt="agregar Formacion" 
+              class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
+        
+        <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Agregar Formaciòn </span>
+    </a>
+
+    <div x-show="tooltipVisible"
+         x-cloak
+         class="fixed z-50 p-2 text-xs text-black bg-white rounded-md"
+         :style="`left: ${tooltipX}px; top: ${tooltipY}px;`">
+        Agregar Formaciòn
+    </div>
+
+</div>
+
 
 
 <!-- historial de solicitudes -->
-        <a href="{% url 'historial_solicitudes' %}" title="Historial de Solicitudes"
-           class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
-                  rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
-                  justify-center md:justify-center lg:max-h-fit lg:py-4"
-           :class="sidebarOpen ? 'w-48 sm:w-56 lg:w-60 px-2 sm:px-3' : 'w-12 sm:w-14 lg:w-16 px-1 sm:px-2'">
-           <img src="{% static 'img/historial.png' %}" alt="Historial de Solicitudes" 
-                 class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
-           <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Historial de Solicitudes</span>
-        </a>
+      <div x-data="{ tooltipVisible: false, tooltipX: 0, tooltipY: 0 }" 
+     @mousemove="!sidebarOpen && (tooltipX = $event.clientX + 10, tooltipY = $event.clientY + 10)">
+
+    <a href="{% url 'historial_solicitudes' %}"
+       @mouseenter="!sidebarOpen && (tooltipVisible = true)"
+       @mouseleave="tooltipVisible = false"
+       class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
+              rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
+              justify-center md:justify-center lg:max-h-fit lg:py-4"
+       :class="sidebarOpen ? 'w-48 sm:w-56 lg:w-60 px-2 sm:px-3' : 'w-12 sm:w-14 lg:w-16 px-1 sm:px-2'">
+        
+        <img src="{% static 'img/historial.png' %}" alt="historial de solicitudes" 
+              class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
+        
+        <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Historial de Solicitudes</span>
+    </a>
+
+    <div x-show="tooltipVisible"
+         x-cloak
+         class="fixed z-50 p-2 text-xs text-black bg-white rounded-md"
+         :style="`left: ${tooltipX}px; top: ${tooltipY}px;`">
+       Historial de Solicitudes
+    </div>
+
+</div>
 
 
     <!-- Botón de Opciones alineado -->
@@ -133,14 +184,15 @@
   @click.away="open = false"
   class="absolute left-0 mt-2 bg-white border border-gray-200 rounded shadow-lg z-50"
   x-cloak
-  :class="sidebarOpen ? 'w-48 sm:w-56 lg:w-60' : 'w-12 sm:w-14 lg:w-16'"
->
+  :class="sidebarOpen ? 'w-48 sm:w-56 lg:w-60' : 'w-12 sm:w-14 lg:w-16'">
+
+  
   <!-- Opción 1 -->
-  <a href="#"
+<a href="#"
    class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 relative"
    x-data="{ showTip: false, tipX: 0, tipY: 0 }"
    @mouseenter="
-     showTip = true;
+     showTip = !sidebarOpen;
      const rect = $refs.icon.getBoundingClientRect();
      tipX = rect.right + 8;
      tipY = rect.top + rect.height / 2;
@@ -149,27 +201,25 @@
 >
   <img src="{% static 'img/documento.png' %}" alt="Certificado" class="w-5 h-5" x-ref="icon">
 
-  <!-- Texto visible solo si el sidebar está abierto -->
   <span x-show="sidebarOpen" x-cloak class="ml-2">certificado sencillo</span>
 
-  <!-- Tooltip flotante sobre el body, alineado al ícono -->
   <div
-    x-show="showTip && !sidebarOpen"
+    x-show="showTip"
     x-cloak
     :style="`top: ${tipY}px; left: ${tipX}px; transform: translateY(-50%)`"
     class="fixed z-[9999] bg-white text-black text-sm px-2 py-1 rounded shadow-lg 
            opacity-0 transition-opacity duration-200 pointer-events-none"
     :class="showTip ? 'opacity-100' : 'opacity-0'">
-    certificado cencillo
+    Certificado sencillo
   </div>
 </a>
 
   <!-- Opción 2 -->
-  <a href="#"
+ <a href="#"
    class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 relative"
    x-data="{ showTip: false, tipX: 0, tipY: 0 }"
    @mouseenter="
-     showTip = true;
+     showTip = !sidebarOpen;
      const rect = $refs.icon.getBoundingClientRect();
      tipX = rect.right + 8;
      tipY = rect.top + rect.height / 2;
@@ -178,19 +228,17 @@
 >
   <img src="{% static 'img/historico.png' %}" alt="Certificado" class="w-5 h-5" x-ref="icon">
 
-  <!-- Texto visible solo si el sidebar está abierto -->
-  <span x-show="sidebarOpen" x-cloak class="ml-2">certificado Historico</span>
+  <span x-show="sidebarOpen" x-cloak class="ml-2">certificado Historico </span>
 
-  <!-- Tooltip flotante sobre el body, alineado al ícono -->
-    <div
-      
-        x-cloak
-        :style="`top: ${tipY}px; left: ${tipX}px; transform: translateY(-50%)`"
-        class="fixed z-[9999] bg-white text-black text-sm  px-2 py-1 rounded shadow-lg 
-            opacity-0 transition-opacity duration-200 pointer-events-none"
-        :class="showTip ? 'opacity-100' : 'opacity-0'">
-        certificado Historico
-    </div>
+  <div
+    x-show="showTip"
+    x-cloak
+    :style="`top: ${tipY}px; left: ${tipX}px; transform: translateY(-50%)`"
+    class="fixed z-[9999] bg-white text-black text-sm px-2 py-1 rounded shadow-lg 
+           opacity-0 transition-opacity duration-200 pointer-events-none"
+    :class="showTip ? 'opacity-100' : 'opacity-0'">
+    certificado Historico 
+  </div>
 </a>
 
 </div>
