@@ -130,6 +130,7 @@ STATIC_URL = "/static/"
 
 STATICFILES_DIRS = [
     BASE_DIR / "frontend" / "static",   # global compartida
+    BASE_DIR  / "static"
 ]
 
 # Tailwind CSS configuration 

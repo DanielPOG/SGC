@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'core_apps.cargos_api',
     'core_apps.reportes_api',
     'core_apps.general'
+    ,'django_extensions'
 ]
 
 MIDDLEWARE = [
