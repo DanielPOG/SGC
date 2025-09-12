@@ -217,49 +217,82 @@
     </div>
   </div>
 </div>
-<!-- Modal para datos de asignación temporal -->
-<div id="temporalModal" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50 px-4">
-  <div class="bg-white rounded-lg w-full max-w-3xl p-6 relative h-auto">
-    <button id="closeTemporalModal" class="absolute top-2 right-3 text-gray-600 hover:text-black text-xl font-bold">X</button>
-    <h3 class="text-lg font-bold mb-4">Datos para asignación temporal</h3>
+<!-- Modal Temporal -->
+<div id="temporalModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 z-50 items-center justify-center">
+  <div class="bg-white rounded-lg shadow-lg w-full max-w-lg p-6 relative">
+    <!-- Header -->
+    <div class="flex justify-between items-center border-b pb-3">
+      <h3 class="text-lg font-semibold">Asignación Temporal</h3>
+      <button id="closeTemporalModal" class="text-gray-500 hover:text-gray-700">
+        ✕
+      </button>
+    </div>
 
-    <form id="formTemporalAsignacion">
-      <input type="hidden" id="temporalCargoId" />
-      <input type="hidden" id="temporalUsuarioId" />
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label for="temporalGrado">Grado</label>
-          <input id="temporalGrado" type="number" class="w-full border rounded px-3 py-2" />
-        </div>
-        <div>
-          <label for="temporalSalario">Salario</label>
-          <input id="temporalSalario" type="number" class="w-full border rounded px-3 py-2" />
-        </div>
-        <div>
-          <label for="temporalResolucion">Resolución</label>
-          <input id="temporalResolucion" type="text" class="w-full border rounded px-3 py-2" />
-        </div>
-        <div>
-          <label for="temporalArchivo">Archivo Resolución</label>
-          <input id="temporalArchivo" type="file" class="w-full border rounded px-3 py-2" />
-        </div>
-        <div>
-          <label for="temporalEstado">Estado de vinculación</label>
-          <select id="temporalEstado" class="w-full border rounded px-3 py-2">
-            <option value="">-- Selecciona --</option>
-          </select>
-        </div>
-        <div>
-          <label for="temporalFechaInicio">Fecha de inicio</label>
-          <input id="temporalFechaInicio" type="date" class="w-full border rounded px-3 py-2" />
-        </div>
-        <div class="md:col-span-2">
-          <label for="temporalObservacion">Observación</label>
-          <textarea id="temporalObservacion" rows="2" class="w-full border rounded px-3 py-2"></textarea>
-        </div>
+    <!-- Formulario -->
+    <form id="formTemporalAsignacion" class="space-y-4 mt-4">
+      <input type="hidden" id="temporalCargoId" name="temporalCargoId">
+      <input type="hidden" id="temporalUsuarioId" name="temporalUsuarioId">
+
+      <!-- Grado -->
+      <div>
+        <label for="temporalGrado" class="block text-sm font-medium text-gray-700">Grado</label>
+        <input type="text" id="temporalGrado" name="temporalGrado"
+               class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
       </div>
-      <div class="flex justify-end mt-4">
-        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">Confirmar asignación</button>
+
+      <!-- Salario -->
+      <div>
+        <label for="temporalSalario" class="block text-sm font-medium text-gray-700">Salario</label>
+        <input type="number" id="temporalSalario" name="temporalSalario"
+               class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+      </div>
+
+      <!-- Resolución -->
+      <div>
+        <label for="temporalResolucion" class="block text-sm font-medium text-gray-700">Resolución</label>
+        <input type="text" id="temporalResolucion" name="temporalResolucion"
+               class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+      </div>
+
+      <!-- Archivo Resolución -->
+      <div>
+        <label for="temporalArchivo" class="block text-sm font-medium text-gray-700">Archivo Resolución</label>
+        <input type="file" id="temporalArchivo" name="temporalArchivo"
+               accept=".pdf,.jpg,.png"
+               class="mt-1 block w-full text-sm text-gray-700 border border-gray-300 rounded-md cursor-pointer focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+      </div>
+
+      <!-- Estado de vinculación -->
+      <div>
+        <label for="temporalEstado" class="block text-sm font-medium text-gray-700">Estado de vinculación</label>
+        <select id="temporalEstado" name="temporalEstado"
+                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+          <option value="">-- Selecciona --</option>
+        </select>
+      </div>
+
+      <!-- Fecha de inicio -->
+      <div>
+        <label for="temporalFechaInicio" class="block text-sm font-medium text-gray-700">Fecha de inicio</label>
+        <input type="date" id="temporalFechaInicio" name="temporalFechaInicio"
+               class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+      </div>
+
+      <!-- Observación -->
+      <div>
+        <label for="temporalObservacion" class="block text-sm font-medium text-gray-700">Observación</label>
+        <textarea id="temporalObservacion" name="temporalObservacion" rows="3"
+                  class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
+      </div>
+
+      <!-- Botones -->
+      <div class="flex justify-end gap-3 mt-4 border-t pt-3">
+        <button type="button" id="cancelarTemporal" class="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400">
+          Cancelar
+        </button>
+        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+          Asignar Temporal
+        </button>
       </div>
     </form>
   </div>

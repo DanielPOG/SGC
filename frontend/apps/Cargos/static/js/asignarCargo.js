@@ -12,6 +12,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const selectCargos = document.getElementById("selectCargos");
   const btnConfirmAsignar = document.getElementById("btnConfirmAsignar");
 
+  const temporalModal = document.getElementById("temporalModal");
+  const closeTemporalModal = document.getElementById("closeTemporalModal");
+  const formTemporalAsignacion = document.getElementById("formTemporalAsignacion");
+
   let sugerenciasGlobal = [];
   let decisiones = [];
   let indiceActual = 0;
@@ -43,7 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   cargarEstados();
 
-  // Abrir modal
+  // Abrir modal principal
   document.addEventListener("click", e => {
     const btn = e.target.closest(".open-nuevo-modal");
     if (!btn) return;
@@ -85,7 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
       { id: "grado", nombre: "Grado" },
       { id: "salario", nombre: "Salario" },
       { id: "resolucion", nombre: "Resolución" },
-      { id: "resolucionArchivo", nombre: "Resolución_Archivo" },
+      { id: "resolucionArchivo", nombre: "Archivo Resolución" },
       { id: "estadoVinculacion", nombre: "Estado de vinculación" },
       { id: "fechaInicio", nombre: "Fecha de inicio" }
     ];
@@ -113,20 +117,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       const formData = new FormData();
-
-      // 🔹 DRF espera campos planos, no JSON
       Object.entries(payloadRootBase).forEach(([key, value]) => {
         formData.append(key, value);
       });
-
-      // Archivo obligatorio
       formData.append("resolucion_archivo", archivoRoot);
 
       const res = await fetch("http://127.0.0.1:8001/api/cargos/cargo-usuarios/?modo=escalonado", {
         method: "POST",
         body: formData
       });
-
 
       const data = await res.json();
       if (!res.ok) {
@@ -153,6 +152,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  // === Manejo de sugerencias ===
   function mostrarSiguienteSugerencia() {
     if (indiceActual >= sugerenciasGlobal.length) {
       enviarConfirmacion();
@@ -164,6 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
     selectorCargos.classList.add("hidden");
     selectCargos.innerHTML = "";
 
+    // Planta → usa datos históricos, sin archivo
     document.getElementById("btnDevolverPlanta").onclick = () => {
       agregarDecision({
         usuario_id: sug.usuario_id,
@@ -174,14 +175,15 @@ document.addEventListener("DOMContentLoaded", () => {
         salario: sug.salario,
         grado: sug.grado,
         resolucion: sug.resolucion,
+        resolucion_archivo: sug.resolucion_archivo,
         fechaInicio: sug.fechaInicio,
-        observacion: sug.observacion || "",
-        resolucion_archivo: archivoRoot
+        observacion: sug.observacion || ""
       });
       indiceActual++;
       mostrarSiguienteSugerencia();
     };
 
+    // Mostrar selector de cargos temporales
     document.getElementById("btnAsignarOtro").onclick = () => {
       selectorCargos.classList.remove("hidden");
       const temporales = sug.opciones.filter(o => o.tipo === "temporal");
@@ -194,23 +196,13 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     };
 
+    // Abrir modal temporal para capturar datos
     btnConfirmAsignar.onclick = () => {
       const cargoIdSel = parseInt(selectCargos.value);
-      agregarDecision({
-        usuario_id: sug.usuario_id,
-        cargo_id: cargoIdSel,
-        tipo: "temporal",
-        num_doc: sug.num_doc,
-        estadoVinculacion: parseInt(document.getElementById("temporalEstado").value),
-        salario: document.getElementById("temporalSalario").value,
-        grado: document.getElementById("temporalGrado").value,
-        resolucion: document.getElementById("temporalResolucion").value,
-        fechaInicio: document.getElementById("temporalFechaInicio").value,
-        observacion: document.getElementById("temporalObservacion").value || "",
-        resolucion_archivo: archivoRoot
-      });
-      indiceActual++;
-      mostrarSiguienteSugerencia();
+      document.getElementById("temporalCargoId").value = cargoIdSel;
+      document.getElementById("temporalUsuarioId").value = sug.usuario_id;
+      temporalModal.classList.remove("hidden");
+      temporalModal.classList.add("flex");
     };
 
     escalonModal.classList.remove("hidden");
@@ -222,66 +214,91 @@ document.addEventListener("DOMContentLoaded", () => {
     escalonModal.classList.remove("flex");
   });
 
-  // === POST Confirmación Final ===
-async function enviarConfirmacion() {
-  if (!cargoIdInput.value) {
-    alert("Error interno: no se detectó el cargo destino");
-    return;
-  }
+  // === Formulario Temporal ===
+  formTemporalAsignacion.addEventListener("submit", e => {
+    e.preventDefault();
+    const cargoIdSel = parseInt(document.getElementById("temporalCargoId").value);
+    const usuarioId = parseInt(document.getElementById("temporalUsuarioId").value);
 
-  try {
-    const formData = new FormData();
-
-    // Agregar root_usuario y cargo_destino
-    formData.append("root_usuario_id", rootUsuarioId);
-    formData.append("cargo_destino_id", parseInt(cargoIdInput.value));
-
-    // 🔹 Mandar payload_root como JSON (el backend lo decodifica con json.loads)
-    formData.append("payload_root", JSON.stringify(payloadRootBase));
-
-    // Archivo raíz
-    if (archivoRoot) {
-      formData.append("resolucion_archivo", archivoRoot);
-    }
-
-    // Decisiones (igual que antes)
-    decisiones.forEach((d, i) => {
-      const { resolucion_archivo, ...rest } = d;
-      formData.append(`decisiones[${i}]`, JSON.stringify(rest));
-      if (resolucion_archivo instanceof File) {
-        formData.append(`decisiones_archivo_${i}`, resolucion_archivo);
-      }
-    });
-
-    const res = await fetch("http://127.0.0.1:8001/api/cargos/cargo-usuarios/confirmacion/", {
-      method: "POST",
-      body: formData
-    });
-
-    const data = await res.json().catch(() => ({}));
-
-    if (!res.ok) {
-      console.error("Error en confirmación:", data);
-      alert("❌ Error al aplicar decisiones: revisa campos obligatorios");
+    const archivoTemp = document.getElementById("temporalArchivo").files[0];
+    if (!archivoTemp) {
+      alert("❌ Debes adjuntar el archivo de resolución del temporal");
       return;
     }
 
-    alert("✅ Decisiones aplicadas correctamente");
+    agregarDecision({
+      usuario_id: usuarioId,
+      cargo_id: cargoIdSel,
+      tipo: "temporal",
+      grado: document.getElementById("temporalGrado").value,
+      salario: document.getElementById("temporalSalario").value,
+      resolucion: document.getElementById("temporalResolucion").value,
+      resolucion_archivo: archivoTemp,
+      estadoVinculacion: parseInt(document.getElementById("temporalEstado").value),
+      fechaInicio: document.getElementById("temporalFechaInicio").value,
+      observacion: document.getElementById("temporalObservacion").value || ""
+    });
 
-    // Cerrar modales
-    escalonModal.classList.add("hidden");
-    escalonModal.classList.remove("flex");
-    nuevoModal.classList.add("hidden");
-    nuevoModal.classList.remove("flex");
+    temporalModal.classList.add("hidden");
+    temporalModal.classList.remove("flex");
 
-    // Refrescar vista si existe
-    if (typeof buscarPorIdp === "function") buscarPorIdp();
+    indiceActual++;
+    mostrarSiguienteSugerencia();
+  });
 
-  } catch (err) {
-    console.error(err);
-    alert("⚠️ Error de red al confirmar");
+  closeTemporalModal.addEventListener("click", () => {
+    temporalModal.classList.add("hidden");
+    temporalModal.classList.remove("flex");
+  });
+
+  // === POST Confirmación Final ===
+  async function enviarConfirmacion() {
+    if (!cargoIdInput.value) {
+      alert("Error interno: no se detectó el cargo destino");
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append("root_usuario_id", rootUsuarioId);
+      formData.append("cargo_destino_id", parseInt(cargoIdInput.value));
+      formData.append("payload_root", JSON.stringify(payloadRootBase));
+
+      if (archivoRoot) {
+        formData.append("resolucion_archivo", archivoRoot);
+      }
+      console.log(decisiones)
+      decisiones.forEach((d, i) => {
+        const { resolucion_archivo, ...rest } = d;
+        formData.append(`decisiones[${i}]`, JSON.stringify(rest));
+        if (resolucion_archivo instanceof File) {
+          formData.append(`decisiones_archivo_${i}`, resolucion_archivo);
+        }
+      });
+
+      const res = await fetch("http://127.0.0.1:8001/api/cargos/cargo-usuarios/confirmacion/", {
+        method: "POST",
+        body: formData
+      });
+
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        console.error("Error en confirmación:", data);
+        alert("❌ Error al aplicar decisiones: revisa campos obligatorios");
+        return;
+      }
+
+      alert("✅ Decisiones aplicadas correctamente");
+      escalonModal.classList.add("hidden");
+      escalonModal.classList.remove("flex");
+      nuevoModal.classList.add("hidden");
+      nuevoModal.classList.remove("flex");
+
+      if (typeof buscarPorIdp === "function") buscarPorIdp();
+
+    } catch (err) {
+      console.error(err);
+      alert("⚠️ Error de red al confirmar");
+    }
   }
-}
-
-
 });

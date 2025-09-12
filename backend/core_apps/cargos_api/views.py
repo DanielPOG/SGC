@@ -35,6 +35,10 @@ from core_apps.cargos_api.services.cascada import (
     aplicar_decisiones_cascada,
     _normalize_date
 )
+from core_apps.cargos_api.logic.cascada_helpers import (
+    devolver_a_planta,
+    devolver_a_temporal,
+)
 class CargoNombreViewSet(viewsets.ModelViewSet):
    
     queryset = CargoNombre.objects.all()
@@ -132,7 +136,7 @@ class CargoUsuarioViewSet(viewsets.ModelViewSet):
         self.instance_creada = serializer.save()
 
     def create(self, request, *args, **kwargs):
-        data = request.data.dict()  # solo campos normales
+        data = request.data.dict()
         archivo_root = request.FILES.get("resolucion_archivo")
 
         if "cargo" in data and "cargo_id" not in data:
@@ -175,21 +179,12 @@ class CargoUsuarioViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=["post"], url_path="confirmacion")
     def confirmacion(self, request, *args, **kwargs):
-        """
-        Endpoint para confirmar la asignación en cascada:
-        - root_usuario_id -> ID del usuario principal
-        - cargo_destino_id -> ID del cargo destino
-        - payload_root -> datos del usuario principal (JSON)
-        - decisiones[i] -> lista de decisiones adicionales (JSON)
-        - resolucion_archivo -> archivo principal
-        - decisiones_archivo_i -> archivos asociados a decisiones
-        """
+
         # --- Normalizar datos base ---
         data = {k: v[0] if isinstance(v, list) else v 
                 for k, v in request.data.items() 
                 if not k.startswith("decisiones[")}
 
-        # Parsear payload_root si viene como string
         if "payload_root" in data and isinstance(data["payload_root"], str):
             try:
                 data["payload_root"] = json.loads(data["payload_root"])
@@ -214,7 +209,6 @@ class CargoUsuarioViewSet(viewsets.ModelViewSet):
         if archivo_root:
             payload_root["resolucion_archivo"] = archivo_root
 
-        # Asegurar cargo_id en root
         if "cargo_id" not in payload_root and cargo_destino_id:
             payload_root["cargo_id"] = cargo_destino_id
 
@@ -232,27 +226,40 @@ class CargoUsuarioViewSet(viewsets.ModelViewSet):
                 root_serializer.is_valid(raise_exception=True)
                 root_instance = root_serializer.save()
 
-                # Actualizar cargo en el usuario
                 if hasattr(root_instance, "usuario"):
                     root_instance.usuario.cargo = root_instance.cargo
                     root_instance.usuario.save(update_fields=["cargo"])
 
                 # --- Procesar decisiones ---
                 for i, dec in enumerate(decisiones):
-                    dec_payload = dec.copy()
-                    archivo_dec = request.FILES.get(f"decisiones_archivo_{i}")
-                    if archivo_dec:
-                        dec_payload["resolucion_archivo"] = archivo_dec
-                        archivos_a_cerrar.append(archivo_dec)
-                    else:
-                        dec_payload["resolucion_archivo"] = None
+                    usuario_id = dec.get("usuario_id")
+                    tipo = dec.get("tipo", "").upper()
+                    cargo_id = dec.get("cargo_id")
 
-                    dec_serializer = CargoUsuarioSerializer(
-                        data=dec_payload,
-                        context={"cargo_destino_id": dec_payload.get("cargo_id")}
-                    )
-                    dec_serializer.is_valid(raise_exception=True)
-                    resultados.append(dec_serializer.save())
+                    try:
+                        usuario = Usuario.objects.get(pk=usuario_id)
+                    except Usuario.DoesNotExist:
+                        return Response({"error": f"Usuario {usuario_id} no encontrado"}, status=400)
+
+                    if tipo == "PLANTA":
+                        nuevo = devolver_a_planta(usuario, context={"request": request})
+                        if nuevo:
+                            resultados.append(nuevo)
+
+                    elif tipo == "TEMPORAL":
+                        archivo_dec = request.FILES.get(f"decisiones_archivo_{i}")
+                        if not cargo_id:
+                            return Response({"error": f"Falta cargo_id en decisión {i}"}, status=400)
+                        try:
+                            cargo_destino = Cargo.objects.get(pk=cargo_id)
+                        except Cargo.DoesNotExist:
+                            return Response({"error": f"Cargo {cargo_id} no encontrado"}, status=400)
+
+                        nuevo = devolver_a_temporal(usuario, cargo_destino, archivo_dec, context={"request": request})
+                        resultados.append(nuevo)
+
+                    else:
+                        return Response({"error": f"Tipo de decisión inválido: {tipo}"}, status=400)
 
         finally:
             if archivo_root and not archivo_root.closed:
@@ -265,6 +272,7 @@ class CargoUsuarioViewSet(viewsets.ModelViewSet):
             "root": CargoUsuarioSerializer(root_instance).data,
             "decisiones": CargoUsuarioSerializer(resultados, many=True).data
         }, status=status.HTTP_201_CREATED)
+
 # VISTA PARA SUBIR POR EXCEL
 class CargoUploadView(APIView):
     parser_classes = [MultiPartParser]
