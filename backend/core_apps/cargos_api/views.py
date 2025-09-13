@@ -1,5 +1,5 @@
 from rest_framework import viewsets, status
-from .models import CargoNombre, EstadoCargo, Cargo, CargoFuncion, CargoUsuario, Idp
+from .models import CargoNombre, EstadoCargo, Cargo, CargoFuncion, CargoUsuario, Idp, IdpxCargo
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
@@ -60,9 +60,28 @@ class IdpViewSet(viewsets.ModelViewSet):
         idp.save()
         text = 'IDP Desactivado' if idp.estado is False else 'IDP Activado'
         return Response({"msg":text},status=200)
+    
     @action(methods=['get'], detail=False)
     def historialCargos(self, request):
         idp_id = request.query_params.get('idp_id')
+        if not idp_id:
+            return Response({'error':'Faltan Datos'})
+        idp = Idp.objects.filter(idp_id=idp_id).first()
+        if not idp:
+            return Response({'error': 'Ocurrió un error'})
+        
+        idpxcargo = IdpxCargo.objects.filter(idp=idp.idp_id)
+        if not idpxcargo.exists():
+            return Response({'error':'No hay nada que mostrar'})
+        serializer = IdpxCargoSerializer(idpxcargo, many=True)
+        return Response({
+            'idp': {
+                'numero': idp.idp_id,
+                'estado': idp.estado
+            },
+            'cargos': serializer.data
+        })
+
     @action(methods=['post'], detail=False)
     def cargarExcel(self, request):
         file = request.FILES.get('file')

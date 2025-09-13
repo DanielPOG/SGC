@@ -107,6 +107,27 @@ class CargoUsuarioNestedSerializer(serializers.ModelSerializer):
 class IdpxCargoSerializer(serializers.ModelSerializer):
     idp_id = serializers.PrimaryKeyRelatedField(queryset=Idp.objects.all())
     cargo = serializers.PrimaryKeyRelatedField(queryset=Cargo.objects.all())
+
+    idp_detalle = serializers.SerializerMethodField()
+    cargo_detalle = serializers.SerializerMethodField()
+
     class Meta:
         model = IdpxCargo
         fields = '__all__'
+
+    def get_idp_detalle(self, obj):
+        return {
+            "fechaCreacion": obj.idp.fechaCreacion,
+            "numero": obj.idp.idp_id,  
+            "estado": obj.idp.estado
+        }
+
+    def get_cargo_detalle(self, obj):
+        return {
+        "id": obj.cargo.id,
+        "fechaCreacion": obj.cargo.fechaCreacion,
+        "fechaActualizacion": obj.cargo.fechaActualizacion,
+        "centro": getattr(obj.cargo.centro_id, "nombre", None),
+        "cargoNombre": getattr(obj.cargo.cargoNombre_id, "nombre", None),
+        "estadoCargo": getattr(obj.cargo.estadoCargo_id, "estado", None),
+        }
