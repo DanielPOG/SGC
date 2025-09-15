@@ -62,17 +62,17 @@
               justify-center md:justify-center lg:max-h-fit lg:py-2"
        :class="sidebarOpen ? 'w-48 sm:w-56 lg:w-60 px-2 sm:px-3' : 'w-12 sm:w-14 lg:w-16 px-1 sm:px-2'">
         
-        <img src="{% static 'img/principal.png' %}" alt="Actualizar Datos" 
+        <img src="{% static 'img/principal.png' %}" alt="Principal" 
               class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
         
-        <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Actualizar Datos </span>
+        <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Principal </span>
     </a>
 
     <div x-show="tooltipVisible"
          x-cloak
          class="fixed z-50 p-2 text-xs text-black bg-white rounded-md"
          :style="`left: ${tooltipX}px; top: ${tooltipY}px;`">
-        Actualizar Datos
+        Principal
     </div>
 
 </div>
@@ -185,10 +185,7 @@
         Reportes
     </div>
 
-</div>
-
-
-<!-- id planta  -->
+<Principalplanta  -->
      <div x-data="{ tooltipVisible: false, tooltipX: 0, tooltipY: 0 }" 
      @mousemove="!sidebarOpen && (tooltipX = $event.clientX + 10, tooltipY = $event.clientY + 10)">
     <a href="{% url 'id_planta' %}"
@@ -199,7 +196,7 @@
               justify-center md:justify-center lg:max-h-fit lg:py-2"
        :class="sidebarOpen ? 'w-48 sm:w-56 lg:w-60 px-2 sm:px-3' : 'w-12 sm:w-14 lg:w-16 px-1 sm:px-2'">
         
-        <img src="{% static 'img/cargo.png' %}" alt="ID Planta" 
+        <img src="{% static 'img/id_planta.png' %}" alt="ID Planta" 
               class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
         
         <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">ID Planta </span>
