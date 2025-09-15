@@ -29,7 +29,7 @@ class Cargo(models.Model):
     resolucion_archivo = models.FileField(upload_to="resolucionesCargo/", blank=True, null=True)
     centro = models.ForeignKey('general.Centro', on_delete=models.CASCADE)
     fechaCreacion = models.DateTimeField(default=timezone.now)
-    fechaActualizacion = models.DateTimeField(auto_now=True)
+    fechaActualizacion = models.DateTimeField(auto_now=True, null=True, blank=True)
     observacion = models.TextField(blank=True, null=True)
     def __str__(self):
         return str(self.idp)
@@ -55,39 +55,19 @@ class CargoUsuario(models.Model):
 
 class IdpxCargo(models.Model):
     idp = models.ForeignKey(
-        "Idp",
-        null=True,
-        on_delete=models.CASCADE,
-        related_name="historial_cargos"
+    "Idp",
+    null=True,
+    on_delete=models.CASCADE,
+    related_name="historial_cargos",
     )
     cargo = models.ForeignKey(
         "Cargo",
         on_delete=models.CASCADE,
         related_name="historial_idps"
     )
-    fecha_asignacion = models.DateField(default=timezone.now)  # 👉 más limpio
+    fecha_asignacion = models.DateField(default=timezone.now)
     fecha_fin = models.DateField(null=True, blank=True)
 
-    def __str__(self):
-        return f"{self.idp.idp_id} - {self.cargo.nombre}"
-
-class IdpxCargo(models.Model):
-    idp = models.ForeignKey(
-        "Idp",
-        null=True,
-        on_delete=models.CASCADE,
-        related_name="historial_cargos"
-    )
-    cargo = models.ForeignKey(
-        "Cargo",
-        on_delete=models.CASCADE,
-        related_name="historial_idps"
-    )
-    fecha_asignacion = models.DateField(default=timezone.now)  # 👉 más limpio
-    fecha_fin = models.DateField(null=True, blank=True)
-
-    def __str__(self):
-        return f"{self.idp.idp_id} - {self.cargo.nombre}"
 
 
 

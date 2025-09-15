@@ -143,7 +143,7 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     tipo_doc = models.ForeignKey('TipoDocumento', on_delete=PROTECT)
     correo = models.EmailField(max_length=254, unique=True)
     genero = models.ForeignKey('Genero', on_delete=PROTECT)
-    cargo = models.ForeignKey('cargos_api.Cargo', on_delete=PROTECT)
+    cargo = models.ForeignKey('cargos_api.Cargo', on_delete=PROTECT, related_name="usuarios", null=True, blank=True)
     estudioF = models.ForeignKey('EstudioFormal', on_delete=PROTECT)
     fechaInicio = models.DateField(auto_now_add=True)
     fechaActualizacion = models.DateField(auto_now=True, null=True, blank=True)
@@ -164,7 +164,7 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     # is_superuser lo hereda de PermissionsMixin
-    # last_login lo hereda de AbstractBaseUser (déjalo tal cual, no lo redefinas)
+    last_login = models.DateTimeField(blank=True, null=True, default=None)
 
     USERNAME_FIELD = 'correo'
     REQUIRED_FIELDS = ['nombre', 'apellido', 'num_doc']

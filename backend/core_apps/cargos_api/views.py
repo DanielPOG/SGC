@@ -69,8 +69,8 @@ class IdpViewSet(viewsets.ModelViewSet):
         idp = Idp.objects.filter(idp_id=idp_id).first()
         if not idp:
             return Response({'error': 'Ocurrió un error'})
-        
-        idpxcargo = IdpxCargo.objects.filter(idp=idp.idp_id)
+        idp_id = idp.idp_id
+        idpxcargo = IdpxCargo.objects.filter(idp_id=idp_id)
         if not idpxcargo.exists():
             return Response({'error':'No hay nada que mostrar'})
         serializer = IdpxCargoSerializer(idpxcargo, many=True)
