@@ -57,6 +57,92 @@ class EstadoVinculacionViewSet(viewsets.ModelViewSet):
 class IdpViewSet(viewsets.ModelViewSet):
     queryset = Idp.objects.all()
     serializer_class = IdpSerializer
+    http_method_names = ['get', 'post', 'patch']
+    parser_classes = [MultiPartParser]
+    def create(self, request):
+        serializer = IdpSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        if Idp.objects.filter(numero=request.data.get('numero')).exists():
+            return Response({'error':'Ya existe una IDP con ese número'}, status=status.HTTP_409_CONFLICT)
+        idp = serializer.save()
+        return Response(IdpSerializer(idp).data, status=status.HTTP_201_CREATED)
+    @action(methods=['patch'], detail=False)
+    def cambiarEstado(self, request):
+        numero = request.data.get('numero')
+        if not numero:
+            return Response({"error":"Error al cambiar estado"}, status=400)
+        try:
+            idp = Idp.objects.get(numero=numero)
+        except Idp.DoesNotExist as e:
+            print(f'Error al cambiar estado: {e}')
+            return Response({'error':'Error al cambiar el estado de la IDP'}, status=404)
+        cargo_exists = Cargo.objects.filter(idp=idp.numero).exists()
+        if cargo_exists:
+            c_obj = Cargo.objects.filter(idp=idp.numero).get()
+            if c_obj.idp.estado is True:
+                return Response({'error':'No es posible desactivar una IDP con cargos activos'}, status=400)
+        idp.estado = not idp.estado
+        idp.save()
+        text = 'IDP Desactivado' if idp.estado is False else 'IDP Activado'
+        return Response({"msg":text},status=200)
+    @action(detail=False, methods=["get"], url_path="historialCargos")
+    def historialCargos(self, request, pk=None):
+        try:
+            idp = request.query_params.get('numero ')
+        except Idp.DoesNotExist:
+            return Response({"error": "Idp no encontrada"}, status=status.HTTP_404_NOT_FOUND)
+
+        # 1. Todos los cargos que han estado asociados a esta Idp
+        cargos = Cargo.objects.filter(idp=idp)
+
+        # 2. Todos los registros de usuarios que ocuparon esos cargos
+        historial = CargoUsuario.objects.filter(cargo__in=cargos).order_by("fechaInicio")
+
+        # 3. Serializar el historial
+        serializer = CargoUsuarioSerializer(historial, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+        
+    @action(methods=['post'], detail=False)
+    def cargarExcel(self, request):
+        file = request.FILES.get('file')
+        if not file:
+            return Response({"error": "No se envió ningún archivo"},
+                            status=status.HTTP_400_BAD_REQUEST)
+        try:
+            #leer el archivo y captar dataframe
+            df = pd.read_excel(file)
+            creados, actualizados, errores = 0,0,[]
+            for i, row in df.iterrows():
+                try:
+                    fecha = row.get("fechaCreacion")
+                    idp = row.get("numero")
+                    estado = row.get("estado")
+                    if not idp:
+                        errores.append({"fila":i+2, "error":"IDP Vacío"})
+                        continue
+                    obj, created = Idp.objects.update_or_create(
+                        numero=idp,
+                        defaults={
+                            "fechaCreacion": fecha,
+                            "estado": estado
+                        }
+                    )
+                    if created:
+                        creados += 1
+                    else:
+                        actualizados += 1
+                except Exception as e:
+                    errores.append({"fila":i+2, "error":str(e)})
+                return Response({
+                "msg": "Archivo procesado",
+                "creados": creados,
+                "actualizados": actualizados,
+                "errores": errores
+                }, status=status.HTTP_201_CREATED)
+        except Exception as e: #pylint=disable:broad-exception-caught
+            return Response({"error": f"Error procesando el archivo: {str(e)}"},
+                            status=status.HTTP_400_BAD_REQUEST)
+
 
 class CargoViewSet(viewsets.ModelViewSet):
     queryset = Cargo.objects.all()

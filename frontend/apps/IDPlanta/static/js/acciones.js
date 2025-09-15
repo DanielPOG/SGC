@@ -14,7 +14,7 @@ function showMessage(msg) {
 export default async function toggleIdpState(idp) {
   try {
     const formData = new FormData()
-    formData.append('idp_id',idp)
+    formData.append('numero',idp)
     const res = await apiFetch("http://127.0.0.1:8001/api/cargos/idps/cambiarEstado/", {
       method: "PATCH",
       body: formData
