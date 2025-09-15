@@ -12,10 +12,10 @@ export const colorDiv = (color, text = '')=>{
 
 export function idpRow(idp, cargos) {
   const state = idp.estado ? colorDiv('green', 'ACTIVO') : colorDiv('red', 'INACTIVO')
-  const cargosIDP = cargos.filter(c =>c.idp?.idp_id === idp.idp_id).length
+  const cargosIDP = cargos.filter(c =>c.idp?.numero === idp.numero).length
   return (
     ` 
-      <td class="px-4 py-2 border text-center">${idp.idp_id}</td>  
+      <td class="px-4 py-2 border text-center">${idp.numero}</td>  
       <td class="px-4 py-2 border text-center hidden md:table-cell">${idp.fechaCreacion}</td>
       <td class="px-4 py-2 border text-center ">
         <div class="flex justify-center items-center gap-2 "> 
@@ -23,10 +23,10 @@ export function idpRow(idp, cargos) {
             ${state}
           </div>
           <p class=" border-r-2 rounded-r-[.7rem] border-black/20 -ms-2 font-semibold shadow-md">
-            <a href="http://127.0.0.1:8000/idplanta/historial/?idp_id=${idp.idp_id}" class="hover:bg-black/25 px-2 py-1 pb-[.30em] rounded-e-md border-y-2 border-black/50 pe-3 rounded-r-[10rem]">Historial</a>
+            <a href="http://127.0.0.1:8000/idplanta/historial/?idp_id=${idp.numero}" class="hover:bg-black/25 px-2 py-1 pb-[.30em] rounded-e-md border-y-2 border-black/50 pe-3 rounded-r-[10rem]">Historial</a>
           </p>
           <strong class="border-l-2 ps-1" >Acciones:</strong>
-          <button data-estado="${idp.estado ? 0 : 1}" id=${idp.idp_id} ${cargosIDP > 0 ? 'disabled' : ''} data-idp=${idp.idp_id} class="min-w-32 text-white rounded-xl px-2 ${cargosIDP < 1 ? (idp.estado ? 'bg-red-500/80 hover:bg-red-700 font-semibold' :'bg-green-600/80  hover:bg-green-600 font-semibold' ): 'font-bold bg-gray-500/50 pointer-events-none opacity-[0.5]'}">
+          <button data-estado="${idp.estado ? 0 : 1}" id=${idp.numero} ${cargosIDP > 0 ? 'disabled' : ''} data-idp=${idp.numero} class="min-w-32 text-white rounded-xl px-2 ${cargosIDP < 1 ? (idp.estado ? 'bg-red-500/80 hover:bg-red-700 font-semibold' :'bg-green-600/80  hover:bg-green-600 font-semibold' ): 'font-bold bg-gray-500/50 pointer-events-none opacity-[0.5]'}">
             ${idp.estado ? (cargosIDP > 0 ? 'OCUPADO' : 'DESACTIVAR') : 'ACTIVAR'}
           </button> 
 
@@ -128,7 +128,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         tbody.innerHTML = ""
         const row = document.createElement("tr")
         row.classList.add("hover:bg-gray-100")
-        console.error(`ERROR NOMBRE ID PLANTA ${idp.idp_id}`)
+        console.error(`ERROR NOMBRE ID PLANTA ${idp.numero}`)
         row.innerHTML = idpRow(idp, window.cargos)
         tbody.appendChild(row)
       })

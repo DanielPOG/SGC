@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     cargarSelect("http://127.0.0.1:8001/api/cargos/cargo-nombres/", "cargoNombre", "nombre");
-    cargarSelect("http://127.0.0.1:8001/api/cargos/idps/", "idp", "idp_id");
+    cargarSelect("http://127.0.0.1:8001/api/cargos/idps/", "idp", "numero");
     cargarSelect("http://127.0.0.1:8001/api/cargos/estado-cargo/", "estadoCargo", "estado");
     cargarSelect("http://127.0.0.1:8001/api/general/centros/", "centro", "nombre");
 

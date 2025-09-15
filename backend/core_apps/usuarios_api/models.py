@@ -216,3 +216,60 @@ class Solicitud(models.Model):
     fechaCreacion = models.DateTimeField(auto_now_add=True)
     fechaAprobada = models.DateTimeField(null=True, blank=True)  
     estado = models.ForeignKey('EstadoSolicitud', on_delete=PROTECT)
+    
+class Autorizacion(models.Model):
+    """
+    Categoría principal de autorización.
+    Ejemplo: Funcionario, Cargo, Grupo SENA, Reportes, ID Planta, Solicitudes, Autorizaciones.
+    """
+    nombre = models.CharField(max_length=100, unique=True)
+
+    class Meta:
+        verbose_name = "Autorización"
+        verbose_name_plural = "Autorizaciones"
+        ordering = ["nombre"]
+
+    def __str__(self):
+        return self.nombre
+
+
+class Permiso(models.Model):
+    """
+    Sub-permisos asociados a una Autorización.
+    Ejemplo: Agregar Funcionario, Editar Cargo, Consultar Solicitudes, etc.
+    """
+    autorizacion = models.ForeignKey(
+        Autorizacion,
+        related_name="permisos",
+        on_delete=models.CASCADE
+    )
+    nombre = models.CharField(max_length=150)
+    codigo = models.CharField(
+        max_length=150,
+        unique=True,
+        help_text="Identificador único interno (ejemplo: funcionario_agregar, cargo_editar)"
+    )
+
+    class Meta:
+        verbose_name = "Permiso"
+        verbose_name_plural = "Permisos"
+        ordering = ["autorizacion", "nombre"]
+
+    def __str__(self):
+        return f"{self.autorizacion.nombre} - {self.nombre}"
+
+
+class PermisosUsuario(models.Model):
+    """
+    Permisos otorgados a cada usuario.
+    """
+    usuario = models.ForeignKey("Usuario", verbose_name=("Usuario"), on_delete=models.CASCADE)
+    permiso = models.ForeignKey("Permiso", verbose_name=("Permiso"), on_delete=models.CASCADE)
+    otorgado_en = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ['usuario', 'permiso']
+
+    def __str__(self):
+        return f"{self.usuario.nombre} - {self.permiso.nombre}"
+    

@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     await cargarSelect("http://127.0.0.1:8001/api/cargos/cargo-nombres/", "cargoNombre", "nombre");
-    await cargarSelect("http://127.0.0.1:8001/api/cargos/idps/", "idp", "idp_id");
+    await cargarSelect("http://127.0.0.1:8001/api/cargos/idps/", "idp", "numero");
     await cargarSelect("http://127.0.0.1:8001/api/cargos/estado-cargo/", "estadoCargo", "estado");
     await cargarSelect("http://127.0.0.1:8001/api/general/centros/", "centro", "nombre");
 
@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const data = await resp.json();
 
             document.getElementById("cargoNombre").value = data.cargoNombre.id;
-            document.getElementById("idp").value = data.idp.idp_id;
+            document.getElementById("idp").value = data.idp.numero;
             document.getElementById("estadoCargo").value = data.estadoCargo.id;
             document.getElementById("centro").value = data.centro.id;
             document.getElementById("resolucion_numero").value = data.resolucion;

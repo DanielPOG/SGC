@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded',()=>{
                 }
             try {
                 const formData = new FormData()
-                formData.append('idp_id', numero)
+                formData.append('numero', numero)
                 formData.append('fechaCreacion', fecha)
                 const response = await apiFetch('http://127.0.0.1:8001/api/cargos/idps/', {
                     method: 'POST',
@@ -41,9 +41,9 @@ document.addEventListener('DOMContentLoaded',()=>{
                 if (!response.ok) {
                     const errorData = await response.json();
                     newIdpRes.innerText = 
-                    errorData.idp_id == 'idp with this idp id already exists.' 
+                    errorData.numero == 'idp with this idp id already exists.' 
                     ? 'Ya existe una IDP con ese número' 
-                    : (errorData.idp_id == 'Ensure this field has no more than 10 characters.' 
+                    : (errorData.numero == 'Ensure this field has no more than 10 characters.' 
                         ? 'La IDP lleva máximo 10 digitos' 
                         :(errorData.fechaCreacion ?'Formato de fecha incorrecto':'No se pudo crear la IDP' ))
                     newIdpRes.classList.add('bg-red-600')
