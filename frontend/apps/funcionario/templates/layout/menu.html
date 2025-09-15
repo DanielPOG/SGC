@@ -69,7 +69,7 @@
 
     <div x-show="tooltipVisible"
          x-cloak
-         class="fixed z-50 p-2 text-xs  text-black bg-white rounded-md"
+         class="fixed z-50 p-2 text-xs  text-black bg-gray-300 rounded-md"
          :style="`left: ${tooltipX}px; top: ${tooltipY}px;`">
         Cambiar Contraseña
     </div>
@@ -179,6 +179,7 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
         </svg>
       </button>
+
      <div
   x-show="open"
   @click.away="open = false"
@@ -199,9 +200,9 @@
    "
    @mouseleave="showTip = false"
 >
-  <img src="{% static 'img/documento.png' %}" alt="Certificado" class="w-5 h-5" x-ref="icon">
+  <img src="{% static 'img/documento.png' %}" alt="Certificado_sensillo" class="w-5 h-5" x-ref="icon">
 
-  <span x-show="sidebarOpen" x-cloak class="ml-2">certificado sencillo</span>
+  <span x-show="sidebarOpen" x-cloak class="ml-2">Certificado Sencillo</span>
 
   <div
     x-show="showTip"
@@ -210,7 +211,7 @@
     class="fixed z-[9999] bg-white text-black text-sm px-2 py-1 rounded shadow-lg 
            opacity-0 transition-opacity duration-200 pointer-events-none"
     :class="showTip ? 'opacity-100' : 'opacity-0'">
-    Certificado sencillo
+    Certificado Sencillo
   </div>
 </a>
 
@@ -228,7 +229,7 @@
 >
   <img src="{% static 'img/historico.png' %}" alt="Certificado" class="w-5 h-5" x-ref="icon">
 
-  <span x-show="sidebarOpen" x-cloak class="ml-2">certificado Historico </span>
+  <span x-show="sidebarOpen" x-cloak class="ml-2">Certificado Historico </span>
 
   <div
     x-show="showTip"
@@ -237,7 +238,7 @@
     class="fixed z-[9999] bg-white text-black text-sm px-2 py-1 rounded shadow-lg 
            opacity-0 transition-opacity duration-200 pointer-events-none"
     :class="showTip ? 'opacity-100' : 'opacity-0'">
-    certificado Historico 
+    Certificado Historico 
   </div>
 </a>
 

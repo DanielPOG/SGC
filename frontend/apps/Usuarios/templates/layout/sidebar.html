@@ -50,103 +50,251 @@
   <nav class="flex-1 overflow-y-auto mt-1 flex flex-col items-center pr-0 space-y-2 lg:space-y-1">
     <div class="flex flex-col flex-grow items-center w-full space-y-2 lg:space-y-1">
 
-        <a href="{% url 'index' %}" title="principal"
-           class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
-                  rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
-                  justify-center md:justify-center lg:max-h-fit lg:py-2"
-           :class="sidebarOpen ? 'w-48 sm:w-56 lg:w-60 px-2 sm:px-3' : 'w-12 sm:w-14 lg:w-16 px-1 sm:px-2'">
-           <img src="{% static 'img/principal.png' %}" alt="principal" 
-                 class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
-           <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">principal</span>
-        </a>
 
+ <!-- principal -->
+     <div x-data="{ tooltipVisible: false, tooltipX: 0, tooltipY: 0 }" 
+     @mousemove="!sidebarOpen && (tooltipX = $event.clientX + 10, tooltipY = $event.clientY + 10)">
+    <a href="{% url 'index' %}"
+       @mouseenter="!sidebarOpen && (tooltipVisible = true)"
+       @mouseleave="tooltipVisible = false"
+       class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
+              rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
+              justify-center md:justify-center lg:max-h-fit lg:py-2"
+       :class="sidebarOpen ? 'w-48 sm:w-56 lg:w-60 px-2 sm:px-3' : 'w-12 sm:w-14 lg:w-16 px-1 sm:px-2'">
         
-        <a href="{% url 'funcionario' %}" title="Funcionario"
-           class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
-                  rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
-                  justify-center md:justify-center lg:max-h-fit lg:py-2"
-           :class="sidebarOpen ? 'w-48 sm:w-56 lg:w-60 px-2 sm:px-3' : 'w-12 sm:w-14 lg:w-16 px-1 sm:px-2'">
-           <img src="{% static 'img/user.png' %}" alt="Funcionario" 
-                 class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
-           <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Funcionario</span>
-        </a>
+        <img src="{% static 'img/principal.png' %}" alt="Actualizar Datos" 
+              class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
+        
+        <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Actualizar Datos </span>
+    </a>
+
+    <div x-show="tooltipVisible"
+         x-cloak
+         class="fixed z-50 p-2 text-xs text-black bg-white rounded-md"
+         :style="`left: ${tooltipX}px; top: ${tooltipY}px;`">
+        Actualizar Datos
+    </div>
+
+</div>
 
 
-        <a  href="{% url 'cargo' %}" title="Cargo"
-           class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
-                  rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
-                  justify-center md:justify-center lg:max-h-fit lg:py-2"
-           :class="sidebarOpen ? 'w-48 sm:w-56 lg:w-60 px-2 sm:px-3' : 'w-12 sm:w-14 lg:w-16 px-1 sm:px-2'">
-           <img src="{% static 'img/cargo.png' %}" alt="Cargo" 
-                 class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
-           <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Cargo</span>
-        </a>
+<!-- funcionario -->
+        
+     <div x-data="{ tooltipVisible: false, tooltipX: 0, tooltipY: 0 }" 
+     @mousemove="!sidebarOpen && (tooltipX = $event.clientX + 10, tooltipY = $event.clientY + 10)">
+    <a href="{% url 'funcionario' %}"
+       @mouseenter="!sidebarOpen && (tooltipVisible = true)"
+       @mouseleave="tooltipVisible = false"
+       class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
+              rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
+              justify-center md:justify-center lg:max-h-fit lg:py-2"
+       :class="sidebarOpen ? 'w-48 sm:w-56 lg:w-60 px-2 sm:px-3' : 'w-12 sm:w-14 lg:w-16 px-1 sm:px-2'">
+        
+        <img src="{% static 'img/user.png' %}" alt="funcionario" 
+              class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
+        
+        <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Funcionario </span>
+    </a>
+
+    <div x-show="tooltipVisible"
+         x-cloak
+         class="fixed z-50 p-2 text-xs text-black bg-white rounded-md"
+         :style="`left: ${tooltipX}px; top: ${tooltipY}px;`">
+        Funcionario
+    </div>
+
+</div>
 
 
-        <a href="{% url 'grupo_sena' %}" title="Grupo SENA"
-           class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
-                  rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
-                  justify-center md:justify-center lg:max-h-fit lg:py-2"
-           :class="sidebarOpen ? 'w-48 sm:w-56 lg:w-60 px-2 sm:px-3' : 'w-12 sm:w-14 lg:w-16 px-1 sm:px-2'">
-           <img src="{% static 'img/grupoSena.png' %}" alt="Grupo SENA" 
-                 class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
-           <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Grupo SENA</span>
-        </a>
+<!-- cargo -->
+        <div x-data="{ tooltipVisible: false, tooltipX: 0, tooltipY: 0 }" 
+     @mousemove="!sidebarOpen && (tooltipX = $event.clientX + 10, tooltipY = $event.clientY + 10)">
+    <a href="{% url 'cargo' %}"
+       @mouseenter="!sidebarOpen && (tooltipVisible = true)"
+       @mouseleave="tooltipVisible = false"
+       class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
+              rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
+              justify-center md:justify-center lg:max-h-fit lg:py-2"
+       :class="sidebarOpen ? 'w-48 sm:w-56 lg:w-60 px-2 sm:px-3' : 'w-12 sm:w-14 lg:w-16 px-1 sm:px-2'">
+        
+        <img src="{% static 'img/cargo.png' %}" alt="Cargo" 
+              class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
+        
+        <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Cargo </span>
+    </a>
+
+    <div x-show="tooltipVisible"
+         x-cloak
+         class="fixed z-50 p-2 text-xs text-black bg-white rounded-md"
+         :style="`left: ${tooltipX}px; top: ${tooltipY}px;`">
+        Cargo
+    </div>
+
+</div>
 
 
-        <a href="{% url 'reportes' %}" title="Reportes"
-           class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
-                  rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
-                  justify-center md:justify-center lg:max-h-fit lg:py-2"
-           :class="sidebarOpen ? 'w-48 sm:w-56 lg:w-60 px-2 sm:px-3' : 'w-12 sm:w-14 lg:w-16 px-1 sm:px-2'">
-           <img src="{% static 'img/reportes.png' %}" alt="Reportes" 
-                 class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-h-6">
-           <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Reportes</span>
-        </a>
+
+<!--grupo sena   -->
+         <div x-data="{ tooltipVisible: false, tooltipX: 0, tooltipY: 0 }" 
+     @mousemove="!sidebarOpen && (tooltipX = $event.clientX + 10, tooltipY = $event.clientY + 10)">
+    <a href="{% url 'grupo_sena' %}"
+       @mouseenter="!sidebarOpen && (tooltipVisible = true)"
+       @mouseleave="tooltipVisible = false"
+       class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
+              rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
+              justify-center md:justify-center lg:max-h-fit lg:py-2"
+       :class="sidebarOpen ? 'w-48 sm:w-56 lg:w-60 px-2 sm:px-3' : 'w-12 sm:w-14 lg:w-16 px-1 sm:px-2'">
+        
+        <img src="{% static 'img/grupoSena.png' %}" alt="Grupo SENA" 
+              class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
+        
+        <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Grupo SENA </span>
+    </a>
+
+    <div x-show="tooltipVisible"
+         x-cloak
+         class="fixed z-50 p-2 text-xs text-black bg-white rounded-md"
+         :style="`left: ${tooltipX}px; top: ${tooltipY}px;`">
+        Grupo SENA
+    </div>
+
+</div>
 
 
-        <a href="{% url 'id_planta' %}" title="ID Planta"
-           class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
-                  rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
-                  justify-center md:justify-center lg:max-h-fit lg:py-2"
-           :class="sidebarOpen ? 'w-48 sm:w-56 lg:w-60 px-2 sm:px-5' : 'w-12 sm:w-14 lg:w-16 px-1 sm:px-2'">
-           <img src="{% static 'img/cargo.png' %}" alt="ID Planta" 
-                 class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
-           <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">ID Planta</span>
-        </a>
+<!-- reportes -->
+        <div x-data="{ tooltipVisible: false, tooltipX: 0, tooltipY: 0 }" 
+     @mousemove="!sidebarOpen && (tooltipX = $event.clientX + 10, tooltipY = $event.clientY + 10)">
+    <a href="{% url 'reportes' %}"
+       @mouseenter="!sidebarOpen && (tooltipVisible = true)"
+       @mouseleave="tooltipVisible = false"
+       class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
+              rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
+              justify-center md:justify-center lg:max-h-fit lg:py-2"
+       :class="sidebarOpen ? 'w-48 sm:w-56 lg:w-60 px-2 sm:px-3' : 'w-12 sm:w-14 lg:w-16 px-1 sm:px-2'">
+        
+        <img src="{% static 'img/reportes.png' %}" alt="Reportes" 
+              class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
+        
+        <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Reportes </span>
+    </a>
+
+    <div x-show="tooltipVisible"
+         x-cloak
+         class="fixed z-50 p-2 text-xs text-black bg-white rounded-md"
+         :style="`left: ${tooltipX}px; top: ${tooltipY}px;`">
+        Reportes
+    </div>
+
+</div>
 
 
-        <a href="{% url 'solicitudes' %}"  title="Solicitudes"
-           class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
-                  rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
-                  justify-center md:justify-center lg:max-h-fit lg:py-2"
-           :class="sidebarOpen ? 'w-48 sm:w-56 lg:w-60 px-2 sm:px-3' : 'w-12 sm:w-14 lg:w-16 px-1 sm:px-2'">
-           <img src="{% static 'img/solicitudes.png' %}" alt="Solicitudes" 
-                 class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
-           <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Solicitudes</span>
-        </a>
+<!-- id planta  -->
+     <div x-data="{ tooltipVisible: false, tooltipX: 0, tooltipY: 0 }" 
+     @mousemove="!sidebarOpen && (tooltipX = $event.clientX + 10, tooltipY = $event.clientY + 10)">
+    <a href="{% url 'id_planta' %}"
+       @mouseenter="!sidebarOpen && (tooltipVisible = true)"
+       @mouseleave="tooltipVisible = false"
+       class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
+              rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
+              justify-center md:justify-center lg:max-h-fit lg:py-2"
+       :class="sidebarOpen ? 'w-48 sm:w-56 lg:w-60 px-2 sm:px-3' : 'w-12 sm:w-14 lg:w-16 px-1 sm:px-2'">
+        
+        <img src="{% static 'img/cargo.png' %}" alt="ID Planta" 
+              class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
+        
+        <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">ID Planta </span>
+    </a>
+
+    <div x-show="tooltipVisible"
+         x-cloak
+         class="fixed z-50 p-2 text-xs text-black bg-white rounded-md"
+         :style="`left: ${tooltipX}px; top: ${tooltipY}px;`">
+        ID Planta
+    </div>
+
+</div>
+
+<!-- solicitudes -->
+         <div x-data="{ tooltipVisible: false, tooltipX: 0, tooltipY: 0 }" 
+     @mousemove="!sidebarOpen && (tooltipX = $event.clientX + 10, tooltipY = $event.clientY + 10)">
+    <a href="{% url 'solicitudes' %}"
+       @mouseenter="!sidebarOpen && (tooltipVisible = true)"
+       @mouseleave="tooltipVisible = false"
+       class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
+              rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
+              justify-center md:justify-center lg:max-h-fit lg:py-2"
+       :class="sidebarOpen ? 'w-48 sm:w-56 lg:w-60 px-2 sm:px-3' : 'w-12 sm:w-14 lg:w-16 px-1 sm:px-2'">
+        
+        <img src="{% static 'img/solicitudes.png' %}" alt="Solicitudes" 
+              class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
+        
+        <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Solicitudes </span>
+    </a>
+
+    <div x-show="tooltipVisible"
+         x-cloak
+         class="fixed z-50 p-2 text-xs text-black bg-white rounded-md"
+         :style="`left: ${tooltipX}px; top: ${tooltipY}px;`">
+        Solicitudes
+    </div>
+
+</div>
 
 
-        <a href="{% url 'autorizaciones' %}"  title="Autorizaciones"
-           class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
-                  rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
-                  justify-center md:justify-center lg:max-h-fit lg:py-2"
-           :class="sidebarOpen ? 'w-48 sm:w-56 lg:w-60 px-2 sm:px-3' : 'w-12 sm:w-14 lg:w-16 px-1 sm:px-2'">
-           <img src="{% static 'img/autorizaciones.png' %}" alt="Autorizaciones" 
-                 class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
-           <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Autorizaciones</span>
-        </a>
+<!-- autorizaciones -->
+ <div x-data="{ tooltipVisible: false, tooltipX: 0, tooltipY: 0 }" 
+     @mousemove="!sidebarOpen && (tooltipX = $event.clientX + 10, tooltipY = $event.clientY + 10)">
+    <a href="{% url 'autorizaciones' %}"
+       @mouseenter="!sidebarOpen && (tooltipVisible = true)"
+       @mouseleave="tooltipVisible = false"
+       class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
+              rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
+              justify-center md:justify-center lg:max-h-fit lg:py-2"
+       :class="sidebarOpen ? 'w-48 sm:w-56 lg:w-60 px-2 sm:px-3' : 'w-12 sm:w-14 lg:w-16 px-1 sm:px-2'">
+        
+        <img src="{% static 'img/autorizaciones.png' %}" alt="Autorizaciones" 
+              class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
+        
+        <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Autorizaciones </span>
+    </a>
+
+    <div x-show="tooltipVisible"
+         x-cloak
+         class="fixed z-50 p-2 text-xs text-black bg-white rounded-md"
+         :style="`left: ${tooltipX}px; top: ${tooltipY}px;`">
+        Autorizaciones
+    </div>
+
+</div>
 
 
-        <a  href="{% url 'bitacora' %}" title="Bitacora"
-           class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
-                  rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
-                  justify-center md:justify-center lg:max-h-fit lg:py-2"
-           :class="sidebarOpen ? 'w-48 sm:w-56 lg:w-60 px-2 sm:px-3' : 'w-12 sm:w-14 lg:w-16 px-1 sm:px-2'">
-           <img src="{% static 'img/bitacora.png' %}" alt="Bitacora" 
-                 class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
-           <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Bitacora</span>
-        </a>
+<!-- bitacora -->
+       <div x-data="{ tooltipVisible: false, tooltipX: 0, tooltipY: 0 }" 
+     @mousemove="!sidebarOpen && (tooltipX = $event.clientX + 10, tooltipY = $event.clientY + 10)">
+    <a href="{% url 'bitacora' %}"
+       @mouseenter="!sidebarOpen && (tooltipVisible = true)"
+       @mouseleave="tooltipVisible = false"
+       class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
+              rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
+              justify-center md:justify-center lg:max-h-fit lg:py-2"
+       :class="sidebarOpen ? 'w-48 sm:w-56 lg:w-60 px-2 sm:px-3' : 'w-12 sm:w-14 lg:w-16 px-1 sm:px-2'">
+        
+        <img src="{% static 'img/bitacora.png' %}" alt="Bitacora" 
+              class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
+        
+        <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Bitacora </span>
+    </a>
+
+    <div x-show="tooltipVisible"
+         x-cloak
+         class="fixed z-50 p-2 text-xs text-black bg-white rounded-md"
+         :style="`left: ${tooltipX}px; top: ${tooltipY}px;`">
+        Bitacora
+    </div>
+
+</div>
+
+
     </div>
 <a title="Salir"
    class="transition hover:scale-105 flex items-center gap-2 font-medium py-2 mt-auto mb-4
