@@ -38,8 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders', # Para validar cors
-    'rest_framework', #API REST Framework
-    'rest_framework_simplejwt',
+    'rest_framework', #Framework
     #'coreapi', #Documentacion TODO: MIRAR LA VERSION DEL PYTHON 
     # apps
     'core_apps.grupoSena_api',
@@ -47,7 +46,6 @@ INSTALLED_APPS = [
     'core_apps.cargos_api',
     'core_apps.reportes_api',
     'core_apps.general'
-    ,'django_extensions'
 ]
 
 MIDDLEWARE = [
@@ -57,8 +55,10 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    "core_apps.usuarios_api.middleware.CurrentUserMiddleware",
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -87,9 +87,9 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'sgcv3',
+        'NAME': 'SGC',
         'USER': 'postgres',
-        'PASSWORD': '12345678',
+        'PASSWORD': 'root',
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -123,7 +123,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Bogota'
 
 USE_I18N = True
 
@@ -151,33 +151,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CORS settings TODO:PONER URL AUTORIZADAS
 CORS_ALLOWED_ORIGINS = [
-    'http://127.0.0.1:8000'
+    "http://127.0.0.1:8000",   # 👈 este es tu frontend real ahora
+    "http://localhost:8000",   # por si abres desde localhost también
 ]
 
 REST_FRAMEWORK = {
-    "DEFAULT_RENDERER_CLASSES": [
-        "rest_framework.renderers.JSONRenderer",
-    ],
     "DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.coreapi.AutoSchema",
-     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
-    "DEFAULT_PERMISSION_CLASSES": (
-        "rest_framework.permissions.IsAuthenticated", 
-    ),
-    "DEFAULT_PARSER_CLASSES":[
-        'rest_framework.parsers.JSONParser',
-        'rest_framework.parsers.FormParser',
-        'rest_framework.parsers.MultiPartParser',
-    ]
 }
-
-
-#Variables para el envio de correos (Developement)
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'jdmapple322@gmail.com'
-EMAIL_HOST_PASSWORD = 'targ jdnk knei dfmb'
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
