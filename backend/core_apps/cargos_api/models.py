@@ -20,6 +20,7 @@ class EstadoVinculacion(models.Model):
 class Idp(models.Model):
     numero = models.CharField(max_length=10, unique=True)
     fechaCreacion = models.DateField(default=timezone.now,)
+    estado = models.BooleanField(default=False)
     def __str__(self):
         return self.numero
 class Cargo(models.Model):
@@ -28,7 +29,7 @@ class Cargo(models.Model):
     estadoCargo = models.ForeignKey('EstadoCargo', on_delete=models.CASCADE) 
     resolucion = models.CharField(max_length=200)
     resolucion_archivo = models.FileField(upload_to="resolucionesCargo/", blank=True, null=True)
-    centro = models.ForeignKey('general.Centro', on_delete=models.CASCADE)
+    centro = models.ForeignKey('general.Centro', on_delete=models.CASCADE, blank=True, null=True)
     fechaCreacion = models.DateTimeField(default=timezone.now)
     fechaActualizacion = models.DateTimeField(auto_now=True)
     observacion = models.TextField(blank=True, null=True)

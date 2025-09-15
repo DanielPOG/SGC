@@ -15,7 +15,7 @@ class Centro(models.Model):
 class Red(models.Model):
     codigoRed= models.CharField(max_length=10, unique=True)
     nombre= models.CharField(max_length=100, unique=True)
-    centro= models.ForeignKey('Centro', on_delete=models.CASCADE)
+    centro= models.ForeignKey('Centro', on_delete=models.CASCADE, null=True, blank=True)
     def __str__(self):
         return self.nombre
 class Area(models.Model):

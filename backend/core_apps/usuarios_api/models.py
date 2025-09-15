@@ -64,15 +64,18 @@ class UsuarioManager(BaseUserManager):
         cargo_nombre, _ = CargoNombre.objects.get_or_create(nombre="ADMIN" , funcion="Administrador del sistema")
         idp_obj, _ = Idp.objects.get_or_create(numero="ADMIN", defaults={'numero': 'ADMIN'})
         estado_cargo, _ = EstadoCargo.objects.get_or_create(estado="ACTIVO")
-        centro = Centro.objects.first()
+        centro = Centro.objects.first()  # Puede ser None si no existe, porque tu modelo lo permite con null=True
 
-        cargo, _ = Cargo.objects.get_or_create(idp=idp_obj, defaults={
-            'idp': idp_obj,
-            'cargoNombre': cargo_nombre,
-            'estadoCargo': estado_cargo,
-            'resolucion': 'N/A',
-            'centro': centro,
-        })
+        cargo, _ = Cargo.objects.get_or_create(
+            idp=idp_obj,
+            defaults={
+                'idp': idp_obj,
+                'cargoNombre': cargo_nombre,
+                'estadoCargo': estado_cargo,
+                'resolucion': 'N/A',
+                'centro': centro,
+            }
+)
 
 
         extra_fields.setdefault('tipo_doc', tipo_doc)
