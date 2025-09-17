@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework', #Framework
     #'coreapi', #Documentacion TODO: MIRAR LA VERSION DEL PYTHON 
     # apps
+    'core_apps.grupoSena_api',
     'core_apps.usuarios_api',
     'core_apps.cargos_api',
     'core_apps.reportes_api',
@@ -48,14 +49,16 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
     "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    "core_apps.usuarios_api.middleware.CurrentUserMiddleware",
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -120,7 +123,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Bogota'
 
 USE_I18N = True
 
@@ -132,6 +135,15 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+import os
+
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+MEDIA_URL = '/media/'   # URL pública
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Carpeta física
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
@@ -139,6 +151,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CORS settings TODO:PONER URL AUTORIZADAS
 CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:8000",   # 👈 este es tu frontend real ahora
+    "http://localhost:8000",   # por si abres desde localhost también
 ]
 
 REST_FRAMEWORK = {

@@ -25,3 +25,7 @@ BACKEND
     pip install django-cors-headers (para autorizaciones de los navegadores)
     pip install coreapi (para documentacion automatica hacer para cada app, hacerla para cada una)
     pip install setuptools (para que maneje los package)
+
+
+
+    pip install pandas openpyxl (PARA CARGAR POR EXCEL)
