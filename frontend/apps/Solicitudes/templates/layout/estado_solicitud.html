@@ -1,0 +1,81 @@
+{% extends "layout/sidebar.html" %}
+
+{% block title %}Solicitudes{% endblock %}
+
+{% block content %}
+<h1 class="text-4xl font-bold mb-6">
+  Solicitudes {% if estado_actual %}- {{ estado_actual|title }}{% endif %}
+</h1>
+<a href="{% url 'solicitudes' %}" class="mt-8 inline-block text-green-600 border border-green-600 rounded-full px-4 py-3 hover:bg-green-600 hover:text-white transition mb-20">
+  Volver al Panel
+</a>
+
+<table class="w-full table-auto border-collapse">
+  <thead>
+    <tr class="text-white bg-blue-900">
+      <th class="px-4 py-2 border">ID</th>
+      <th class="px-4 py-2 border">Acción</th>
+      <th class="px-4 py-2 border">Estado</th>
+      <th class="px-4 py-2 border">Fecha</th>
+
+      {% if estado_actual == "aprobada" %}
+        <th class="px-4 py-2 border">Fecha Aprobación</th>
+      {% endif %}
+
+      <th class="px-4 py-2 border">Ver Detalle</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for solicitud in solicitudes %}
+    <tr class="hover:bg-gray-100 text-center">
+      <td class="px-4 py-2 border">{{ solicitud.id }}</td>
+      <td class="px-4 py-2 border">{{ solicitud.titulo }}</td>
+      <td class="px-4 py-2 border">
+        {% if solicitud.estado == "pendiente" %}
+          <span class="text-yellow-600 font-semibold">Pendiente</span>
+        {% elif solicitud.estado == "en_revision" %}
+          <span class="text-blue-600 font-semibold">En Revisión</span>
+        {% elif solicitud.estado == "aprobada" %}
+          <span class="text-green-600 font-semibold">Aprobada</span>
+        {% endif %}
+      </td>
+      <td class="px-4 py-2 border">{{ solicitud.fecha }}</td>
+
+      {% if estado_actual == "aprobada" %}
+        <td class="px-4 py-2 border">
+          {{ solicitud.fecha_aprobacion|default:"-" }}
+        </td>
+      {% endif %}
+
+      <td class="px-4 py-2 border">
+        {% if solicitud.estado == "pendiente" %}
+          <a href="{% url 'solicitud_pendiente' solicitud.id %}" class="text-blue-600 hover:underline">
+            {{ solicitud.ver_detalle }}
+          </a>
+        {% elif solicitud.estado == "en_revision" %}
+          <a href="{% url 'solicitud_revicion' solicitud.id %}" class="text-blue-600 hover:underline">
+            {{ solicitud.ver_detalle }}
+          </a>
+        {% elif solicitud.estado == "aprobada" %}
+          <a href="{% url 'solicitud_aprovada' solicitud.id %}" class="text-blue-600 hover:underline">
+            {{ solicitud.ver_detalle }}
+          </a>
+        {% endif %}
+      </td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="{% if estado_actual == 'aprobada' %}6{% else %}5{% endif %}" class="text-center py-6">
+        No hay solicitudes en este estado.
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+
+
+
+
+
+{% endblock %}

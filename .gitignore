@@ -10,7 +10,7 @@ __pycache__/
 .Python
 build/
 develop-eggs/
-dist/
+
 downloads/
 eggs/
 .eggs/
@@ -179,3 +179,23 @@ cython_debug/
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
+
+# --- Django + Tailwind ---
+# Node modules (pesado, se regenera con npm install)
+**/node_modules/
+
+# Tailwind cache
+theme/static_src/.cache/
+
+# Archivos generados por Tailwind JIT (no necesarios en git)
+*.tmp
+*.temp
+
+# Opcional: si usas editorconfig de tailwindcss
+.postcssrc
+# Ignorar cualquier dist
+/dist/
+
+# Pero NO ignorar el CSS de Tailwind en theme
+!theme/static/css/dist/
+

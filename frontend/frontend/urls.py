@@ -18,6 +18,17 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
+
+    path('', include('apps.Usuarios.urls')),  #Ruta raíz que carga login_view
+
     path('admin/', admin.site.urls),
-    path('', include('apps.Usuarios.urls')) # URLS de la app Usuarios 
+    path('usuarios/', include('apps.Usuarios.urls')), # URLS de la app Usuarios 
+    path('cargos/', include('apps.Cargos.urls')), # URLS de la app Cargos
+    path('gruposena/', include('apps.GruposSENA.urls')), # URLS de la app GruposSENA
+    path('reportes/', include('apps.Reportes.urls')), # URLS de la app Reportes
+    path('idplanta/', include('apps.IDPlanta.urls')), # URLS de la app IDPlanta
+    path('solicitudes/', include('apps.Solicitudes.urls')), # URLS de la app Solicitudes
+    path('autorizaciones/', include('apps.Autorizaciones.urls')), # URLS de la app Autorizaciones
+    path('bitacora/', include('apps.Bitacora.urls')), # URLS de la app Bitacora
+    path('funcionario/', include('apps.funcionario.urls')), # URLS de la app funcionario
 ]

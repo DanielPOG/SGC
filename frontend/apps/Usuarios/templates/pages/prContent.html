@@ -1,0 +1,52 @@
+{% extends "layout/pr.html" %} /* Hereda la estructura llamada "sidebar.html" */
+
+{% block title %}Funcionario{% endblock %}
+
+{% block content %}
+  
+    <!-- Nombre -->
+    <h1 class="text-5xl font-bold mb-4">Nombre Funcionario</h1>
+
+    <!-- Botón Volver -->
+     <form action="{% url 'funcionario' %}" method="get">
+  <button class="relative -top-1 text-green-600 border border-green-600 rounded-full px-4 py-1 mb-10 hover:bg-green-600 hover:text-white transition">
+    Volver
+  </button>
+</form>
+
+    <!-- Contenedor gris -->
+    <div class="bg-gray-200 p-8 rounded border border-gray-300 h-[400px] ">
+
+      <!-- Bloque 1 -->
+      <a href="{% url 'datos_basicosfun' %}">
+  <div class="flex justify-between items-center border border-black rounded-xl px-4 py-2 mb-3 bg-white h-[70px] hover:bg-gray-100 transition cursor-pointer">
+    <span class="font-medium">Datos Básicos:</span>
+    <span class="text-xl">↓</span>
+  </div>
+</a>
+      <!-- Bloque 2 -->
+       <a href="{% url 'cargo_actualfun' %}">
+  <div class="flex justify-between items-center border border-black rounded-xl px-4 py-2 mb-3 bg-white h-[70px] hover:bg-gray-100 transition cursor-pointer">
+    <span class="font-medium">Cargo Actual:</span>
+    <span class="text-xl">↓</span>
+  </div>
+</a>
+
+      <!-- Bloque 3 -->
+       <a href="{% url 'cargos_anterioresfun' %}">
+  <div class="flex justify-between items-center border border-black rounded-xl px-4 py-2 mb-3 bg-white h-[70px] hover:bg-gray-100 transition cursor-pointer">
+    <span class="font-medium">Cargos Anteriores:</span>
+    <span class="text-xl">↓</span>
+  </div>
+</a>
+
+      <!-- Bloque 4 -->
+       <a href="{% url 'estudios_fun' %}">
+  <div class="flex justify-between items-center border border-black rounded-xl px-4 py-2 mb-3 bg-white h-[70px] hover:bg-gray-100 transition cursor-pointer">
+    <span class="font-medium">Estudios:</span>
+    <span class="text-xl">↓</span>
+  </div>
+</a>
+  
+
+{% endblock %}
