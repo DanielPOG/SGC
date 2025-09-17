@@ -56,9 +56,9 @@
 </table>
   <!-- fin tabla -->
 
+
 <!-- Modal -->
-<!-- Modal -->
-<div id="nuevoModal" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50">
+<div id="nuevoModal" class="fixed inset-0 bg-black/50 bg-opacity-50 hidden justify-center items-center z-50">
   <div class="bg-white rounded-lg w-96 p-6 relative h-auto">
     <!-- Botón para cerrar -->
     <button id="closeNuevoModal" class="absolute top-2 right-3 text-gray-600 hover:text-black text-xl font-bold">×</button>
@@ -297,9 +297,15 @@
       </div>
 
       <!-- Botón enviar -->
-      <div class="flex justify-end mt-7">
-        <button type="submit" class="px-3 py-2 bg-green-600 text-white rounded-2xl hover:bg-green-700">Aceptar</button>
-      </div>
+                <div class="flex justify-end space-x-4 -mt-1">
+             <button type="submit" class="px-3 py-2 bg-green-600 text-white rounded-2xl hover:bg-green-700 w-40">
+    Aceptar
+  </button>
+  <button  id="cancelNuevoModal" type="button" class="px-3 py-2 bg-gray-400 text-white rounded-2xl hover:bg-gray-500 w-40">
+    Cancelar
+  </button>
+ 
+</div>
     </form>
   </div>
 </div>
@@ -317,6 +323,10 @@
       nuevoModal.classList.add('flex');
     });
   }
+          // Cerrar con botón "Cancelar"
+  cancelNuevoModal.addEventListener('click', () => {
+    nuevoModal.classList.add('hidden');
+  });
 
   // Cerrar modal
   closeNuevoModal.addEventListener('click', () => {

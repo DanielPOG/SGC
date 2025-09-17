@@ -120,7 +120,7 @@
   <!-- fin tabla -->
 
   <!-- Modal -->
-  <div id="modalExcel" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50">
+  <div id="modalExcel" class="fixed inset-0 bg-black/50  bg-opacity-50 hidden justify-center items-center z-50">
     <div class="bg-white rounded-lg shadow-lg w-96 p-6 relative">
       <!-- Botón cerrar -->
       <button id="closeModal" class="absolute top-2 right-3 text-gray-600 hover:text-black text-xl font-bold">×</button>
@@ -137,51 +137,11 @@
     </div>
   </div>
 
-  <!-- Script para abrir el modal -->
-  <script>
-    const openModal = document.getElementById('openModal');
-    const closeModal = document.getElementById('closeModal');
-    const modalExcel = document.getElementById('modalExcel');
-    const fileInput = document.getElementById('fileInput');
-    const fileName = document.getElementById('fileName');
-
-    openModal.addEventListener('click', () => {
-      modalExcel.classList.remove('hidden');
-      modalExcel.classList.add('flex');
-    });
-
-    closeModal.addEventListener('click', () => {
-      modalExcel.classList.add('hidden');
-    });
-
-    // Mostrar nombre del archivo seleccionado
-    fileInput.addEventListener('change', (e) => {
-      fileName.textContent = e.target.files[0]?.name || "Ningún archivo";
-    });
-  </script>
-
-  <!-- Script para manejar el menú desplegable -->
-  <script>
-    document.querySelectorAll('[data-dropdown-toggle]').forEach(button => {
-      button.addEventListener('click', function() {
-        const menu = document.querySelector(`#${this.dataset.dropdownToggle}`);
-        menu.classList.toggle('hidden');  // Alterna la visibilidad del menú
-      });
-    });
-
-    document.addEventListener('click', function(e) {
-      if (!e.target.closest('[data-dropdown-toggle]') && !e.target.closest('#dropdownDotsHorizontal')) {
-        document.querySelectorAll('.z-10').forEach(menu => {
-          menu.classList.add('hidden');
-        });
-      }
-    });
-  </script>
-
+  
 
   <!-- segundo modal para agregar nuevo funcionario   -->
-<div id="nuevoModal" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50">
-  <div class="bg-white rounded-lg w-96 p-6 relative h-134"> 
+<div id="nuevoModal" class="fixed inset-0 bg-black/50  bg-opacity-50 hidden justify-center items-center z-50">
+  <div class="bg-white rounded-lg w-76 p-6 relative h-104"> 
     <!-- Botón para cerrar el nuevo modal -->
     <button id="closeNuevoModal" class="absolute top-2 right-3 text-gray-600 hover:text-black text-xl font-bold">×</button>
     
@@ -200,16 +160,64 @@
   </div>
 
       
-      <div class="flex justify-end -mt-1">
-        <button type="submit" class="px-3 py-2 bg-green-600 text-white rounded-2xl hover:bg-green-700 ">
+    <div class="flex justify-end space-x-4 -mt-1">
+        <button type="submit" class="px-3 py-2 bg-green-600 text-white rounded-2xl hover:bg-green-700 w-40">
           Aceptar
         </button>
-      </div>
+        <button  id="cancelNuevoModal" type="button" class="px-3 py-2 bg-gray-400 text-white rounded-2xl hover:bg-gray-500 w-40">
+          Cancelar
+        </button>
+    </div>
     </form>
   </div>
 </div>
 
-<script>
+<!-- Script para abrir el modal -->
+  <script>
+    const openModal = document.getElementById('openModal');
+    const closeModal = document.getElementById('closeModal');
+    const modalExcel = document.getElementById('modalExcel');
+    const fileInput = document.getElementById('fileInput');
+    const fileName = document.getElementById('fileName');
+
+    openModal.addEventListener('click', () => {
+      modalExcel.classList.remove('hidden');
+      modalExcel.classList.add('flex');
+    });
+
+    closeModal.addEventListener('click', () => {
+      modalExcel.classList.add('hidden');
+    });
+           // Cerrar con botón "Cancelar"
+  cancelNuevoModal.addEventListener('click', () => {
+    nuevoModal.classList.add('hidden');
+  });
+
+
+    // Mostrar nombre del archivo seleccionado
+    fileInput.addEventListener('change', (e) => {
+      fileName.textContent = e.target.files[0]?.name || "Ningún archivo";
+    });
+ 
+  //<!-- Script para manejar el menú desplegable -->
+ 
+    document.querySelectorAll('[data-dropdown-toggle]').forEach(button => {
+      button.addEventListener('click', function() {
+        const menu = document.querySelector(`#${this.dataset.dropdownToggle}`);
+        menu.classList.toggle('hidden');  // Alterna la visibilidad del menú
+      });
+    });
+
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('[data-dropdown-toggle]') && !e.target.closest('#dropdownDotsHorizontal')) {
+        document.querySelectorAll('.z-10').forEach(menu => {
+          menu.classList.add('hidden');
+        });
+      }
+    });
+
+
+
   // Abrir el nuevo modal
   const openNuevoModal = document.getElementById('openNuevoModal');
   const nuevoModal = document.getElementById('nuevoModal');
@@ -224,11 +232,17 @@
   closeNuevoModal.addEventListener('click', () => {
     nuevoModal.classList.add('hidden');
   });
+  
 
   // Cerrar el modal si se hace clic fuera del contenido
   window.addEventListener('click', (e) => {
     if (e.target === nuevoModal) {
       nuevoModal.classList.add('hidden');
+    }
+  });
+    window.addEventListener('click', (e) => {
+    if (e.target === modalExcel) {
+      modalExcel.classList.add('hidden');
     }
   });
 </script>

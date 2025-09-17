@@ -90,7 +90,7 @@
   <!-- fin tabla -->
 
   <!-- Modal -->
-  <div id="modalExcel" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50">
+  <div id="modalExcel" class="fixed inset-0 bg-black/50  bg-opacity-50 hidden justify-center items-center z-50">
     <div class="bg-white rounded-lg shadow-lg w-96 p-6 relative">
       <!-- Botón cerrar -->
       <button id="closeModal" class="absolute top-2 right-3 text-gray-600 hover:text-black text-xl font-bold">×</button>
@@ -146,6 +146,11 @@
         });
       }
     });
+      window.addEventListener('click', (e) => {
+    if (e.target === modalExcel) {
+      modalExcel.classList.add('hidden');
+    }
+  });
   </script>
 
 
