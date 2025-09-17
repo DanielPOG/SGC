@@ -3,19 +3,11 @@
 {% block title %}Cargos{% endblock %}
 
 {% block content %}
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cargos</title>
- 
-</head>
-<body class="bg-white p-8 scrollbar">
+
+
 
   <!-- Título -->
   <h1 class="text-4xl font-bold mb-6">Cargos</h1>
-   <script src="https://cdn.tailwindcss.com"></script>
 
   <!-- Buscador -->
   <div class="flex items-center w-full max-w-8xl mb-6 border rounded-full px-8 py-3 shadow-sm">
@@ -86,7 +78,7 @@
 
       <!-- Input archivo -->
       <label class="flex items-center cursor-pointer">
-        <span class="px-4 py-2 bg-blue-900 text-white rounded">Subir Excel</span>
+         <span class="px-4 py-2 bg-blue-900 text-white rounded">Subir Excel</span>
         <input type="file" accept=".xlsx,.xls" class="hidden" id="fileInput">
         <span id="fileName" class="text-gray-600 bg-gray-200 px-1 py-1 rounded w-48">Ningún archivo</span>
       </label>
@@ -94,46 +86,7 @@
     </div>
   </div>
 
-  <!-- Script para abrir el modal -->
-  <script>
-    const openModal = document.getElementById('openModal');
-    const closeModal = document.getElementById('closeModal');
-    const modalExcel = document.getElementById('modalExcel');
-    const fileInput = document.getElementById('fileInput');
-    const fileName = document.getElementById('fileName');
 
-    openModal.addEventListener('click', () => {
-      modalExcel.classList.remove('hidden');
-      modalExcel.classList.add('flex');
-    });
-
-    closeModal.addEventListener('click', () => {
-      modalExcel.classList.add('hidden');
-    });
-
-    // Mostrar nombre del archivo seleccionado
-    fileInput.addEventListener('change', (e) => {
-      fileName.textContent = e.target.files[0]?.name || "Ningún archivo";
-    });
-  </script>
-
-  <!-- Script para manejar el menú desplegable -->
-  <script>
-    document.querySelectorAll('[data-dropdown-toggle]').forEach(button => {
-      button.addEventListener('click', function() {
-        const menu = document.querySelector(`#${this.dataset.dropdownToggle}`);
-        menu.classList.toggle('hidden');  // Alterna la visibilidad del menú
-      });
-    });
-
-    document.addEventListener('click', function(e) {
-      if (!e.target.closest('[data-dropdown-toggle]') && !e.target.closest('#dropdownDotsHorizontal')) {
-        document.querySelectorAll('.z-10').forEach(menu => {
-          menu.classList.add('hidden');
-        });
-      }
-    });
-  </script>
 
 
   <!-- segundo modal para agregar nuevo funcionario   -->
@@ -303,30 +256,7 @@
   </div>
 </div>
 
-<script>
-  // Abrir el nuevo modal
-  const openNuevoModal = document.getElementById('openNuevoModal');
-  const nuevoModal = document.getElementById('nuevoModal');
-  const closeNuevoModal = document.getElementById('closeNuevoModal');
 
-  openNuevoModal.addEventListener('click', () => {
-    nuevoModal.classList.remove('hidden');
-    nuevoModal.classList.add('flex');
-  });
-
-  // Cerrar el nuevo modal
-  closeNuevoModal.addEventListener('click', () => {
-    nuevoModal.classList.add('hidden');
-  });
-
-  // Cerrar el modal si se hace clic fuera del contenido
-  window.addEventListener('click', (e) => {
-    if (e.target === nuevoModal) {
-      nuevoModal.classList.add('hidden');
-    }
-  });
-</script>
-   
 
 
 {% endblock %}
