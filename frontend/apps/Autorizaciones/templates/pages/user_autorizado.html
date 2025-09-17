@@ -375,6 +375,7 @@
       document.querySelectorAll(".submenu." + group).forEach(cb => {
         cb.checked = this.checked;
       });
+      
       // Marcar principal
       let principal = document.querySelector(`.principal[data-target="submenu-${group}"]`);
       if (principal) principal.checked = this.checked;
