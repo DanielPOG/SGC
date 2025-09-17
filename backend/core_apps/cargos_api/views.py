@@ -88,12 +88,12 @@ class IdpViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=["get"], url_path="historialCargos")
     def historialCargos(self, request, pk=None):
         try:
-            idp = request.query_params.get('numero ')
+            idp = request.query_params.get('numero')
         except Idp.DoesNotExist:
             return Response({"error": "Idp no encontrada"}, status=status.HTTP_404_NOT_FOUND)
 
         # 1. Todos los cargos que han estado asociados a esta Idp
-        cargos = Cargo.objects.filter(idp=idp)
+        cargos = Cargo.objects.filter(idp=idp).all()
 
         # 2. Todos los registros de usuarios que ocuparon esos cargos
         historial = CargoUsuario.objects.filter(cargo__in=cargos).order_by("fechaInicio")

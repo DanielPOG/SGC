@@ -104,8 +104,9 @@
   },
   {
     "model": "cargos_api.idp",
-    "pk": "1001",
+    "pk": "1",
     "fields": {
+      "numero":"1001",
       "fechaCreacion": "2025-01-01",
       "estado": true
     }
