@@ -291,11 +291,12 @@
   closeNuevoModal.addEventListener('click', () => {
     nuevoModal.classList.add('hidden');
   });
-    window.addEventListener('click', (e) => {
-    if (e.target === modalExcel) {
-      modalExcel.classList.add('hidden');
-    }
-  });
+  window.addEventListener('click', (e) => {
+  // Asegúrate de que el clic ocurra en el fondo del modal y no en su contenido
+  if (e.target === modalExcel) {
+    modalExcel.classList.add('hidden');
+  }
+})
   // Cerrar el modal si se hace clic fuera del contenido
   window.addEventListener('click', (e) => {
     if (e.target === nuevoModal) {
