@@ -1,0 +1,596 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+  overflow: auto;
+}
+/* estilos modal  */
+/* Fondo oscuro del modal */
+.modal {
+  display: none;                 /* oculto por defecto */
+  position: fixed;
+  inset: 0;                      /* ocupa toda la pantalla */
+  background: rgba(0,0,0,0.4);   /* fondo semi-transparente */
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+/* logo de sgc */
+.logosgc {
+  width: 100px;            /* Aumenta el tamaño (antes 100px) */
+  position: relative;
+  top: 5rem;
+  margin-left: -12rem;       /* Lo mueve hacia la izquierda */
+}
+/* logo sena */
+.logosena {
+  width: 70px; 
+  position: relative;
+  float: right;
+  margin-top: -80px;
+  margin-left: 12rem; /* Aumenta este valor para mover más a la derecha */
+  fill: red; 
+}
+.logo-circle{
+  width:500px;
+  display:block;
+  margin:0 auto 14px;
+}
+
+
+.logo-section{
+    margin-left: 0;  
+    margin-top: -100px;          /* Centrar el logo y texto */
+    font-size: 45px;
+  }
+
+/* Contenedor del modal */
+.modal-content {
+  background: #fff;
+  border-radius: 16px;
+  padding: 32px 24px;
+  max-width: 350px;
+  width: 90%;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  margin: auto;
+}
+
+/* Botón cerrar */
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 22px;
+  color: #888;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+/* Título */
+.modal-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 3px;
+  text-align: left;
+  margin-top: 30px;
+}
+
+/* Input */
+.modal-input {
+  width: 90%;
+  padding: 10px;
+  margin: 15px 0;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+/* Botón enviar */
+.modal-button {
+  background: #1e3a5f;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+.modal-button:hover {
+  background: #2c5282;
+}
+
+/* contenedor principal  */
+.container {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+/* fondo curvado izquierdo color gris  */
+.left-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40%;        /* ocupa todo el left-group */
+  height: 100%;
+  border-top-right-radius: 180vh;
+  border-bottom-right-radius: 180vh;
+  background: #d1d5db;
+  z-index: 0;
+} 
+/* seccion izquierda */
+.left-section {
+  position: relative; /* ya no absolute */
+  width: 96%;
+  height: 100%;
+  border-top-right-radius: 180vh;
+  border-bottom-right-radius: 180vh;
+  background: linear-gradient(135deg, #00304D 0%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+/* texto "bienvenido" */
+.welcome-content {
+  text-align: center;
+  z-index: 2;
+}
+/* Contenedor para íconos o gráficos decorativos */
+.chart-icon {
+  position: relative;
+  margin-bottom: 30px;
+  display: inline-block;
+}
+/* Texto de bienvenida principal. */
+.welcome-text {
+  color: white;              
+  font-size: 38px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  position: relative;
+  text-align: left;
+   margin-left: 10%; 
+}
+/* Línea decorativa horizontal en login  */
+.linea-vertical {
+  border-top: 2px solid #000;
+  width: 80%;
+  margin: 5px auto;
+}
+/* Línea decorativa blanca debajo del texto de bienvenida */
+.welcome-text::after {
+  content: '';
+  position: absolute;
+  bottom: -7px;
+  left: 0;
+  right: 0;
+  width: 300px;
+  height: 4px;
+  background: white;           /* ✅ línea blanca debajo */
+  
+}
+
+/* Contenedor del formulario de login (lado derecho). */
+.right-section {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  background: #ffffff;
+  padding: 80px;
+  margin-right: 60px; /* margen para separar del lado izquierdo */
+}
+/* Tarjeta visual del formulario de login. */
+.login-card {
+ background: white;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 400px;
+  border: 8px solid #d1d5db;
+  transition: all 0.3s ease;
+}
+/* Contenedor del logo e información del sistema. */
+.logo-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+/* Título del sistema junto al logo. */
+.logo-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+  width: 100%;
+}
+
+/* Subtítulo o descripción corta bajo el título. */
+.descripcion_sistema {
+   font-size: 1rem; 
+   font-weight: bold; 
+   color: #000;
+    white-space: nowrap;
+   }
+/* Contenedor del formulario de login. */
+.login-form {
+  width: 100%;
+  position: relative;
+  top: 20px;
+}
+/* Agrupa cada campo individual (etiqueta + input). */
+.form-group {
+  margin-bottom: 25px;
+}
+/* Etiquetas de los campos (ej: "Usuario y conttraseña"). */
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #374151;
+  font-size: 14px;
+}
+/* Campos de entrada del formulario. */
+.form-group input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 25px;
+  font-size: 14px;
+  background: #f9fafb;
+  transition: all 0.3s ease;
+}
+/* Estado enfocado del input. */
+.form-group input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background: white;
+}
+/* Placeholder de los inputs. */
+.form-group input::placeholder {
+  color: #9ca3af;
+}
+.title_login {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #000;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0;
+}
+/* Botón para iniciar sesión. */
+.login-button {
+  width: 100%;
+  background: #1e3a5f;
+  color: white;
+  padding: 14px;
+  border: none;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 20px;
+}
+/* Efecto visual cuando el mouse pasa sobre el botón. */
+.login-button:hover {
+  background: #2c5282;
+  transform: translateY(-1px);
+}
+/* Contenedor del enlace "¿Olvidaste tu contraseña?". */
+.forgot-password {
+  text-align: center;
+  padding-top: 15px;
+  border-top: 1px solid #e5e7eb;
+}
+/* Enlace de recuperación. */
+.forgot-password a {
+  color: #6b7280;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+}
+/* Estilo al pasar el mouse sobre el enlace. */
+.forgot-password a:hover {
+  color: #3b82f6;
+  text-decoration: underline;
+}
+
+/* estilos de imagenes de login logo sena y sgc */
+.logosgc {
+  transition: filter 0.3s ease;
+}
+
+.logosgc:hover {
+  filter: saturate(1) brightness(1.5); /* Aumenta la saturación y el brillo */
+}
+/* Estilo por defecto */
+.logosena {
+  transition: filter 0.3s ease, opacity 0.3s ease;
+  opacity: 0.6; /* Imagen opaca al principio */
+}
+
+/* Estilo al hacer hover */
+.logosena:hover {
+  filter: saturate(1.5) brightness(1.5); /* Colores más vivos y brillantes */
+  opacity: 1; /* Restaurar opacidad al 100% */
+}
+
+
+ /* !TODO: DISEÑO RESPONSIVO TODO */
+ /* responsive de pantalla  */
+ @media (min-width: 1920px) {
+  .right-section {
+    justify-content: center;
+  }
+  /* Texto de bienvenida principal. */
+.welcome-text {
+  color: white;              
+  font-size: 100px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  position: relative;
+  text-align: left;
+   margin-left: 10%; 
+}
+.welcome-text::after {
+  content: '';
+  position: absolute;
+  bottom: -7px;
+  left: 0;
+  right: 0;
+  width: 700px;
+  height: 4px;
+  background: white;           /* ✅ línea blanca debajo */
+  
+}
+  /*  estilos de modal  */
+  .modal-content {
+  background: #fff;
+  border-radius: 16px;
+  padding: 32px 24px;
+  max-width: 670px;
+  width: 200%;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  margin: auto;
+  height: 400px;
+}
+/* Título */
+.modal-title {
+  font-size: 90px;
+  font-weight: bold;
+  margin-bottom: 3px;
+  text-align: left;
+  margin-top: 30px;
+}
+/* Botón cerrar */
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 40px;
+  color: #888;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+/* Título */
+.modal-title {
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: 3px;
+  text-align: left;
+  margin-top: 30px;
+}
+
+/* Input */
+.modal-input {
+  font-size: 30px;
+  width: 100%;
+  height: 90px;
+  padding: 20px;
+  margin: 15px 0;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+/* Botón enviar */
+.modal-button {
+  font-size: 30px;
+  width: 200px;
+  background: #1e3a5f;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 20px 20px;
+  cursor: pointer;
+  font-weight: 00;
+  transition: background 0.3s ease;
+}
+    
+ /* logo de sgc */
+.logosgc {
+  width: 140px;            /* Aumenta el tamaño (antes 100px) */
+  position: relative;
+  top: 8rem;
+  margin-left: -6rem;       /* Lo mueve hacia la izquierda */
+}
+/* logo sena */
+.logosena {
+  width: 100px; 
+  position: relative;
+  float: right;
+  margin-top: -90px;
+  margin-left: 18rem; /* Aumenta este valor para mover más a la derecha */
+}
+.logo-circle{
+  width:900px;
+  display:block;
+  margin:0 auto 14px;
+}
+
+  .descripcion_sistema{
+    font-size: 29px;
+  }           
+.linea-vertical{
+  width: 90%;
+  margin: 5px auto;
+}
+  
+ #openModal {
+  font-size: 29px; /* o el tamaño que quieras */
+}
+  .logo-section{
+    margin-left: 0;  
+    margin-top: -200px;          /* Centrar el logo y texto */
+    font-size: 45px;
+  }
+
+  .login-card {
+    max-width: 700px;           /* Más ancho */
+    padding: 200px 80px;         /* Más espacio interno */
+    transform: translateX(-15%); /* Moverlo un poco a la izquierda */
+  }
+  .form-group label{
+    font-size: 29px;            /* Etiquetas más grandes */
+  }
+
+  .login-button {
+    font-size: 29px;            /* Botón más grande */
+    padding: 19px;
+  }
+
+  .form-group input {
+    font-size: 29px;
+    padding: 16px 20px;         /* Inputs más altos y cómodos */
+  }
+
+  .title_login {
+    font-size: 4rem;            /* Título más grande */
+  }
+}
+ @media (min-width: 1920px) {
+  .right-section {
+    justify-content: center;
+  }
+
+  .login-card {
+    transform: translateX(50%);
+  }
+}
+
+
+/* RESPONSIVE (Diseño adaptable) */
+@media (max-width: 768px) {
+
+  /* se apila verticalmente. */
+  .container {
+    flex-direction: column;
+  }
+  /* se vuelve más pequeña y se adapta a ancho completo. */
+  .left-section {
+    width: 100vw;
+    height: 250px;
+    border-top-right-radius: 250px;
+    border-bottom-right-radius: 250px;
+  }
+  /* ocupa más espacio vertical. */
+ .right-section {
+  flex: 1;
+  display: flex;
+  align-items: center;      /* centra vertical */
+  justify-content: center;  /* centra horizontal */
+  background: #ffffff;
+  padding: 80px;
+  margin-right: 0;          /* quitamos margen derecho */
+}
+  /* reduce su padding para pantallas pequeñas. */
+  .login-card {
+    padding: 30px 25px;
+  }
+  
+  /* se oculta totalmente para dar más espacio al login. */
+  .left-group {
+  position: relative;
+  width: 41%;         /* puedes usar % o px */
+  min-width: 320px;
+  height: 100vh;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+
+}
+@media (max-width: 900px) {
+  .left-group {
+    display: none; /*  oculta toda la parte izquierda */
+  }
+
+  /* se centra completamente y elimina margen. */
+  .right-section {
+    flex: 1;             /* ahora ocupa todo el espacio */
+    justify-content: center;
+    padding: 20px;
+    margin-right: 0;     /* quita el margen derecho extra */
+  }
+  /* se adapta al 90% del ancho disponible. */
+  .login-card {
+    max-width: 90%; /* para que se adapte en móviles */
+  }
+  
+  
+}
+/* ----------- PANTALLAS GRANDES ----------- */
+@media (min-width: 1200px) {
+  .login-card {
+    max-width: 500px; /* se agranda un poco */
+    padding: 50px;
+  }
+}
+
+/* ----------- PANTALLAS MEDIANAS ----------- */
+@media (max-width: 900px) {
+  .left-group {
+    display: none; /* oculta el lado izquierdo */
+  }
+
+  .right-section {
+    flex: 1;
+    justify-content: center;  /* ahora se centra */
+    align-items: center;
+    padding: 40px;
+    margin-right: 0; /* quita el margen extra */
+  }
+
+  .login-card {
+    max-width: 90%; /* ocupa casi toda la pantalla */
+    padding: 30px;
+  }
+}
+ /* responsivo de pantalla  */
+ @media (min-width: 1200px) {
+  .login-card {
+    max-width: 550px;     /* más grande */
+    padding: 50px;        /* más espacio interno */
+    transform: translateX(-40px); /* lo mueve un poco a la izquierda */
+  }
+}
+}
