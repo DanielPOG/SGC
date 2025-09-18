@@ -28,25 +28,43 @@ document.addEventListener("DOMContentLoaded", () => {
     decisiones.push(decision);
   }
 
-  async function cargarEstados() {
-    try {
-      const res = await fetch("http://127.0.0.1:8001/api/cargos/estado-vinculacion/");
-      if (!res.ok) throw new Error("Error cargando estados");
-      const estados = await res.json();
-      estadoSelect.innerHTML = '<option value="">-- Selecciona --</option>';
-      const temporalEstado = document.getElementById("temporalEstado");
-      temporalEstado.innerHTML = '<option value="">-- Selecciona --</option>';
-      estados.forEach(estado => {
-        estadoSelect.innerHTML += `<option value="${estado.id}">${estado.estado}</option>`;
-        temporalEstado.innerHTML += `<option value="${estado.id}">${estado.estado}</option>`;
-      });
-    } catch (err) {
-      console.error(err);
-      alert("⚠️ Error cargando estados");
-    }
-  }
-  cargarEstados();
+ async function cargarEstados() {
+  try {
+    const res = await fetch("http://127.0.0.1:8001/api/cargos/estado-vinculacion/");
+    if (!res.ok) throw new Error("Error cargando estados");
 
+    const estados = await res.json();
+
+    // Selecciona el <select> correcto
+    const estadoSelect = document.getElementById("estadoVinculacion");
+    const temporalEstado = document.getElementById("temporalEstado");
+
+    // Limpia los options
+    estadoSelect.innerHTML = '<option value="">-- Selecciona --</option>';
+    if (temporalEstado) {
+      temporalEstado.innerHTML = '<option value="">-- Selecciona --</option>';
+    }
+
+    // Agrega los estados
+    estados.forEach(estado => {
+      estadoSelect.innerHTML += `<option value="${estado.id}">${estado.estado}</option>`;
+      if (temporalEstado) {
+        temporalEstado.innerHTML += `<option value="${estado.id}">${estado.estado}</option>`;
+      }
+    });
+  } catch (err) {
+    console.error(err);
+    alert("⚠️ Error cargando estados");
+  }
+}
+
+// Ejecuta la carga
+cargarEstados();
+
+
+
+
+  
   // Abrir modal principal
   document.addEventListener("click", e => {
     const btn = e.target.closest(".open-nuevo-modal");
