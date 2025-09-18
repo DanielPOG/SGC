@@ -3,20 +3,11 @@
 {% block title %} Crear Cargo{% endblock %}
 
 {% block content %}
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <title>Crear Cargo</title>
-  <script src="{% static 'js/cargo_form.js' %}"></script>
-</head>
-<body class="bg-white min-h-screen flex flex-col items-center p-8">
 
   <!-- Título -->
   <h1 class="text-5xl font-bold mb-4">Crear Cargo</h1>
 
+  <script src="{% static 'js/cargo_form.js' %}"></script>
 
   
   <!-- Botón Volver -->
@@ -133,8 +124,8 @@
       
     </div>
   </div>
-</form>
-</body>
-</html>
+  </form>
+
+
 
 {% endblock %}

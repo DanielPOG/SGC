@@ -20,7 +20,7 @@ def grupo_sena(request):
     return render(request, 'pages/grupo_sena.html')
 
 def reportes(request):
-    return render(request, 'pages/reportes.html')
+    return render(request, 'layout/reportes.html')
 
 def id_planta(request):
     return render(request, 'pages/id_planta.html')
@@ -52,5 +52,13 @@ def estudios_fun(request):
 
 def editar_fun(request):
     return render(request, 'pages/editar_fun.html')
+
+def pr(request):
+    return render(request, 'layout/pr.html')
+
+def prContet(request):
+    return render(request, 'pages/prContent.html')
+
+
 
 
