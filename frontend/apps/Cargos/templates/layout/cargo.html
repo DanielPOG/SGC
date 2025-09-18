@@ -1,0 +1,305 @@
+{% extends "layout/sidebar.html" %}
+{% load static %}
+{% block title %}Cargos{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cargos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // Django procesa esto aquí mismo
+    window.urlEditarCargoBase = "{% url 'editar_cargo' 0 %}".replace("0/", "");
+    window.urlHistorialCargo = "{% url 'cargohistorial' %}".replace("0/", "");
+  </script>
+  <script src="{% static 'js/asignarCargo.js' %}"></script>
+</head>
+<body class="bg-white p-8 scrollbar">
+
+  <!-- Título -->
+  <h1 class="text-4xl font-bold mb-6">Cargos</h1>
+
+  <!-- Buscador -->
+  <div class="flex items-center w-full max-w-8xl mb-6 border rounded-full px-8 py-3 shadow-sm">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1110.5 3a7.5 7.5 0 016.15 13.65z" />
+    </svg>
+    <input 
+      id="buscarCargo" 
+      type="text" 
+      placeholder="Ingrese IDP" 
+      class="flex-1 px-3 focus:outline-none text-gray-700" 
+    />
+    <button 
+      id="btnBuscar" 
+      class="ml-3 px-4 py-2 bg-blue-600 text-white rounded-lg">
+      Buscar
+    </button>
+
+  </div>
+  <!-- Campo Cargo -->
+  <div class="mb-5">
+    <label class="block text-lg font-medium text-gray-700 mb-1">Cargo</label>
+<div class="w-1/2 sm:w-1/3 md:w-64 border-b-2 border-green-500"></div>
+
+
+  </div>
+   
+  <!-- Botones -->
+  <div class="flex justify-end gap-3 mb-5 -mt-6">
+    <button id="openModal" class="px-4 py-2 border border-green-600 text-green-600 rounded-full hover:bg-green-600 hover:text-white transition">
+      Cargar Excel
+    </button>
+    <button type="submit"
+            class="px-4 py-2 border border-green-600 text-green-600 rounded-full 
+                  hover:bg-green-600 hover:text-white transition">
+    <a href="{% url 'cargo_new' %}">Crear Nuevo</a>
+    </button>
+  
+  </div>
+  
+  <!-- Tabla -->
+  <table class="min-w-full table-auto border-collapse">
+    <thead>
+      <tr class="text-white bg-blue-900">
+        <th class="px-4 py-2 border">Nombre Cargo</th>
+        <th class="px-4 py-2 border hidden md:table-cell">Centro</th>
+        <th class="px-4 py-2 border">IDP</th>
+        <th class="px-4 py-2 border hidden md:table-cell">Titular Planta</th>
+        <th class="px-4 py-2 border hidden md:table-cell">Encargados Temporales</th>
+        <th class="px-4 py-2 border hidden md:table-cell">Fecha Último Encargo</th>
+        <th class="px-4 py-2 border hidden md:table-cell">Fecha Creación</th>
+        <th class="px-4 py-2 border">Acciones</th>
+      </tr>
+    </thead>
+    <tbody id="tablaBody">
+      <script src="{% static 'js/buscarCargo.js' %}"></script>
+    </tbody>
+  </table>
+  <!-- fin tabla -->
+
+  <!-- Modal excel -->
+  {# TODO: Cambiar esto a archivo para lógica de Excel #}
+
+
+  <div id="modalExcel" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50">
+    <div class="bg-white rounded-lg shadow-lg w-96 p-6 relative">
+      <!-- Botón cerrar -->
+      <button id="closeModal" class="absolute top-2 right-3 text-gray-600 hover:text-black text-xl font-bold">×</button>
+
+      <h2 class="text-lg font-semibold mb-4">Ingrese Archivo Excel</h2>
+
+      <!-- Input archivo -->
+      <label class="flex items-center cursor-pointer">
+        <span class="px-4 py-2 bg-blue-900 text-white rounded">Subir Excel</span>
+        <input type="file" accept=".xlsx,.xls" class="hidden" id="fileInput">
+        <span id="fileName" class="text-gray-600 bg-gray-200 px-1 py-1 rounded w-48">Ningún archivo</span>
+      </label>
+
+    </div>
+  </div>
+
+  <!-- Script para abrir el modal excel -->
+  <script>
+    const openModal = document.getElementById('openModal');
+    const closeModal = document.getElementById('closeModal');
+    const modalExcel = document.getElementById('modalExcel');
+    const fileInput = document.getElementById('fileInput');
+    const fileName = document.getElementById('fileName');
+
+    openModal.addEventListener('click', () => {
+      modalExcel.classList.remove('hidden');
+      modalExcel.classList.add('flex');
+    });
+
+    closeModal.addEventListener('click', () => {
+      modalExcel.classList.add('hidden');
+    });
+
+    // Mostrar nombre del archivo seleccionado
+    fileInput.addEventListener('change', (e) => {
+      fileName.textContent = e.target.files[0]?.name || "Ningún archivo";
+    });
+  </script>
+
+
+
+
+  <!-- Modal Agregar Nuevo Funcionario -->
+<div id="nuevoModal" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50 px-4 sm:px-6">
+  <div class="bg-white rounded-lg w-full max-w-3xl p-6 relative h-auto"> 
+    <!-- Botón para cerrar el modal -->
+    <button id="closeNuevoModal" class="absolute top-2 right-3 text-gray-600 hover:text-black text-xl font-bold">X</button>
+    
+    <!-- Formulario -->
+    <form id="formAsignarFuncionario">
+      <input type="hidden" id="cargoIdSeleccionado" name="cargo" />
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Número de documento -->
+        <div class="mb-4">
+          <label class="font-semibold block mb-1" for="usuarioId">Usuario</label>
+          <input id="usuarioId" name="num_doc" type="number" class="w-full border rounded-full px-3 py-2" />
+        </div>
+
+        <!-- Grado -->
+        <div class="mb-4">
+          <label class="font-semibold block mb-1" for="grado">Grado</label>
+          <input id="grado" name="grado" type="number" min="1" max="20" class="w-full border rounded-full px-3 py-2" />
+        </div>
+
+        <!-- Salario -->
+        <div class="mb-4">
+          <label class="font-semibold block mb-1" for="salario">Salario</label>
+          <input id="salario" name="salario" type="number" class="w-full border rounded-full px-3 py-2" />
+        </div>
+
+        <!-- Resolución -->
+        <div class="mb-4">
+          <label class="font-semibold block mb-1" for="resolucion">Resolución</label>
+          <input type="text" id="resolucion" name="resolucion" placeholder="Número de resolución" class="w-full border rounded-full px-3 py-2" />
+        </div>
+
+        <!-- Archivo resolución -->
+        <div class="mb-4">
+          <label class="font-semibold block mb-1" for="resolucionArchivo">Archivo Resolución</label>
+          <input id="resolucionArchivo" name="resolucionArchivo" type="file" class="w-full border rounded-full px-3 py-2 text-sm" />
+        </div>
+
+        <!-- Estado vinculación -->
+        <div class="mb-4">
+          <label class="font-semibold block mb-1" for="estadoVinculacion">Estado</label>
+          <select id="estadoVinculacion" name="estadoVinculacion" class="w-full border rounded-full px-3 py-2 bg-gray-100">
+            <option value="">-- Selecciona --</option>
+          </select>
+        </div>
+
+        <!-- Observación -->
+        <div class="mb-4 md:col-span-2">
+          <label class="font-semibold block mb-1" for="observacionCU">Observaciones</label>
+          <textarea id="observacionCU" name="observacionCU" rows="2" class="w-full border rounded-md px-3 py-1"></textarea>
+        </div>
+
+        <!-- Fecha inicio -->
+        <div class="mb-4 md:col-span-2">
+          <label class="font-semibold block mb-1" for="fechaInicio">Fecha Inicio</label>
+          <input id="fechaInicio" name="fechaInicio" type="date" class="w-full border rounded-full px-3 py-2" />
+        </div>
+      </div>
+
+      <div class="flex justify-end mt-4">
+        <button type="submit" class="px-3 py-2 bg-green-600 text-white rounded-2xl hover:bg-green-700">Aceptar</button>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- Modal escalonado -->
+<div id="escalonModal" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50 px-4">
+  <div class="bg-white rounded-lg w-full max-w-xl p-6 relative">
+    <button id="closeEscalonModal" class="absolute top-3 right-3 text-xl">×</button>
+    <h3 class="text-lg font-bold mb-3">Devolución escalonada</h3>
+
+    <div id="escalonContent">
+      <p id="escalonTexto" class="mb-4"></p>
+
+      <div class="flex gap-3">
+        <button id="btnDevolverPlanta" class="px-3 py-2 bg-green-600 text-white rounded">Devolver a planta</button>
+        <button id="btnAsignarOtro" class="px-3 py-2 bg-yellow-600 text-white rounded">Asignar a otro temporal</button>
+      </div>
+
+      <div id="selectorCargos" class="mt-4 hidden">
+        <label for="selectCargos" class="block mb-1">Selecciona cargo temporal:</label>
+        <select id="selectCargos" class="w-full border rounded px-2 py-1"></select>
+        <button id="btnConfirmAsignar" class="mt-2 px-3 py-2 bg-blue-600 text-white rounded">Confirmar asignación</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Temporal -->
+<div id="temporalModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 z-50 items-center justify-center">
+  <div class="bg-white rounded-lg shadow-lg w-full max-w-lg p-6 relative">
+    <!-- Header -->
+    <div class="flex justify-between items-center border-b pb-3">
+      <h3 class="text-lg font-semibold">Asignación Temporal</h3>
+      <button id="closeTemporalModal" class="text-gray-500 hover:text-gray-700">
+        ✕
+      </button>
+    </div>
+
+    <!-- Formulario -->
+    <form id="formTemporalAsignacion" class="space-y-4 mt-4">
+      <input type="hidden" id="temporalCargoId" name="temporalCargoId">
+      <input type="hidden" id="temporalUsuarioId" name="temporalUsuarioId">
+
+      <!-- Grado -->
+      <div>
+        <label for="temporalGrado" class="block text-sm font-medium text-gray-700">Grado</label>
+        <input type="text" id="temporalGrado" name="temporalGrado"
+               class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+      </div>
+
+      <!-- Salario -->
+      <div>
+        <label for="temporalSalario" class="block text-sm font-medium text-gray-700">Salario</label>
+        <input type="number" id="temporalSalario" name="temporalSalario"
+               class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+      </div>
+
+      <!-- Resolución -->
+      <div>
+        <label for="temporalResolucion" class="block text-sm font-medium text-gray-700">Resolución</label>
+        <input type="text" id="temporalResolucion" name="temporalResolucion"
+               class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+      </div>
+
+      <!-- Archivo Resolución -->
+      <div>
+        <label for="temporalArchivo" class="block text-sm font-medium text-gray-700">Archivo Resolución</label>
+        <input type="file" id="temporalArchivo" name="temporalArchivo"
+               accept=".pdf,.jpg,.png"
+               class="mt-1 block w-full text-sm text-gray-700 border border-gray-300 rounded-md cursor-pointer focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+      </div>
+
+      <!-- Estado de vinculación -->
+      <div>
+        <label for="temporalEstado" class="block text-sm font-medium text-gray-700">Estado de vinculación</label>
+        <select id="temporalEstado" name="temporalEstado"
+                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+          <option value="">-- Selecciona --</option>
+        </select>
+      </div>
+
+      <!-- Fecha de inicio -->
+      <div>
+        <label for="temporalFechaInicio" class="block text-sm font-medium text-gray-700">Fecha de inicio</label>
+        <input type="date" id="temporalFechaInicio" name="temporalFechaInicio"
+               class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+      </div>
+
+      <!-- Observación -->
+      <div>
+        <label for="temporalObservacion" class="block text-sm font-medium text-gray-700">Observación</label>
+        <textarea id="temporalObservacion" name="temporalObservacion" rows="3"
+                  class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
+      </div>
+
+      <!-- Botones -->
+      <div class="flex justify-end gap-3 mt-4 border-t pt-3">
+        <button type="button" id="cancelarTemporal" class="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400">
+          Cancelar
+        </button>
+        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+          Asignar Temporal
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+</body>
+</html>
+{% endblock %}
