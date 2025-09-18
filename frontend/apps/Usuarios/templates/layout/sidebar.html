@@ -1,227 +1,489 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="es" 
-      x-data="sidebar()" 
-      x-init="initSidebar()">
+<html class="h-full" lang="es" x-data="{ sidebarOpen: false, notifOpen: false, profileOpen: false, tab: 'general' }">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{% block title %}sidebar{% endblock %}</title>
-  <link href="{% static 'css/dist/styles.css' %}" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-  <style>[x-cloak]{display:none !important}</style>
+    <title>{% block title %}sidebar{% endblock %}</title>
+    <link href="{% static 'css/dist/styles.css' %}" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <style>[x-cloak]{display:none !important}</style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+    
 </head>
-<body class="bg-white text-gray-900 flex flex-col min-h-screen"
-      x-data="{ showMenu:false, showPasswordModal:false, showUpdateModal:false }">
 
-  <!-- SIDEBAR -->
-  <aside :class="sidebarOpen ? 'w-60' : 'w-20'"
-         class="fixed top-0 left-0 h-screen bg-[#00304D] text-white flex flex-col items-center p-4 
-                shadow-[inset_-5px_0_15px_rgba(0,0,0,0.5)] z-40 transition-all duration-200">
+<body class="flex bg-white min-h-screen text-black" x-data="layout()">
+   <aside 
+     x-ref="sidebar"
+     :class="sidebarOpen 
+             ? 'w-64 sm:w-72 md:w-80 lg:w-80 xl:w-80 2xl:w-96' 
+             : 'w-16 sm:w-16 md:w-20 lg:w-20 xl:w-20 2xl:w-20'"
+     class="fixed top-0 left-0 h-full bg-gray-800 text-white flex flex-col 
+            transition-all duration-300 z-50 overflow-hidden">
+    
+    <div class="flex items-center justify-between p-4 border-b border-gray-700 ">
+     
+       <div id="dropdownUserAvatarButton" data-dropdown-toggle="dropdownAvatar"  class="flex items-center gap-2 transition-all"
+             :class="sidebarOpen ? 'justify-start' : 'justify-center w-full'">
+            <img src="{% static 'img/usuario.png' %}" alt="Foto de usuario"
+                 x-show="sidebarOpen" x-cloak
+                 class="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 xl:w-24 xl:h-24 
+                        rounded-full object-cover border-2 border-white bg-white">
+            <span x-show="sidebarOpen" x-cloak
+                  class="font-bold bg-black 
+                         px-2 sm:px-2 md:px-3 lg:px-3 
+                         py-0.5 lg:py-1
+                         rounded-full 
+                         text-[10px] sm:text-xs md:text-sm lg:text-base">
+                USERNAME
+            </span>
+        </div>
+  <button @click="sidebarOpen = !sidebarOpen" 
+            class="relative top-4 left-5 z-50 p-2 rounded hover:bg-gray-700 bg-gray-800 text-white -translate-y-9"> 
+            <svg xmlns="http://www.w3.org/2000/svg" 
+                 class="h-6 w-6" fill="none" 
+                 viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+        </button>
 
-    <!-- Botón flecha -->
-    <button @click="toggleSidebar()"
-            class="absolute top-4 -right-4 bg-white text-[#00304D] border border-[#00304D] 
-                   rounded-full w-8 h-8 flex items-center justify-center shadow-md transition-transform duration-200"
-            :class="!sidebarOpen ? 'rotate-180' : ''">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-      </svg>
+    </div>
+    
+  <nav class="flex-1 overflow-y-auto mt-1 flex flex-col items-center pr-0 space-y-2 lg:space-y-1">
+    <div class="flex flex-col flex-grow items-center w-full space-y-2 lg:space-y-1">
+
+        <!-- opciones de menu de  usuario -->
+<div id="dropdownAvatar" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700 dark:divide-gray-600">
+    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownUserAvatarButton">
+      <li>
+        <a href="#" @click.prevent="changePasswordOpen = true" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Cambiar Contraseña</a>      
+      <li>
+        <a href="#" @click.prevent="modalDosOpen = true" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Actualizar Datos</a>
+    </li>
+
+    </ul>
+
+</div>
+
+
+ <!-- principal -->
+     <div x-data="{ tooltipVisible: false, tooltipX: 0, tooltipY: 0 }" 
+     @mousemove="!sidebarOpen && (tooltipX = $event.clientX + 10, tooltipY = $event.clientY + 10)">
+    <a href="{% url 'index' %}"
+       @mouseenter="!sidebarOpen && (tooltipVisible = true)"
+       @mouseleave="tooltipVisible = false"
+       class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
+              rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
+              justify-center md:justify-center lg:max-h-fit lg:py-2"
+       :class="sidebarOpen ? 'w-48 sm:w-56 lg:w-60 px-2 sm:px-3' : 'w-12 sm:w-14 lg:w-16 px-1 sm:px-2'">
+        
+        <img src="{% static 'img/principal.png' %}" alt="Principal" 
+              class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
+        
+        <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Principal </span>
+    </a>
+
+    <div x-show="tooltipVisible"
+         x-cloak
+         class="fixed z-50 p-2 text-xs text-black bg-gray-300 rounded-md"
+         :style="`left: ${tooltipX}px; top: ${tooltipY}px;`">
+        Principal
+    </div>
+
+</div>
+
+
+<!-- funcionario -->
+        
+     <div x-data="{ tooltipVisible: false, tooltipX: 0, tooltipY: 0 }" 
+     @mousemove="!sidebarOpen && (tooltipX = $event.clientX + 10, tooltipY = $event.clientY + 10)">
+    <a href="{% url 'funcionario' %}"
+       @mouseenter="!sidebarOpen && (tooltipVisible = true)"
+       @mouseleave="tooltipVisible = false"
+       class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
+              rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
+              justify-center md:justify-center lg:max-h-fit lg:py-2"
+       :class="sidebarOpen ? 'w-48 sm:w-56 lg:w-60 px-2 sm:px-3' : 'w-12 sm:w-14 lg:w-16 px-1 sm:px-2'">
+        
+        <img src="{% static 'img/user.png' %}" alt="funcionario" 
+              class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
+        
+        <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Funcionario </span>
+    </a>
+
+    <div x-show="tooltipVisible"
+         x-cloak
+         class="fixed z-50 p-2 text-xs text-black bg-gray-300 rounded-md"
+         :style="`left: ${tooltipX}px; top: ${tooltipY}px;`">
+        Funcionario
+    </div>
+
+</div>
+
+
+<!-- cargo -->
+        <div x-data="{ tooltipVisible: false, tooltipX: 0, tooltipY: 0 }" 
+     @mousemove="!sidebarOpen && (tooltipX = $event.clientX + 10, tooltipY = $event.clientY + 10)">
+    <a href="{% url 'cargo' %}"
+       @mouseenter="!sidebarOpen && (tooltipVisible = true)"
+       @mouseleave="tooltipVisible = false"
+       class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
+              rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
+              justify-center md:justify-center lg:max-h-fit lg:py-2"
+       :class="sidebarOpen ? 'w-48 sm:w-56 lg:w-60 px-2 sm:px-3' : 'w-12 sm:w-14 lg:w-16 px-1 sm:px-2'">
+        
+        <img src="{% static 'img/cargo.png' %}" alt="Cargo" 
+              class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
+        
+        <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Cargo </span>
+    </a>
+
+    <div x-show="tooltipVisible"
+         x-cloak
+         class="fixed z-50 p-2 text-xs text-black bg-gray-300 rounded-md"
+         :style="`left: ${tooltipX}px; top: ${tooltipY}px;`">
+        Cargo
+    </div>
+
+</div>
+
+
+
+<!--grupo sena   -->
+         <div x-data="{ tooltipVisible: false, tooltipX: 0, tooltipY: 0 }" 
+     @mousemove="!sidebarOpen && (tooltipX = $event.clientX + 10, tooltipY = $event.clientY + 10)">
+    <a href="{% url 'grupo_sena' %}"
+       @mouseenter="!sidebarOpen && (tooltipVisible = true)"
+       @mouseleave="tooltipVisible = false"
+       class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
+              rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
+              justify-center md:justify-center lg:max-h-fit lg:py-2"
+       :class="sidebarOpen ? 'w-48 sm:w-56 lg:w-60 px-2 sm:px-3' : 'w-12 sm:w-14 lg:w-16 px-1 sm:px-2'">
+        
+        <img src="{% static 'img/grupoSena.png' %}" alt="Grupo SENA" 
+              class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
+        
+        <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Grupo SENA </span>
+    </a>
+
+    <div x-show="tooltipVisible"
+         x-cloak
+         class="fixed z-50 p-2 text-xs text-black bg-gray-300 rounded-md"
+         :style="`left: ${tooltipX}px; top: ${tooltipY}px;`">
+        Grupo SENA
+    </div>
+
+</div>
+
+
+<!-- reportes -->
+        <div x-data="{ tooltipVisible: false, tooltipX: 0, tooltipY: 0 }" 
+     @mousemove="!sidebarOpen && (tooltipX = $event.clientX + 10, tooltipY = $event.clientY + 10)">
+    <a href="{% url 'reportes' %}"
+       @mouseenter="!sidebarOpen && (tooltipVisible = true)"
+       @mouseleave="tooltipVisible = false"
+       class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
+              rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
+              justify-center md:justify-center lg:max-h-fit lg:py-2"
+       :class="sidebarOpen ? 'w-48 sm:w-56 lg:w-60 px-2 sm:px-3' : 'w-12 sm:w-14 lg:w-16 px-1 sm:px-2'">
+        
+        <img src="{% static 'img/reportes.png' %}" alt="Reportes" 
+              class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
+        
+        <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Reportes </span>
+    </a>
+
+    <div x-show="tooltipVisible"
+         x-cloak
+         class="fixed z-50 p-2 text-xs text-black bg-gray-300 rounded-md"
+         :style="`left: ${tooltipX}px; top: ${tooltipY}px;`">
+        Reportes
+    </div>
+
+<Principalplanta  -->
+     <div x-data="{ tooltipVisible: false, tooltipX: 0, tooltipY: 0 }" 
+     @mousemove="!sidebarOpen && (tooltipX = $event.clientX + 10, tooltipY = $event.clientY + 10)">
+    <a href="{% url 'id_planta' %}"
+       @mouseenter="!sidebarOpen && (tooltipVisible = true)"
+       @mouseleave="tooltipVisible = false"
+       class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
+              rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
+              justify-center md:justify-center lg:max-h-fit lg:py-2"
+       :class="sidebarOpen ? 'w-48 sm:w-56 lg:w-60 px-2 sm:px-3' : 'w-12 sm:w-14 lg:w-16 px-1 sm:px-2'">
+        
+        <img src="{% static 'img/id_planta.png' %}" alt="ID Planta" 
+              class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
+        
+        <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">ID Planta </span>
+    </a>
+
+    <div x-show="tooltipVisible"
+         x-cloak
+         class="fixed z-50 p-2 text-xs text-black bg-gray-300 rounded-md"
+         :style="`left: ${tooltipX}px; top: ${tooltipY}px;`">
+        ID Planta
+    </div>
+
+</div>
+
+<!-- solicitudes -->
+         <div x-data="{ tooltipVisible: false, tooltipX: 0, tooltipY: 0 }" 
+     @mousemove="!sidebarOpen && (tooltipX = $event.clientX + 10, tooltipY = $event.clientY + 10)">
+    <a href="{% url 'solicitudes' %}"
+       @mouseenter="!sidebarOpen && (tooltipVisible = true)"
+       @mouseleave="tooltipVisible = false"
+       class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
+              rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
+              justify-center md:justify-center lg:max-h-fit lg:py-2"
+       :class="sidebarOpen ? 'w-48 sm:w-56 lg:w-60 px-2 sm:px-3' : 'w-12 sm:w-14 lg:w-16 px-1 sm:px-2'">
+        
+        <img src="{% static 'img/solicitudes.png' %}" alt="Solicitudes" 
+              class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
+        
+        <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Solicitudes </span>
+    </a>
+
+    <div x-show="tooltipVisible"
+         x-cloak
+         class="fixed z-50 p-2 text-xs text-black bg-gray-300 rounded-md"
+         :style="`left: ${tooltipX}px; top: ${tooltipY}px;`">
+        Solicitudes
+    </div>
+
+</div>
+
+
+<!-- autorizaciones -->
+ <div x-data="{ tooltipVisible: false, tooltipX: 0, tooltipY: 0 }" 
+     @mousemove="!sidebarOpen && (tooltipX = $event.clientX + 10, tooltipY = $event.clientY + 10)">
+    <a href="{% url 'autorizaciones' %}"
+       @mouseenter="!sidebarOpen && (tooltipVisible = true)"
+       @mouseleave="tooltipVisible = false"
+       class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
+              rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
+              justify-center md:justify-center lg:max-h-fit lg:py-2"
+       :class="sidebarOpen ? 'w-48 sm:w-56 lg:w-60 px-2 sm:px-3' : 'w-12 sm:w-14 lg:w-16 px-1 sm:px-2'">
+        
+        <img src="{% static 'img/autorizaciones.png' %}" alt="Autorizaciones" 
+              class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
+        
+        <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Autorizaciones </span>
+    </a>
+
+    <div x-show="tooltipVisible"
+         x-cloak
+         class="fixed z-50 p-2 text-xs text-black bg-gray-300 rounded-md"
+         :style="`left: ${tooltipX}px; top: ${tooltipY}px;`">
+        Autorizaciones
+    </div>
+
+</div>
+
+
+<!-- bitacora -->
+       <div x-data="{ tooltipVisible: false, tooltipX: 0, tooltipY: 0 }" 
+     @mousemove="!sidebarOpen && (tooltipX = $event.clientX + 10, tooltipY = $event.clientY + 10)">
+    <a href="{% url 'bitacora' %}"
+       @mouseenter="!sidebarOpen && (tooltipVisible = true)"
+       @mouseleave="tooltipVisible = false"
+       class="transition hover:scale-105 flex-grow flex items-center gap-2 font-medium py-2 
+              rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
+              justify-center md:justify-center lg:max-h-fit lg:py-2"
+       :class="sidebarOpen ? 'w-48 sm:w-56 lg:w-60 px-2 sm:px-3' : 'w-12 sm:w-14 lg:w-16 px-1 sm:px-2'">
+        
+        <img src="{% static 'img/bitacora.png' %}" alt="Bitacora" 
+              class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
+        
+        <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Bitacora </span>
+    </a>
+
+    <div x-show="tooltipVisible"
+         x-cloak
+         class="fixed z-50 p-2 text-xs text-black bg-gray-300 rounded-md"
+         :style="`left: ${tooltipX}px; top: ${tooltipY}px;`">
+        Bitacora
+    </div>
+
+</div>
+
+
+    </div>
+<a title="Salir"
+   class="transition hover:scale-105 flex items-center gap-2 font-medium py-2 mt-auto mb-4
+          rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
+          justify-center px-2 sm:px-3 lg:max-h-fit lg:py-2"
+   :class="sidebarOpen ? 'w-48 sm:w-56 lg:w-60' : 'w-12 sm:w-14 lg:w-16'">   
+   
+   <!-- Ícono siempre visible -->
+   <img src="{% static 'img/salir.png' %}" alt="Salir" 
+         class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
+
+   <!-- Texto solo cuando el sidebar está abierto -->
+   <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Salir</span>
+</a>
+
+</nav>
+   </aside>
+    
+    <div class="flex flex-col flex-1 min-h-screen transition-all duration-300"
+         :class="sidebarOpen ? 'ml-64 sm:ml-72 md:ml-80 lg:ml-80 xl:ml-80 2xl:ml-96' : 'ml-16 sm:ml-16 md:ml-20 lg:ml-20 xl:ml-20 2xl:ml-20'">
+    
+        <main class="flex-1 py-6 px-4 md:px-6 bg-white">
+            {% block content %}
+            {% endblock %}
+ </main>
+
+ <!-- modal  -->
+<div x-show="changePasswordOpen" x-cloak class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+    <div @click="changePasswordOpen = false" class="fixed inset-0 bg-black/50 backdrop-blur-sm"></div>
+
+    <div class="relative w-full max-w-md mx-auto bg-white rounded-xl shadow-lg p-6 transform transition-all duration-300 scale-100 opacity-100"
+         x-show="changePasswordOpen"
+         x-transition:enter="ease-out duration-300"
+         x-transition:enter-start="opacity-0 scale-95"
+         x-transition:enter-end="opacity-100 scale-100"
+         x-transition:leave="ease-in duration-200"
+         x-transition:leave-start="opacity-100 scale-100"
+         x-transition:leave-end="opacity-0 scale-95">
+
+        <div class="flex justify-between items-center pb-2 mb-4">
+            <h3 class="text-xl font-semibold text-gray-900">Cambiar Contraseña</h3>
+            <button @click="changePasswordOpen = false" type="button" class="text-gray-500 hover:text-gray-700 rounded-full text-xl w-8 h-8 flex justify-center items-center p-0 m-0">
+                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+
+        <form action="#" method="POST">
+            <div class="space-y-5">
+                 <div>
+                    <label  class="block mb-2 text-base font-medium text-gray-900">Contraseña Actual</label>
+                    <input type="text"  class="w-full border rounded-full px-3 py-2" />
+                </div>
+                <div>
+                    <label for="observaciones" class="block mb-2 text-base font-medium text-gray-900">Nueva Contraseña</label>
+                    <input type="text"  class="w-full border rounded-full px-3 py-2" />
+                </div>
+
+                <div>
+                    <label for="observaciones" class="block mb-2 text-base font-medium text-gray-900">Confirmar Contraseña</label>
+                    <input type="text"  class="w-full border rounded-full px-3 py-2" />
+                </div>
+            </div>
+            <div class="flex justify-center gap-x-4 mt-6">
+    <button type="submit" class="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-full text-base px-6 py-3 shadow-md">
+        Aceptar
     </button>
+    <button type="button" class="text-gray-700 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-full text-base  ml-6 px-6 py-3 shadow-md border border-gray-300">
+        Cancelar
+    </button>
+</div>
+        </form>
+    </div>
+</div>
 
-    <!-- Usuario con Dropdown -->
-    <div class="relative flex flex-col items-center mb-6" x-show="sidebarOpen" x-transition x-cloak>
-      <button @click="showMenu = !showMenu" class="flex flex-col items-center focus:outline-none">
-        <div class="relative w-[90px] h-[90px] rounded-full bg-white border-4 border-black 
-                    flex items-center justify-center shadow-[0_0_0_4px_#00304D]">
-          <img src="{% static 'img/usuario.png' %}" alt="Foto de usuario"
-               class="w-[70px] h-[70px] rounded-full object-cover border-2 border-white">
+<!-- modal 2  -->
+<div x-show="modalDosOpen" x-cloak class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+    <div @click="modalDosOpen = false" class="fixed inset-0 bg-black/50 backdrop-blur-sm"></div>
+
+    <div class="relative w-full max-w-md mx-auto bg-white rounded-xl shadow-lg p-6 transform transition-all duration-300 scale-100 opacity-100"
+         x-show="modalDosOpen"
+         x-transition:enter="ease-out duration-300"
+         x-transition:enter-start="opacity-0 scale-95"
+         x-transition:enter-end="opacity-100 scale-100"
+         x-transition:leave="ease-in duration-200"
+         x-transition:leave-start="opacity-100 scale-100"
+         x-transition:leave-end="opacity-0 scale-95">
+         
+        <div class="flex justify-between items-center pb-2 mb-4">
+            <h3 class="text-xl font-semibold text-gray-900">Actualizar Datos</h3>
+            <button @click="modalDosOpen = false" type="button" class="text-gray-500 hover:text-gray-700 rounded-full text-xl w-8 h-8 flex justify-center items-center p-0 m-0">
+                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
         </div>
-        <span class="mt-2 font-bold bg-black px-3 py-1 rounded-full text-xs md:text-sm">USERNAME</span>
-      </button>
+        
+        <form action="#" method="POST">
+            <div class="space-y-5">
+                <div>
+                    <label class="block mb-2 text-base font-medium text-gray-900">Nombre</label>
+                    <input type="text" class="w-full border rounded-full px-3 py-2" />
+                </div>
+                <div>
+                    <label for="observaciones" class="block mb-2 text-base font-medium text-gray-900">Apellido</label>
+                    <input type="text" class="w-full border rounded-full px-3 py-2" />
+                </div>
 
-      <!-- Dropdown -->
-      <div x-show="showMenu" x-transition x-cloak
-           class="absolute top-28 w-44 bg-white text-black rounded-lg shadow-lg py-2 z-50">
-        <button @click="showPasswordModal=true; showMenu=false"
-                class="block w-full text-left px-4 py-2 hover:bg-gray-100">Cambiar Contraseña</button>
-        <button @click="showUpdateModal=true; showMenu=false"
-                class="block w-full text-left px-4 py-2 hover:bg-gray-100">Actualizar Datos</button>
-      </div>
+                <div>
+                    <label for="observaciones" class="block mb-2 text-base font-medium text-gray-900">Correo Electronico</label>
+                    <input type="text" class="w-full border rounded-full px-3 py-2" />
+                </div>
+
+                <div>
+                    <label for="observaciones" class="block mb-2 text-base font-medium text-gray-900">Telefono</label>
+                    <input type="text" class="w-full border rounded-full px-3 py-2" />
+                </div>
+            </div>
+            <div class="flex justify-center gap-x-4 mt-6">
+                <button type="submit" class="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-full text-base px-6 py-3 shadow-md">
+                    Aceptar
+                </button>
+                <button @click="modalDosOpen = false" type="button" class="text-gray-700 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-full text-base ml-6 px-6 py-3 shadow-md border border-gray-300">
+                    Cancelar
+                </button>
+            </div>
+        </form>
     </div>
-
-    <!-- Navegación -->
-    <nav class="flex flex-col gap-2 w-full px-2 text-sm md:text-base">
-      <a href="{% url 'index' %}" title="Principal"
-         class="transition hover:scale-105 flex items-center gap-2 font-medium py-2 
-                rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
-                justify-center md:justify-start"
-         :class="{'px-2': !sidebarOpen, 'px-4': sidebarOpen}">
-        <img src="{% static 'img/principal.png' %}" alt="Principal" class="w-5 h-5">
-        <span x-show="sidebarOpen" x-cloak>Principal</span>
-      </a>
-      <a href="{% url 'funcionario' %}" title="Funcionario"
-         class="transition hover:scale-105 flex items-center gap-2 font-medium py-2 
-                rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
-                justify-center md:justify-start"
-         :class="{'px-2': !sidebarOpen, 'px-4': sidebarOpen}">
-        <img src="{% static 'img/user.png' %}" alt="Funcionario" class="w-5 h-5">
-        <span x-show="sidebarOpen" x-cloak>Funcionario</span>
-      </a>
-      <a href="{% url 'cargo' %}" title="Cargo"
-         class="transition hover:scale-105 flex items-center gap-2 font-medium py-2 
-                rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
-                justify-center md:justify-start"
-         :class="{'px-2': !sidebarOpen, 'px-4': sidebarOpen}">
-        <img src="{% static 'img/cargo.png' %}" alt="Cargo" class="w-5 h-5">
-        <span x-show="sidebarOpen" x-cloak>Cargo</span>
-      </a>
-      <a href="{% url 'grupo_sena' %}" title="Grupos SENA"
-         class="transition hover:scale-105 flex items-center gap-2 font-medium py-2 
-                rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
-                justify-center md:justify-start"
-         :class="{'px-2': !sidebarOpen, 'px-4': sidebarOpen}">
-        <img src="{% static 'img/grupoSena.png' %}" alt="Grupos SENA" class="w-5 h-5">
-        <span x-show="sidebarOpen" x-cloak>Grupos SENA</span>
-      </a>
-      <a href="{% url 'reportes' %}" title="Reportes"
-         class="transition hover:scale-105 flex items-center gap-2 font-medium py-2 
-                rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
-                justify-center md:justify-start"
-         :class="{'px-2': !sidebarOpen, 'px-4': sidebarOpen}">
-        <img src="{% static 'img/reportes.png' %}" alt="Reportes" class="w-5 h-5">
-        <span x-show="sidebarOpen" x-cloak>Reportes</span>
-      </a>
-      <a href="{% url 'id_planta' %}" title="ID Planta"
-         class="transition hover:scale-105 flex items-center gap-2 font-medium py-2 
-                rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
-                justify-center md:justify-start"
-         :class="{'px-2': !sidebarOpen, 'px-4': sidebarOpen}">
-        <img src="{% static 'img/cargo.png' %}" alt="ID Planta" class="w-5 h-5">
-        <span x-show="sidebarOpen" x-cloak>ID Planta</span>
-      </a>
-      <a href="{% url 'solicitudes' %}" title="Solicitudes"
-         class="transition hover:scale-105 flex items-center gap-2 font-medium py-2 
-                rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
-                justify-center md:justify-start"
-         :class="{'px-2': !sidebarOpen, 'px-4': sidebarOpen}">
-        <img src="{% static 'img/solicitudes.png' %}" alt="Solicitudes" class="w-5 h-5">
-        <span x-show="sidebarOpen" x-cloak>Solicitudes</span>
-      </a>
-      <a href="{% url 'autorizaciones' %}" title="Autorizaciones"
-         class="transition hover:scale-105 flex items-center gap-2 font-medium py-2 
-                rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
-                justify-center md:justify-start"
-         :class="{'px-2': !sidebarOpen, 'px-4': sidebarOpen}">
-        <img src="{% static 'img/autorizaciones.png' %}" alt="Autorizaciones" class="w-5 h-5">
-        <span x-show="sidebarOpen" x-cloak>Autorizaciones</span>
-      </a>
-      <a href="{% url 'bitacora' %}" title="Bitacora"
-         class="transition hover:scale-105 flex items-center gap-2 font-medium py-2 
-                rounded-xl border-2 border-gray-700 bg-white text-black shadow-md 
-                justify-center md:justify-start"
-         :class="{'px-2': !sidebarOpen, 'px-4': sidebarOpen}">
-        <img src="{% static 'img/bitacora.png' %}" alt="Bitacora" class="w-5 h-5">
-        <span x-show="sidebarOpen" x-cloak>Bitacora</span>
-      </a>
-    </nav>
-
-    <!-- Botón Salir -->
-    <div class="mt-auto w-full px-2">
-      <a href="{% url 'login_view' %}" title="Salir"
-         class="transition hover:scale-105 flex items-center gap-2 font-medium py-2 
-                rounded-xl border border-gray-700 bg-white text-black shadow-md 
-                justify-center md:justify-start"
-         :class="{'px-2': !sidebarOpen, 'px-4': sidebarOpen}">
-        <img src="{% static 'img/salir.png' %}" alt="Salir" class="w-5 h-5">
-        <span x-show="sidebarOpen" x-cloak>Salir</span>
-      </a>
+</div>
+    
+        <footer   class=" mt-auto w-full py-4 bg-gray-300 flex flex-wrap justify-center items-center gap-6 px-4">
+            <a href="https://www.facebook.com/SENACauca" target="_blank" title="Facebook SENA">
+                <img src="{% static 'img/facebook.png' %}" alt="Facebook SENA"
+                     class="w-7 h-7 md:w-8 md:h-8 opacity-70 hover:opacity-100 hover:scale-110 transition duration-200">
+            </a>
+            <a href="https://www.tiktok.com/@senacomunica_" target="_blank" title="TikTo">
+                <img src="{% static 'img/tiktok.png' %}" alt="TikTok SENA"
+                     class="w-7 h-7 md:w-8 md:h-8 opacity-70 hover:opacity-100 hover:scale-110 transition duration-200">
+            </a>
+            <a href="https://www.instagram.com/sena.regionalcauca/" target="_blank" title="Instagram SENA">
+                <img src="{% static 'img/instagram.png' %}" alt="Instagram SENA"
+                     class="w-7 h-7 md:w-8 md:h-8 opacity-70 hover:opacity-100 hover:scale-110 transition duration-200">
+            </a>
+            <a href="https://www.youtube.com/user/SENATV" target="_blank" title="YouTube SENA">
+                <img src="{% static 'img/youtube.png' %}" alt="YouTube SENA"
+                     class="w-7 h-7 md:w-8 md:h-8 opacity-70 hover:opacity-100 hover:scale-110 transition duration-200">
+            </a>
+        </footer>
     </div>
-  </aside>
-
-  <!-- CONTENIDO Y FOOTER -->
-  <div class="flex flex-col flex-1 min-h-screen transition-all duration-200"
-       :class="sidebarOpen ? 'ml-60' : 'ml-20'">
-
-    <!-- CONTENIDO -->
-    <main class="flex-1 py-6 px-4 md:px-6 bg-white">
-      {% block content %}{% endblock %}
-    </main>
-
-    <!-- FOOTER -->
-    <footer class="h-auto py-4 bg-gray-300 flex flex-wrap justify-center items-center gap-6 px-4">
-      <a href="https://www.facebook.com/SENACauca" target="_blank" title="Facebook SENA">
-        <img src="{% static 'img/facebook.png' %}" alt="Facebook SENA"
-             class="w-7 h-7 md:w-8 md:h-8 opacity-70 hover:opacity-100 hover:scale-110 transition duration-200">
-      </a>
-      <a href="https://www.tiktok.com/@senacomunica_" target="_blank" title="TikTok SENA">
-        <img src="{% static 'img/tiktok.png' %}" alt="TikTok SENA"
-             class="w-7 h-7 md:w-8 md:h-8 opacity-70 hover:opacity-100 hover:scale-110 transition duration-200">
-      </a>
-      <a href="https://www.instagram.com/sena.regionalcauca/" target="_blank" title="Instagram SENA">
-        <img src="{% static 'img/instagram.png' %}" alt="Instagram SENA"
-             class="w-7 h-7 md:w-8 md:h-8 opacity-70 hover:opacity-100 hover:scale-110 transition duration-200">
-      </a>
-      <a href="https://www.youtube.com/user/SENATV" target="_blank" title="YouTube SENA">
-        <img src="{% static 'img/youtube.png' %}" alt="YouTube SENA"
-             class="w-7 h-7 md:w-8 md:h-8 opacity-70 hover:opacity-100 hover:scale-110 transition duration-200">
-      </a>
-    </footer>
-  </div>
-
-  <!-- Modal Cambiar Contraseña -->
-  <div x-show="showPasswordModal" x-cloak
-       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
-      <h2 class="text-2xl font-bold mb-4">Cambiar Contraseña</h2>
-      <form class="space-y-4">
-        <input type="password" placeholder="Contraseña Actual" class="w-full border rounded px-3 py-2">
-        <input type="password" placeholder="Nueva Contraseña" class="w-full border rounded px-3 py-2">
-        <input type="password" placeholder="Confirmar Contraseña" class="w-full border rounded px-3 py-2">
-        <div class="flex justify-between">
-          <button type="button" @click="showPasswordModal=false"
-                  class="px-4 py-2 bg-gray-200 rounded">Cancelar</button>
-          <button type="submit"
-                  class="px-4 py-2 bg-green-600 text-white rounded">Cambiar</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Modal Actualizar Datos -->
-  <div x-show="showUpdateModal" x-cloak
-       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
-      <h2 class="text-2xl font-bold mb-4">Actualizar Datos</h2>
-      <form class="space-y-4">
-        <input type="text" placeholder="Nombre" class="w-full border rounded px-3 py-2">
-        <input type="text" placeholder="Apellido" class="w-full border rounded px-3 py-2">
-        <input type="email" placeholder="Correo Electrónico" class="w-full border rounded px-3 py-2">
-        <input type="tel" placeholder="Teléfono" class="w-full border rounded px-3 py-2">
-        <div class="flex justify-between">
-          <button type="button" @click="showUpdateModal=false"
-                  class="px-4 py-2 bg-gray-200 rounded">Cancelar</button>
-          <button type="submit"
-                  class="px-4 py-2 bg-green-600 text-white rounded">Guardar</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-<script>
-  function sidebar() {
-    return {
-      sidebarOpen: false,
-      initSidebar() {
-        const saved = localStorage.getItem('sidebarOpen');
-        this.sidebarOpen = saved === 'true'; 
-      },
-      toggleSidebar() {
-        this.sidebarOpen = !this.sidebarOpen;
-        localStorage.setItem('sidebarOpen', this.sidebarOpen);
-      }
+    
+    <script>
+    function layout() {
+        return {
+            sdebarOpen: false,
+            changePasswordOpen: false, // <-- AÑADE ESTA LÍNEA AQUÍ
+            modalDosOpen: false,
+            notifOpen: false, 
+            profileOpen: false, 
+            tab: 'general',
+            init() {
+                // Recuperar el estado del sidebar desde cookies
+                const cookieValue = document.cookie
+                    .split('; ')
+                    .find(row => row.startsWith('sidebarOpen='))
+                    ?.split('=')[1];
+                
+                if (cookieValue !== undefined) {
+                    this.sidebarOpen = cookieValue === 'true';
+                }
+                
+                // Escuchar cambios en el estado para guardarlos
+                this.$watch('sidebarOpen', (value) => {
+                    document.cookie = `sidebarOpen=${value}; path=/; max-age=${60*60*24*30}`; // 30 días
+                });
+            }
+        }
     }
-  }
 </script>
 
 </body>

@@ -1,8 +1,164 @@
 {% extends "layout/sidebar.html" %} /* Hereda la estructura llamada "sidebar.html" */
 
-{% block title %}Reportes{% endblock %}
+{% block title %} crear Repotes{% endblock %}
 
 {% block content %}
-    <h1>Reportes</h1>
-    <p>Texto de prueba</p>
+  <!-- Título -->
+  <h1 class="text-5xl font-bold mb-4">Reportes</h1>
+
+
+  
+  <!-- Botón Volver -->
+  <form action="{% url 'funcionario' %}" method="get">
+  <button class="relative -top-1 text-green-600 border border-green-600 rounded-full px-4 py-1 mb-10 hover:bg-green-600 hover:text-white transition">
+    Volver
+  </button>
+</form>
+<div class="w-full max-w-4xl bg-gray-100 p-8 rounded-md shadow ml-10">
+  <div class="mb-6">
+
+    <!-- fecha inicio -->
+    <div class="mb-6 flex justify-center">
+      <div class="w-full">
+        <label for="fechaInicio" class="block font-medium mb-1">Fecha Inicio:</label>
+        <input id="fechaInicio" type="date"
+          class="w-full border border-gray-600 rounded-full px-4 py-2 text-gray-900 
+                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+                 appearance-none" />
+      </div>
+    </div>
+
+    <!-- fecha fin -->
+    <div class="mb-6 flex justify-center">
+      <div class="w-full">
+        <label for="fechaFin" class="block font-medium mb-1">Fecha Fin:</label>
+        <input id="fechaFin" type="date"
+          class="w-full border border-gray-600 rounded-full px-4 py-2 text-gray-900 
+                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+                 appearance-none" />
+      </div>
+    </div>
+
+    <!-- Tipo de documento -->
+    <div class="mb-6">
+      <label for="documento" class="block font-medium mb-1">Tipo de Documento</label>
+      <select id="documento"
+        class="w-full border border-gray-500 rounded-2xl px-3 py-2 text-gray-900 bg-gray-100
+               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        <option value="">-- Selecciona --</option>
+        <option value="cc">CC</option>
+        <option value="ti">TI</option>
+      </select>
+    </div>
+
+    <!-- Estado -->
+    <div class="mb-6">
+      <label for="estado" class="block font-medium mb-1">Estado:</label>
+      <select id="estado"
+        class="w-full border border-gray-500 rounded-2xl px-3 py-2 text-gray-900 bg-gray-100
+               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        <option value="">-- Selecciona --</option>
+        <option value="activo">Activo</option>
+        <option value="inactivo">Inactivo</option>
+      </select>
+    </div>
+
+    <!-- Tipo Reporte -->
+    <div class="mb-6">
+      <label for="tipoReporte" class="block font-medium mb-1">Tipo Reporte:</label>
+      <select id="tipoReporte"
+        class="w-full border border-gray-500 rounded-2xl px-3 py-2 text-gray-900 bg-gray-100
+               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        <option value="">-- Selecciona --</option>
+        <option value="cargo">Cargo</option>
+        <option value="vac_temp">Vacantes Temporales</option>
+        <option value="vac_def">Vacantes Definitivas</option>
+        <option value="encargo">Vacantes en Encargo</option>
+        <option value="redes">Redes</option>
+        <option value="area">Área</option>
+      </select>
+    </div>
+
+    <!-- Contenedor dinámico -->
+    <div id="dynamicContainer" class="hidden mb-6 p-4 border border-gray-300 rounded-lg bg-white">
+      <!-- Aquí se cargan dinámicamente los inputs -->
+    </div>
+  </div>
+
+  <!-- Botón -->
+  <div class="flex items-center">
+    <button
+      class="bg-green-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-green-700 transition">
+     Generar Reporte
+    </button>
+  </div>
+</div>
+
+<script>
+  const tipoReporte = document.getElementById("tipoReporte");
+  const dynamicContainer = document.getElementById("dynamicContainer");
+
+  const opciones = {
+    cargo: ["Opción A", "Opción B", "Opción C"], // además de check, se mostrará un select
+    vac_temp: ["Contrato 3 meses", "Contrato 6 meses"],
+    vac_def: ["Planta", "Provisional"],
+    encargo: ["Encargado de área", "Encargado de proyecto"],
+    redes: ["Red Local", "Red Nacional", "Red Internacional"],
+    area: ["Recursos Humanos", "Tecnología", "Finanzas", "Operaciones"]
+  };
+
+  tipoReporte.addEventListener("change", (e) => {
+    const valor = e.target.value;
+
+    // Limpiar contenedor
+    dynamicContainer.innerHTML = "";
+
+    if (!valor) {
+      dynamicContainer.classList.add("hidden");
+      return;
+    }
+
+    // Mostrar siempre los checkboxes
+    if (opciones[valor]) {
+      opciones[valor].forEach(item => {
+        const label = document.createElement("label");
+        label.className = "flex items-center space-x-2 mb-2";
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.className = "w-5 h-5 text-green-600";
+
+        const span = document.createElement("span");
+        span.textContent = item;
+
+        label.appendChild(checkbox);
+        label.appendChild(span);
+        dynamicContainer.appendChild(label);
+      });
+    }
+
+    // Caso especial: Cargo → agregar un select además de los check
+    if (valor === "cargo") {
+      const label = document.createElement("label");
+      label.className = "block font-medium mb-2 mt-4";
+      label.textContent = "Selecciona un Cargo:";
+
+      const select = document.createElement("select");
+      select.className = "w-full border border-gray-500 rounded-2xl px-3 py-2 text-gray-900 bg-gray-100 \
+                          focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500";
+
+      const opcionesCargo = ["Gerente", "Coordinador", "Asistente"];
+      select.innerHTML = `<option value="">-- Selecciona --</option>` +
+        opcionesCargo.map(c => `<option value="${c.toLowerCase()}">${c}</option>`).join("");
+
+      dynamicContainer.appendChild(label);
+      dynamicContainer.appendChild(select);
+    }
+
+    dynamicContainer.classList.remove("hidden");
+  });
+</script>
+
+
+    
 {% endblock %}

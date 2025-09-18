@@ -3,22 +3,12 @@
 {% block title %}Cargos{% endblock %}
 
 {% block content %}
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cargos</title>
-  <script src="https://cdn.tailwindcss.com"></script>
   <script>
     // Django procesa esto aquí mismo
     window.urlEditarCargoBase = "{% url 'editar_cargo' 0 %}".replace("0/", "");
     window.urlHistorialCargo = "{% url 'cargohistorial' %}".replace("0/", "");
   </script>
   <script src="{% static 'js/asignarCargo.js' %}"></script>
-</head>
-<body class="bg-white p-8 scrollbar">
-
   <!-- Título -->
   <h1 class="text-4xl font-bold mb-6">Cargos</h1>
 
@@ -81,11 +71,8 @@
   </table>
   <!-- fin tabla -->
 
-  <!-- Modal excel -->
-  {# TODO: Cambiar esto a archivo para lógica de Excel #}
-
-
-  <div id="modalExcel" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50">
+  <!-- Modal -->
+  <div id="modalExcel" class="fixed inset-0 bg-black/50  bg-opacity-50 hidden justify-center items-center z-50">
     <div class="bg-white rounded-lg shadow-lg w-96 p-6 relative">
       <!-- Botón cerrar -->
       <button id="closeModal" class="absolute top-2 right-3 text-gray-600 hover:text-black text-xl font-bold">×</button>
@@ -102,37 +89,14 @@
     </div>
   </div>
 
-  <!-- Script para abrir el modal excel -->
-  <script>
-    const openModal = document.getElementById('openModal');
-    const closeModal = document.getElementById('closeModal');
-    const modalExcel = document.getElementById('modalExcel');
-    const fileInput = document.getElementById('fileInput');
-    const fileName = document.getElementById('fileName');
-
-    openModal.addEventListener('click', () => {
-      modalExcel.classList.remove('hidden');
-      modalExcel.classList.add('flex');
-    });
-
-    closeModal.addEventListener('click', () => {
-      modalExcel.classList.add('hidden');
-    });
-
-    // Mostrar nombre del archivo seleccionado
-    fileInput.addEventListener('change', (e) => {
-      fileName.textContent = e.target.files[0]?.name || "Ningún archivo";
-    });
-  </script>
+  
 
 
-
-
-  <!-- Modal Agregar Nuevo Funcionario -->
-<div id="nuevoModal" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50 px-4 sm:px-6">
-  <div class="bg-white rounded-lg w-full max-w-3xl p-6 relative h-auto"> 
-    <!-- Botón para cerrar el modal -->
-    <button id="closeNuevoModal" class="absolute top-2 right-3 text-gray-600 hover:text-black text-xl font-bold">X</button>
+  <!-- segundo modal para agregar nuevo funcionario   -->
+<div id="nuevoModal" class="fixed inset-0 bg-black/50 bg-opacity-50 hidden justify-center items-center z-50">
+  <div class="bg-white rounded-lg w-96 p-6 relative h-145"> 
+    <!-- Botón para cerrar el nuevo modal -->
+    <button id="closeNuevoModal" class="absolute top-2 right-3 text-gray-600 hover:text-black text-xl font-bold">×</button>
     
     <!-- Formulario -->
     <form id="formAsignarFuncionario">
@@ -255,51 +219,91 @@
                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
       </div>
 
-      <!-- Archivo Resolución -->
-      <div>
-        <label for="temporalArchivo" class="block text-sm font-medium text-gray-700">Archivo Resolución</label>
-        <input type="file" id="temporalArchivo" name="temporalArchivo"
-               accept=".pdf,.jpg,.png"
-               class="mt-1 block w-full text-sm text-gray-700 border border-gray-300 rounded-md cursor-pointer focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
-      </div>
-
-      <!-- Estado de vinculación -->
-      <div>
-        <label for="temporalEstado" class="block text-sm font-medium text-gray-700">Estado de vinculación</label>
-        <select id="temporalEstado" name="temporalEstado"
-                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
-          <option value="">-- Selecciona --</option>
-        </select>
-      </div>
-
-      <!-- Fecha de inicio -->
-      <div>
-        <label for="temporalFechaInicio" class="block text-sm font-medium text-gray-700">Fecha de inicio</label>
-        <input type="date" id="temporalFechaInicio" name="temporalFechaInicio"
-               class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
-      </div>
-
-      <!-- Observación -->
-      <div>
-        <label for="temporalObservacion" class="block text-sm font-medium text-gray-700">Observación</label>
-        <textarea id="temporalObservacion" name="temporalObservacion" rows="3"
-                  class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
-      </div>
-
-      <!-- Botones -->
-      <div class="flex justify-end gap-3 mt-4 border-t pt-3">
-        <button type="button" id="cancelarTemporal" class="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400">
-          Cancelar
-        </button>
-        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-          Asignar Temporal
-        </button>
-      </div>
+          <div class="flex justify-end space-x-4 -mt-1">
+             <button type="submit" class="px-3 py-2 bg-green-600 text-white rounded-2xl hover:bg-green-700 w-40">
+    Aceptar
+  </button>
+  <button  id="cancelNuevoModal" type="button" class="px-3 py-2 bg-gray-400 text-white rounded-2xl hover:bg-gray-500 w-40">
+    Cancelar
+  </button>
+ 
+</div>
     </form>
   </div>
 </div>
 
+<!-- Script para abrir el modal -->
+  <script>
 
-</body>
-</html>
+    const openModal = document.getElementById('openModal');
+    const closeModal = document.getElementById('closeModal');
+    const modalExcel = document.getElementById('modalExcel');
+    const fileInput = document.getElementById('fileInput');
+    const fileName = document.getElementById('fileName');
+
+    openModal.addEventListener('click', () => {
+      modalExcel.classList.remove('hidden');
+      modalExcel.classList.add('flex');
+    });
+
+    closeModal.addEventListener('click', () => {
+      modalExcel.classList.add('hidden');
+    });
+        // Cerrar con botón "Cancelar"
+  cancelNuevoModal.addEventListener('click', () => {
+    nuevoModal.classList.add('hidden');
+  });
+
+
+    // Mostrar nombre del archivo seleccionado
+    fileInput.addEventListener('change', (e) => {
+      fileName.textContent = e.target.files[0]?.name || "Ningún archivo";
+    });
+ 
+//<!-- Script para manejar el menú desplegable -->
+ 
+    document.querySelectorAll('[data-dropdown-toggle]').forEach(button => {
+      button.addEventListener('click', function() {
+        const menu = document.querySelector(`#${this.dataset.dropdownToggle}`);
+        menu.classList.toggle('hidden');  // Alterna la visibilidad del menú
+      });
+    });
+
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('[data-dropdown-toggle]') && !e.target.closest('#dropdownDotsHorizontal')) {
+        document.querySelectorAll('.z-10').forEach(menu => {
+          menu.classList.add('hidden');
+        });
+      }
+    });
+
+  // Abrir el nuevo modal
+  const openNuevoModal = document.getElementById('openNuevoModal');
+  const nuevoModal = document.getElementById('nuevoModal');
+  const closeNuevoModal = document.getElementById('closeNuevoModal');
+
+  openNuevoModal.addEventListener('click', () => {
+    nuevoModal.classList.remove('hidden');
+    nuevoModal.classList.add('flex');
+  });
+
+  // Cerrar el nuevo modal
+  closeNuevoModal.addEventListener('click', () => {
+    nuevoModal.classList.add('hidden');
+  });
+    window.addEventListener('click', (e) => {
+    if (e.target === modalExcel) {
+      modalExcel.classList.add('hidden');
+    }
+  });
+  // Cerrar el modal si se hace clic fuera del contenido
+  window.addEventListener('click', (e) => {
+    if (e.target === nuevoModal) {
+      nuevoModal.classList.add('hidden');
+    }
+  });
+</script>
+   
+
+
 {% endblock %}
