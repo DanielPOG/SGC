@@ -18,7 +18,7 @@ const userRow = (user)=>{
 
 document.addEventListener('DOMContentLoaded',()=>{
     try {
-        apiFetch('http://127.0.0.1:8001/api/usuarios/usuario/')
+        apiFetch('http://127.0.0.1:8001/api/usuarios/usuario/', {method:'GET'})
         .then(res=> res.json()).then(data => {
           const tbody = document.querySelector('table tbody')
           console.log('Usuarios fetched', data)

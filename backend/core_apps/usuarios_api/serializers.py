@@ -6,6 +6,7 @@ from .models import (
 
 class UsuarioSerializer(serializers.ModelSerializer):
     class Meta:
+        depth =2
         model = Usuario
         fields = (
             'id', 'nombre', 'apellido', 'num_doc', 'tipo_doc',

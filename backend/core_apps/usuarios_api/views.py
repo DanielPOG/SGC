@@ -28,8 +28,15 @@ class UsuarioViewSet(viewsets.ModelViewSet):
     """
         Viewset de usuario
     """
-    queryset = Usuario.objects.all()
+    queryset = (Usuario.objects.select_related(
+            "tipo_doc","genero","cargo","estudioF","rol","estado","dependencia",
+            "cargo__cargoNombre","cargo__idp","cargo__estadoCargo","cargo__centro"
+        ))
     serializer_class = UsuarioSerializer
+    @action(methods=['get'], detail=False)
+    def cargarUsers(self, request):
+        return False
+        
     #permission_classes = [permissions.IsAuthenticated]
 
 class PasswordRecoveringViewSet(viewsets.ViewSet):

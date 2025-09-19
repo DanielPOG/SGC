@@ -70,4 +70,4 @@ class Command(BaseCommand):
                     nombre=nombre_permiso,
                     codigo=codigo
                 )
-        self.stdout.write(self.style.SUCCESS("✅ Permisos cargados correctamente."))
+        self.stdout.write(self.style.SUCCESS("✅ Permismos cargados correctamente."))

@@ -1,18 +1,22 @@
 import toggleIdpState from "./acciones.js"
 
-export const colorDiv = (color, text = '')=>{
-  if(!color) return;
+const palette = {
+  green: 'hover:bg-green-600/5 border-green-600/10 text-green-600/80',
+  red:   'hover:bg-red-600/5 border-red-600/10 text-red-600/80',
+};
+
+export const colorDiv = (color, text='') => {
+  if (!palette[color]) return '';
   const divClass = `
-  hover:bg-${color}-600/5 border-${color}-600/10 text-${color}-600/80 mx-auto 
-  w-fit px-0 py-[.40em] text-[13px] font-bold rounded-r-none 
-  rounded-md min-w-20 -me-5 border-2 border-r-0
-  `
-  return (`<div class="${divClass}">${text}</div>`)
-}
+    ${palette[color]} mx-auto w-fit px-0 py-[.40em] text-[13px] font-bold
+    rounded-r-none rounded-md min-w-20 -me-5 border-2 border-r-0
+  `;
+  return `<div class="${divClass}">${text}</div>`;
+};
 
 export function idpRow(idp, cargos) {
   const state = idp.estado ? colorDiv('green', 'ACTIVO') : colorDiv('red', 'INACTIVO')
-  const cargosIDP = cargos.filter(c =>c.idp?.numero === idp.numero).length
+  const cargosIDP =cargos.filter(c =>c.idp?.numero === idp.numero).length
   return (
     ` 
       <td class="px-4 py-2 border text-center">${idp.numero}</td>  
@@ -26,9 +30,20 @@ export function idpRow(idp, cargos) {
             <a href="http://127.0.0.1:8000/idplanta/historial/?idp_id=${idp.numero}" class="hover:bg-black/25 px-2 py-1 pb-[.30em] rounded-e-md border-y-2 border-black/50 pe-3 rounded-r-[10rem]">Historial</a>
           </p>
           <strong class="border-l-2 ps-1" >Acciones:</strong>
-          <button data-estado="${idp.estado ? 0 : 1}" id=${idp.numero} ${cargosIDP > 0 ? 'disabled' : ''} data-idp=${idp.numero} class="min-w-32 text-white rounded-xl px-2 ${cargosIDP < 1 ? (idp.estado ? 'bg-red-500/80 hover:bg-red-700 font-semibold' :'bg-green-600/80  hover:bg-green-600 font-semibold' ): 'font-bold bg-gray-500/50 pointer-events-none opacity-[0.5]'}">
-            ${idp.estado ? (cargosIDP > 0 ? 'OCUPADO' : 'DESACTIVAR') : 'ACTIVAR'}
-          </button> 
+         <button
+  data-estado="${idp.estado ? 0 : 1}"
+  id="${idp.numero}"
+  ${cargosIDP > 0 ? 'disabled' : ''}
+  data-idp="${idp.numero}"
+   data-cargos-count="${cargosIDP}"
+  class="min-w-32 text-white rounded-xl px-2
+    ${cargosIDP < 1
+      ? (idp.estado
+          ? 'bg-red-500/80 hover:bg-red-700 font-semibold'
+          : 'bg-green-600/80 hover:bg-green-600 font-semibold')
+      : 'font-bold bg-gray-500/50 pointer-events-none opacity-50'}">
+  ${idp.estado ? (cargosIDP > 0 ? 'OCUPADO' : 'DESACTIVAR') : 'ACTIVAR'}
+</button>
 
         </div>
       </td>
@@ -60,39 +75,59 @@ export async function cargarIdps(cargos) {
 }
 
 // Cambiar el estado de una IDP
+// Cambiar el estado de una IDP
 document.addEventListener("click", (e) => {
-        if (e.target.matches("[data-idp]")) {
-          const idp = e.target.dataset.idp
-          const estado = e.target.dataset.estado == 0 ? 'desactivar' : 'activar'
+  // encuentra el botón real aunque hagas click en un hijo
+  const btn = e.target.closest('button[data-idp]');
+  if (!btn) return;
 
-          const confirmHtml = `
-            <div id="confirm-estado" class="bg-black/50 inset-0 z-50 w-screen h-screen fixed overflow-y-hidden">
-            <div class="flex items-center h-full">
-              <div class="w-1/3 h-fit px-2 rounded-md bg-white mx-auto py-4">
-               <p class="text-center font-semibold text-xl">¿Estas seguro de ${estado} esta IDP?</p>
-                <div class="flex justify-center mt-5 font-bold gap-5">
-                  <button id="accept" class="rounded-md px-2 text-green-600 hover:text-white hover:bg-green-600  border border-green-600">Aceptar</button>
-                  <button id="decline" class="rounded-md px-2 text-red-600 hover:text-white hover:bg-red-600 border border-red-600 ">Cancelar</button>
-                </div>
-              </div>
-              </div>
-            </div>
-          `
-          const cambiarEstado = async (e)=>{
-              if(e.target == modal.querySelector('#accept')){
-                document.querySelector('#confirm-estado').remove()
-                toggleIdpState(idp)
-                document.removeEventListener('click', cambiarEstado)
-              } else if (e.target == modal.querySelector('#decline')) {
-                document.querySelector('#confirm-estado').remove()
-                document.removeEventListener('click', cambiarEstado)
-              }
-          }
-          document.querySelector('body').insertAdjacentHTML('afterbegin', confirmHtml)
-          const modal = document.getElementById('confirm-estado')
-          document.addEventListener('click', cambiarEstado)
-        }
-      })
+  // si está deshabilitado, no hagas nada
+  if (btn.disabled) return;
+
+  const idp = btn.dataset.idp;
+  const estado = btn.dataset.estado === '0' ? 'desactivar' : 'activar';
+
+  // ← lee el conteo de ESTA fila (lo pusiste como data-cargos-count en el botón)
+  const cargosCount = parseInt(btn.dataset.cargosCount || '0', 10);
+
+  const buttons = (cargosCount > 0)
+    ? `<button id="close" class="rounded-md px-2 text-green-600 hover:text-white hover:bg-green-600 border border-green-600">Aceptar</button>`
+    : `<button id="accept" class="rounded-md px-2 text-green-600 hover:text-white hover:bg-green-600 border border-green-600">Aceptar</button>
+       <button id="decline" class="rounded-md px-2 text-red-600 hover:text-white hover:bg-red-600 border border-red-600">Cancelar</button>`;
+
+  const confirmHtml = `
+    <div id="confirm-estado" class="bg-black/50 inset-0 z-50 w-screen h-screen fixed overflow-y-hidden">
+      <div class="flex items-center h-full">
+        <div class="w-1/3 h-fit px-2 rounded-md bg-white mx-auto py-4">
+          ${cargosCount > 0
+            ? `<p class="text-center font-semibold text-xl">No es posible modificar el estado de una IDP ocupada</p>`
+            : `<p class="text-center font-semibold text-xl">¿Estas seguro de ${estado} esta IDP?</p>`}
+          <div class="flex justify-center mt-5 font-bold gap-5">
+            ${buttons}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const cambiarEstado = async (ev) => {
+    const modal = document.getElementById('confirm-estado');
+    if (!modal) return;
+
+    if (ev.target === modal.querySelector('#accept')) {
+      modal.remove();
+      await toggleIdpState(idp);
+      document.removeEventListener('click', cambiarEstado);
+    } else if (ev.target === modal.querySelector('#decline') || ev.target === modal.querySelector('#close')) {
+      modal.remove();
+      document.removeEventListener('click', cambiarEstado);
+    }
+  };
+
+  document.body.insertAdjacentHTML('afterbegin', confirmHtml);
+  document.addEventListener('click', cambiarEstado);
+});
+
 document.addEventListener("DOMContentLoaded", async () => {
   try {
     const res = await apiFetch('http://127.0.0.1:8001/api/cargos/cargos/')
