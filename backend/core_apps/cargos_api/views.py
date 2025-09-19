@@ -113,7 +113,7 @@ class IdpViewSet(viewsets.ModelViewSet):
             df = pd.read_excel(file)
             creados, actualizados, errores = 0,0,[]
             for i, row in df.iterrows():
-                try:asdas
+                try:
                     fecha = row.get("fechaCreacion")
                     idp = row.get("numero")
                     estado = row.get("estado")
