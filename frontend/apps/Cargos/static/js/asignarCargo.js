@@ -15,6 +15,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const temporalModal = document.getElementById("temporalModal");
   const closeTemporalModal = document.getElementById("closeTemporalModal");
   const formTemporalAsignacion = document.getElementById("formTemporalAsignacion");
+  const cancelTemporalModal = document.getElementById("cancelTemporalModal");
+
+
+// Cerrar modal temporal
+cancelTemporalModal.addEventListener("click", () => {
+  temporalModal.classList.add("hidden");
+  temporalModal.classList.remove("flex");
+});
+
 
   let sugerenciasGlobal = [];
   let decisiones = [];
@@ -44,6 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (temporalEstado) {
       temporalEstado.innerHTML = '<option value="">-- Selecciona --</option>';
     }
+
 
     // Agrega los estados
     estados.forEach(estado => {

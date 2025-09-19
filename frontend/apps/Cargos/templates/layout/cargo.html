@@ -101,8 +101,7 @@
   </div>
 
   
-
-
+<!--TODO: MODAL AGREGAR NUEVO FUNCIONARIO -->
   <!-- segundo modal para agregar nuevo funcionario   -->
 <div id="nuevoModal" class="fixed inset-0 bg-black/50 bg-opacity-50 hidden justify-center items-center z-50">
   <div class="bg-white rounded-lg  w-140 p-6 relative h-15"> 
@@ -164,12 +163,20 @@
         </div>
       </div>
 
-      <div class="flex justify-end  space-x-4 -mt-1">
-        <button type="submit" class="px-3 py-2 bg-green-600 text-white rounded-2xl hover:bg-green-700">Aceptar</button>
-      </div>
+     
+ <div class="flex justify-center space-x-4 -mt-1">
+             <button type="submit" class="px-3 py-2 bg-green-600 text-white rounded-2xl hover:bg-green-700 w-40">
+    Aceptar
+  </button>
+  <button  id="cancelNuevoModal" type="button" class="px-3 py-2 bg-gray-400 text-white rounded-2xl hover:bg-gray-500 w-40">
+    Cancelar
+  </button>
+ 
+</div>
     </form>
   </div>
 </div>
+<!-- //!TODO: MODAL ASIGNAR TEMPORAL Y DEVOLUCION ESCALONADA -->
 <!-- Modal escalonado -->
 <div id="escalonModal" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50 px-4">
   <div class="bg-white rounded-lg w-full max-w-xl p-6 relative">
@@ -234,7 +241,7 @@
              <button type="submit" class="px-3 py-2 bg-green-600 text-white rounded-2xl hover:bg-green-700 w-40">
     Aceptar
   </button>
-  <button  id="cancelNuevoModal" type="button" class="px-3 py-2 bg-gray-400 text-white rounded-2xl hover:bg-gray-500 w-40">
+  <button  id="cancelTemporalModal" type="button" class="px-3 py-2 bg-gray-400 text-white rounded-2xl hover:bg-gray-500 w-40">
     Cancelar
   </button>
  
@@ -245,34 +252,43 @@
 
 <!-- Script para abrir el modal -->
   <script>
-
     const openModal = document.getElementById('openModal');
     const closeModal = document.getElementById('closeModal');
     const modalExcel = document.getElementById('modalExcel');
+    const cancelNuevoModal = document.getElementById("cancelNuevoModal");
     const fileInput = document.getElementById('fileInput');
     const fileName = document.getElementById('fileName');
 
+// Abrir modal al hacer clic en el botón
     openModal.addEventListener('click', () => {
       modalExcel.classList.remove('hidden');
       modalExcel.classList.add('flex');
     });
 
+// Cerrar modal al hacer clic en el botón de cerrar
     closeModal.addEventListener('click', () => {
       modalExcel.classList.add('hidden');
     });
-        // Cerrar con botón "Cancelar"
-  cancelNuevoModal.addEventListener('click', () => {
-    nuevoModal.classList.add('hidden');
-  });
 
 
-    // Mostrar nombre del archivo seleccionado
+cancelNuevoModal.addEventListener("click", () => {
+  console.log("✅ Cancelar del nuevo modal funcionando");
+  nuevoModal.classList.add("hidden");
+  nuevoModal.classList.remove("flex");
+});
+
+// Cerrar modal al hacer clic fuera del contenido
+ window.addEventListener('click', (e) => {
+  if (e.target === modalExcel) {
+    modalExcel.classList.add('hidden');
+  }
+});
+// Mostrar nombre del archivo seleccionado
     fileInput.addEventListener('change', (e) => {
       fileName.textContent = e.target.files[0]?.name || "Ningún archivo";
     });
  
 //<!-- Script para manejar el menú desplegable -->
- 
     document.querySelectorAll('[data-dropdown-toggle]').forEach(button => {
       button.addEventListener('click', function() {
         const menu = document.querySelector(`#${this.dataset.dropdownToggle}`);
@@ -287,32 +303,6 @@
         });
       }
     });
-
-  // Abrir el nuevo modal
-  const openNuevoModal = document.getElementById('openNuevoModal');
-  const nuevoModal = document.getElementById('nuevoModal');
-  const closeNuevoModal = document.getElementById('closeNuevoModal');
-
-  openNuevoModal.addEventListener('click', () => {
-    nuevoModal.classList.remove('hidden');
-    nuevoModal.classList.add('flex');
-  });
-
-  // Cerrar el nuevo modal
-  closeNuevoModal.addEventListener('click', () => {
-    nuevoModal.classList.add('hidden');
-  });
-    window.addEventListener('click', (e) => {
-    if (e.target === modalExcel) {
-      modalExcel.classList.add('hidden');
-    }
-  });
-  // Cerrar el modal si se hace clic fuera del contenido
-  window.addEventListener('click', (e) => {
-    if (e.target === nuevoModal) {
-      nuevoModal.classList.add('hidden');
-    }
-  });
 </script>
    
 
