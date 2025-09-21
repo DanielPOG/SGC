@@ -213,7 +213,6 @@ cargarEstados();
 
     // Mostrar selector de cargos temporales
     document.getElementById("btnAsignarOtro").onclick = () => {
-      selectorCargos.classList.remove("hidden");
       const temporales = sug.opciones.filter(o => o.tipo === "temporal");
       selectCargos.innerHTML = "";
       temporales.forEach(opt => {
