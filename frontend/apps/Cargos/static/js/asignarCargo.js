@@ -211,18 +211,20 @@ cargarEstados();
       mostrarSiguienteSugerencia();
     };
 
-    // Mostrar selector de cargos temporales
-    document.getElementById("btnAsignarOtro").onclick = () => {
-      const temporales = sug.opciones.filter(o => o.tipo === "temporal");
-      selectCargos.innerHTML = "";
-      temporales.forEach(opt => {
-        const option = document.createElement("option");
-        option.value = opt.cargo_id;
-        option.textContent = `${opt.cargo_id} - ${opt.cargo_nombre || "Sin nombre"}`;
-        selectCargos.appendChild(option);
-      });
-    };
+document.getElementById("btnAsignarOtro").onclick = () => {
+  const temporales = sug.opciones.filter(o => o.tipo === "temporal");
+  selectCargos.innerHTML = "";
 
+  temporales.forEach(opt => {
+    const option = document.createElement("option");
+    option.value = opt.cargo_id;
+    option.textContent = `${opt.cargo_id} - ${opt.cargo_nombre || "Sin nombre"}`;
+    selectCargos.appendChild(option);
+  });
+
+  // 🔹 Mostrar el bloque del selector
+  selectorCargos.classList.remove("hidden");
+};
     // Abrir modal temporal para capturar datos
     btnConfirmAsignar.onclick = () => {
       const cargoIdSel = parseInt(selectCargos.value);
