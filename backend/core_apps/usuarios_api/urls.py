@@ -8,7 +8,7 @@ from rest_framework.routers import DefaultRouter, path
 from .views import (
   UsuarioViewSet, FormacionComplementariaViewSet,
   BitacoraViewSet, SolicitudViewSet, PasswordRecoveringViewSet,
-  LoginView
+  LoginView, PermisoUsuarioViewSet
 )
 
 router = DefaultRouter()
@@ -18,6 +18,7 @@ router.register(r'formaciones', FormacionComplementariaViewSet)
 router.register(r'bitacoras', BitacoraViewSet)
 router.register(r'solicitudes', SolicitudViewSet)
 router.register(r'mail-check', PasswordRecoveringViewSet, basename='password-recover')
+router.register(r'asignar-permisos', PermisoUsuarioViewSet, basename='asignar-permisos')
 
 urlpatterns = router.urls + [
     path('login/', LoginView.as_view(), name='token_obtain_pair'),
