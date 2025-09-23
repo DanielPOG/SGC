@@ -39,6 +39,7 @@ from core_apps.cargos_api.logic.cascada_helpers import (
     devolver_a_planta,
     devolver_a_temporal,
 )
+from core_apps.general.models import Centro, Regional
 class CargoNombreViewSet(viewsets.ModelViewSet):
    
     queryset = CargoNombre.objects.all()
@@ -87,13 +88,14 @@ class IdpViewSet(viewsets.ModelViewSet):
         return Response({"msg":text},status=200)
     @action(detail=False, methods=["get"], url_path="historialCargos")
     def historialCargos(self, request, pk=None):
+        numero = request.query_params.get('idp_id')
         try:
-            idp = request.query_params.get('numero')
+            idp = Idp.objects.get(numero=numero)
         except Idp.DoesNotExist:
-            return Response({"error": "Idp no encontrada"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"error": f"{numero} Idp no encontrada"}, status=status.HTTP_404_NOT_FOUND)
 
         # 1. Todos los cargos que han estado asociados a esta Idp
-        cargos = Cargo.objects.filter(idp=idp).all()
+        cargos = Cargo.objects.filter(idp=idp)
 
         # 2. Todos los registros de usuarios que ocuparon esos cargos
         historial = CargoUsuario.objects.filter(cargo__in=cargos).order_by("fechaInicio")
@@ -102,6 +104,65 @@ class IdpViewSet(viewsets.ModelViewSet):
         serializer = CargoUsuarioSerializer(historial, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
         
+    @action(detail=False, methods=['post'])
+    def asignarCargo(self, request):
+        regional_id = request.data.get("regional_id")
+        centro_id = request.data.get("centro_id")
+        numero = request.data.get("numero")
+        cargo_id = request.data.get("cargo_id")
+
+        # Validar datos requeridos
+        if not (regional_id and centro_id and numero and cargo_id):
+            return Response(
+                {"error": "Faltan parámetros obligatorios"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            regional = Regional.objects.get(id=regional_id)
+        except Regional.DoesNotExist:
+            return Response(
+                {"error": f"Regional con id {regional_id} no encontrada"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        try:
+            centro = Centro.objects.filter(id=centro_id, regional_id=regional_id).get()
+        except Centro.DoesNotExist:
+            return Response(
+                {"error": f"Centro con id {centro_id} no encontrado o no pertenece a la regional {regional_id}"},
+                    status=status.HTTP_404_NOT_FOUND
+            )
+        try:
+            idp = Idp.objects.get(numero=numero)
+        except Idp.DoesNotExist:
+            return Response(
+                {"error": f"IDP con número {numero} no encontrada"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        try:
+            cargo = Cargo.objects.get(id=cargo_id)
+        except Cargo.DoesNotExist:
+            return Response(
+                {"error": f"Cargo con id {cargo_id} no encontrado"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        # Asignar relaciones
+        cargo.centro = centro
+        cargo.idp = idp
+        cargo.save()
+
+        return Response(
+            {
+                "msg": f"Cargo {cargo.cargoNombre.nombre} asignado a IDP {idp.numero} en regional {regional.nombre}"
+            },
+            status=status.HTTP_200_OK
+        )
+        
+
+
+
     @action(methods=['post'], detail=False)
     def cargarExcel(self, request):
         file = request.FILES.get('file')

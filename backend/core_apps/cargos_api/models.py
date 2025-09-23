@@ -1,5 +1,5 @@
 from django.db import models
-from core_apps.general.models import Area
+from core_apps.general.models import Area, Regional
 from django.apps import apps
 from django.utils import timezone
 # Create your models here.
@@ -25,14 +25,15 @@ class Idp(models.Model):
         return self.numero
 class Cargo(models.Model):
     cargoNombre = models.ForeignKey('CargoNombre', on_delete=models.CASCADE)
-    idp = models.ForeignKey('Idp', on_delete=models.CASCADE)
+    idp = models.ForeignKey('Idp', on_delete=models.CASCADE, blank=True, null=True)
     estadoCargo = models.ForeignKey('EstadoCargo', on_delete=models.CASCADE) 
-    resolucion = models.CharField(max_length=200)
+    resolucion = models.CharField(max_length=200, null=True, blank=True)
     resolucion_archivo = models.FileField(upload_to="resolucionesCargo/", blank=True, null=True)
     centro = models.ForeignKey('general.Centro', on_delete=models.CASCADE, blank=True, null=True)
-    fechaCreacion = models.DateTimeField(default=timezone.now)
+    fechaCreacion = models.DateTimeField(default=timezone.now,null=True, blank=True)
     fechaActualizacion = models.DateTimeField(auto_now=True, null=True)
     observacion = models.TextField(blank=True, null=True)
+    regional = models.ForeignKey(Regional, on_delete=models.CASCADE, null=True)
     def __str__(self):
         return str(self.idp)
 
@@ -43,9 +44,9 @@ class CargoUsuario(models.Model):
     fechaInicio = models.DateTimeField(default=timezone.now)
     fechaRetiro = models.DateTimeField(blank=True, null=True)
 
-    salario = models.DecimalField(max_digits=10, decimal_places=2)
-    grado = models.CharField(max_length=100)
-    resolucion= models.CharField(max_length=100)
+    salario = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    grado = models.CharField(max_length=100,  null=True)
+    resolucion= models.CharField(max_length=100,  null=True)
     resolucion_archivo = models.FileField(upload_to="resolucionesCargoUsuario/", blank=True, null=True)
     estadoVinculacion = models.ForeignKey('EstadoVinculacion', on_delete=models.CASCADE )
     observacion = models.TextField(blank=True, null=True)

@@ -3,6 +3,7 @@
 """
 from rest_framework import serializers
 from core_apps.general.models import Centro
+from core_apps.general.serializers import RegionalSerializer
 from core_apps.usuarios_api.models import Usuario
 from core_apps.usuarios_api.serializers import UsuarioSerializer
 from .models import CargoNombre, EstadoCargo, Cargo, CargoUsuario, Idp, EstadoVinculacion
@@ -261,13 +262,12 @@ class CargoExcelSerializer(serializers.ModelSerializer):
 
 
 # Serializer anidado (para lectura: GET list y retrieve)
-class CargoNestedSerializer(serializers.ModelSerializer): #sirve para mostrar los detalles del cargo
+class CargoNestedSerializer(serializers.ModelSerializer):
     cargoNombre = CargoNombreSerializer(read_only=True)
     estadoCargo = EstadoCargoSerializer(read_only=True)
-    centro = CentroSerializer(read_only=True)
+    centro = CentroSerializer(read_only=True)   # ← ya incluye regional
     idp = IdpSerializer(read_only=True)
-    fechaCreacion = serializers.DateTimeField(read_only=True)
-    fechaActualizacion = serializers.DateTimeField(read_only=True)
+
     class Meta:
         model = Cargo
         fields = "__all__"

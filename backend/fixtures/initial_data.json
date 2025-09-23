@@ -1,4 +1,62 @@
 [
+  
+  {
+    "model": "usuarios_api.usuario",
+    "pk": 1,
+    "fields": {
+      "tipo_doc_id": 1,
+      "num_doc": "123456789",
+      "nombre": "Juan",
+      "apellido": "Pérez",
+      "genero_id": 1,
+      "rol_id": 1,
+      "estado_id": 1,
+      "fechaInicio": "2025-01-15",
+      "dependencia_id":1
+    }
+  },
+  {
+    "model": "cargos_api.cargousuario",
+    "pk": 1,
+    "fields": {
+      "cargo_id": 1,
+      "usuario_id": 1,
+      "estadoVinculacion_id": 1,
+      "fechaInicio": "2025-01-15",
+      "fechaRetiro": null,
+      "observacion": "Primer usuario asignado al cargo ADMIN"
+    }
+  },
+
+  {
+    "model": "usuarios_api.usuario",
+    "pk": 1,
+    "fields": {
+      "tipo_doc_id": 1,
+      "num_doc": "1234567891",
+      "nombre": "Juan1",
+      "apellido": "Pér2ez",
+      "genero_id": 1,
+      "rol_id": 1,
+      "estado_id": 1,
+      "fechaInicio": "2025-01-15",
+      "dependencia_id":1
+    }
+  },
+  {
+    "model": "cargos_api.cargousuario",
+    "pk": 1,
+    "fields": {
+      "cargo_id": 1,
+      "usuario_id": 1,
+      "estadoVinculacion_id": 1,
+      "fechaInicio": "2025-01-15",
+      "fechaRetiro": null,
+      "observacion": "Primer usuario asignado al cargo ADMIN"
+    }
+  },
+
+
   {
     "model": "general.regional",
     "pk": 1,
@@ -116,7 +174,7 @@
     "pk": 1,
     "fields": {
       "cargoNombre": 1,
-      "idp": "1001",
+      "idp": 1,
       "estadoCargo": 1,
       "resolucion": "N/A",
       "centro": 1,

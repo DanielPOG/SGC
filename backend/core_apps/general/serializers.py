@@ -5,15 +5,15 @@ from .models import Regional, Centro, Red, Area, Dependencia
 class RegionalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Regional
-        fields = ['id', 'codigoRegional', 'nombre']
+        fields = '__all__'
 
 
 class CentroSerializer(serializers.ModelSerializer):
-    regional = serializers.PrimaryKeyRelatedField(queryset=Regional.objects.all())
+    regional = RegionalSerializer(read_only=True)
 
     class Meta:
         model = Centro
-        fields = ['id', 'codigoCentro', 'nombre', 'regional']
+        fields = "__all__"
 
 
 class RedSerializer(serializers.ModelSerializer):
