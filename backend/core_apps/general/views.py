@@ -32,3 +32,4 @@ class AreaViewSet(viewsets.ModelViewSet):
 class DependenciaViewSet(viewsets.ModelViewSet):
     queryset = Dependencia.objects.all()
     serializer_class = DependenciaSerializer
+

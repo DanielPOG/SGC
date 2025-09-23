@@ -3,7 +3,6 @@ from .models import (
     Usuario, TipoCertificado, FormacionComplementaria,
     Bitacora, EstadoSolicitud, TipoSolicitud, Solicitud
 )
-
 class UsuarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Usuario

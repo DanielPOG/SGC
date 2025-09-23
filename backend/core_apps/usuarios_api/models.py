@@ -213,3 +213,5 @@ class Solicitud(models.Model):
     fechaCreacion = models.DateTimeField(auto_now_add=True)
     fechaAprobada = models.DateTimeField(null=True, blank=True)  
     estado = models.ForeignKey('EstadoSolicitud', on_delete=PROTECT)
+
+
