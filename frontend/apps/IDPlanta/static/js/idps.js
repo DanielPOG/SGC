@@ -84,7 +84,6 @@ export function idpRow(idp, cargos) {
       ? ``
       : `
   <button 
-    @click="asignCyR()"
     data-action="abrir-modal" 
     data-idpmodal="${idp.numero}"
     class="añadir-cargo bg-blue-600 text-white px-5 py-[1px] rounded-[1rem]">
