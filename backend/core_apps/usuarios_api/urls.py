@@ -7,7 +7,7 @@ from .views import (
     BitacoraViewSet,
     SolicitudViewSet,
     UsuarioView,
-    CustomTokenObtainPairView,  # 👈 importar desde views
+    CustomTokenObtainPairView,  # login personalizado
 )
 
 router = DefaultRouter()
@@ -23,6 +23,6 @@ urlpatterns = [
     path("login/", CustomTokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("refresh/", TokenRefreshView.as_view(), name="token_refresh"),
 
-    # Perfil autenticado
+    # Perfil del usuario autenticado
     path("perfil/", UsuarioView.as_view(), name="usuario_perfil"),
 ]

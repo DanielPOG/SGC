@@ -1,8 +1,7 @@
-from rest_framework import viewsets, permissions, serializers
+from rest_framework import viewsets, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .models import Usuario, FormacionComplementaria, Bitacora, Solicitud
@@ -11,8 +10,7 @@ from .serializers import (
     FormacionComplementariaSerializer,
     BitacoraSerializer,
     SolicitudSerializer,
-    # Importamos el serializador desde el archivo serializers.py
-    CustomTokenObtainPairSerializer, 
+    CustomTokenObtainPairSerializer,
 )
 
 
@@ -24,6 +22,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
     Vista personalizada para el login.
     Usa el serializador personalizado para autenticar con correo y password.
     """
+    permission_classes = [AllowAny]
     serializer_class = CustomTokenObtainPairSerializer
 
 
@@ -55,7 +54,7 @@ class UsuarioViewSet(viewsets.ModelViewSet):
 
 class FormacionComplementariaViewSet(viewsets.ModelViewSet):
     """
-    Conjunto de vistas para operaciones CRUD sobre la FormacionComplementaria.
+    Conjunto de vistas para operaciones CRUD sobre FormacionComplementaria.
     """
     queryset = FormacionComplementaria.objects.all()
     serializer_class = FormacionComplementariaSerializer
