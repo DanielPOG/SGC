@@ -12,7 +12,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     Serializador de login personalizado.
     Usa correo como campo de autenticación.
     """
-    username_field = "correo"  # <- cambiamos el campo de login
+    username_field = "correo" # <- cambiamos el campo de login
 
     def validate(self, attrs):
         correo = attrs.get("username")  # viene como "username" desde el cliente

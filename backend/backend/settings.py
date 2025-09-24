@@ -152,7 +152,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # CORS settings TODO:PONER URL AUTORIZADAS
 CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:8000",   # 👈 este es tu frontend real ahora
-    "http://localhost:8000",   # por si abres desde localhost también
+    "http://localhost:8000",
+    "http://127.0.0.1:8001",
+    "http://localhost:8001",   # por si abres desde localhost también
 ]
 
 REST_FRAMEWORK = {

@@ -4,7 +4,6 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
 from rest_framework_simplejwt.views import TokenObtainPairView
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from .models import Usuario, FormacionComplementaria, Bitacora, Solicitud
 from .serializers import (
@@ -12,31 +11,19 @@ from .serializers import (
     FormacionComplementariaSerializer,
     BitacoraSerializer,
     SolicitudSerializer,
+    # Importamos el serializador desde el archivo serializers.py
+    CustomTokenObtainPairSerializer, 
 )
 
 
 # ==============================
 #   LOGIN CON CORREO
 # ==============================
-class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-    def validate(self, attrs):
-        correo = attrs.get("username")  # el frontend manda "username" como correo
-        password = attrs.get("password")
-
-        try:
-            user = Usuario.objects.get(correo=correo)
-        except Usuario.DoesNotExist:
-            raise serializers.ValidationError({"detail": "❌ Usuario o contraseña incorrectos"})
-
-        if not user.check_password(password):
-            raise serializers.ValidationError({"detail": "❌ Usuario o contraseña incorrectos"})
-
-        # SimpleJWT necesita el "username" interno
-        attrs["username"] = user.username
-        return super().validate(attrs)
-
-
 class CustomTokenObtainPairView(TokenObtainPairView):
+    """
+    Vista personalizada para el login.
+    Usa el serializador personalizado para autenticar con correo y password.
+    """
     serializer_class = CustomTokenObtainPairSerializer
 
 
@@ -44,6 +31,9 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 #   PERFIL DEL USUARIO
 # ==============================
 class UsuarioView(APIView):
+    """
+    Vista para obtener el perfil del usuario autenticado.
+    """
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -52,27 +42,39 @@ class UsuarioView(APIView):
 
 
 # ==============================
-#   CRUDs
+#   CRUDs (Conjuntos de vistas)
 # ==============================
 class UsuarioViewSet(viewsets.ModelViewSet):
+    """
+    Conjunto de vistas para operaciones CRUD sobre el modelo Usuario.
+    """
     queryset = Usuario.objects.all()
     serializer_class = UsuarioSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 
 class FormacionComplementariaViewSet(viewsets.ModelViewSet):
+    """
+    Conjunto de vistas para operaciones CRUD sobre la FormacionComplementaria.
+    """
     queryset = FormacionComplementaria.objects.all()
     serializer_class = FormacionComplementariaSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 
 class BitacoraViewSet(viewsets.ModelViewSet):
+    """
+    Conjunto de vistas para operaciones CRUD sobre el modelo Bitacora.
+    """
     queryset = Bitacora.objects.all()
     serializer_class = BitacoraSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 
 class SolicitudViewSet(viewsets.ModelViewSet):
+    """
+    Conjunto de vistas para operaciones CRUD sobre el modelo Solicitud.
+    """
     queryset = Solicitud.objects.all()
     serializer_class = SolicitudSerializer
     permission_classes = [permissions.IsAuthenticated]
