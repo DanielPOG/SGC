@@ -6,7 +6,7 @@ from .serializers import UsuarioSerializer, FormacionComplementariaSerializer, B
 class UsuarioViewSet(viewsets.ModelViewSet):
     queryset = Usuario.objects.all()
     serializer_class = UsuarioSerializer
-    permission_classes = [permissions.IsAuthenticated] 
+    permission_classes = [permissions.AllowAny] 
 
 
 class FormacionComplementariaViewSet(viewsets.ModelViewSet):

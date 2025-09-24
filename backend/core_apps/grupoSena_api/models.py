@@ -17,7 +17,7 @@ class NombreGrupo(models.Model):
 
 
 class GrupoSena(models.Model):
-    nombre_grupo = models.ForeignKey(
+    nombre_grupo = models.ForeignKey(# nombre
         NombreGrupo,
         on_delete=models.PROTECT,
         verbose_name="Nombre del Grupo",
@@ -34,7 +34,7 @@ class GrupoSena(models.Model):
         related_name='grupos_dirigidos',
         verbose_name="Líder del Grupo"
     )
-    resolucion1 = models.CharField(
+    resolucion1 = models.CharField( 
         max_length=200,
         blank=True,
         null=True,

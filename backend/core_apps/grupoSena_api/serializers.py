@@ -1,8 +1,12 @@
 from rest_framework import serializers
 from core_apps.general.models import Area
 from core_apps.usuarios_api.models import Usuario
-from .models import  GrupoSena, UsuarioGrupo, NombreGrupo
+from .models import  GrupoSena, UsuarioGrupo, NombreGrupo, EstadoGrupo
 
+class EstadoGrupoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EstadoGrupo
+        fields = ['id', 'estado']
 
 class AreaSerializer(serializers.ModelSerializer):
     class Meta:

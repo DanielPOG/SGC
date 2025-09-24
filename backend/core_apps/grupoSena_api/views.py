@@ -5,12 +5,13 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework import viewsets, filters
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny
 
 from .models import GrupoSena, NombreGrupo, EstadoGrupo, UsuarioGrupo
-from .serializers import GrupoSenaSerializer, UsuarioGrupoSerializer, NombreGrupoSerializer
+from .serializers import GrupoSenaSerializer, UsuarioGrupoSerializer, NombreGrupoSerializer, EstadoGrupoSerializer
 from core_apps.general.models import Area
 from core_apps.usuarios_api.models import Usuario
+from rest_framework import status
 
 # -------------------- DRF ViewSets --------------------
 class GrupoSenaViewSet(viewsets.ModelViewSet):
@@ -28,7 +29,13 @@ class GrupoSenaViewSet(viewsets.ModelViewSet):
 class UsuarioGrupoViewSet(viewsets.ModelViewSet):
     queryset = UsuarioGrupo.objects.select_related("usuario", "grupo")
     serializer_class = UsuarioGrupoSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
+
+class EstadoGrupoList(APIView):
+    def get(self, request):
+        estados = EstadoGrupo.objects.all()
+        serializer = EstadoGrupoSerializer(estados, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 # -------------------- APIs para selects dinámicos --------------------
 def api_areas(request):
