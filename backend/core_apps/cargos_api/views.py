@@ -25,15 +25,9 @@ from .serializers import (
     CargoUsuarioNestedSerializer,
     IdpSerializer,
     EstadoVinculacionSerializer,
-    CargoUsuarioSimpleSerializer,
-    SimulacionInputSerializer,
-    ConfirmacionCascadaSerializer,
-    DecisionSerializer,
 )
 from core_apps.cargos_api.services.cascada import (
     build_escalon_sugerencias,
-    aplicar_decisiones_cascada,
-    _normalize_date
 )
 from core_apps.cargos_api.logic.cascada_helpers import (
     devolver_a_planta,

@@ -7,6 +7,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.decorators import api_view, action #pylint:disable=unused-import
 from rest_framework.response import Response
 from django.core.mail import send_mail
+from rest_framework.parsers import MultiPartParser
 from .models import (
     Usuario, FormacionComplementaria, Bitacora, Solicitud,
     PermisosUsuario, Permiso, Autorizacion
@@ -107,11 +108,21 @@ class SolicitudViewSet(viewsets.ModelViewSet):
     queryset = Solicitud.objects.all() #pylint:disable=no-member
     serializer_class = SolicitudSerializer
     permission_classes = [permissions.IsAuthenticated]
+    http_method_names = ['get', 'post', 'patch']
 
 class PermisoUsuarioViewSet(viewsets.ModelViewSet):
     queryset = PermisosUsuario.objects.all() #pylint:disable=no-member
     serializer_class = PermisoUsuarioSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    parser_classes = [MultiPartParser]
+    @action(methods=['get'], detail=False)
+    def getAuths(self, request):
+        try:
+            auths = Autorizacion.objects.all()
+            auth_s = AuthSerializer(auths, many=True).data
+            return Response({'auths': auth_s}, status=status.HTTP_200_OK)
+        except BaseExceptionGroup as e:
+            print(f'Hubo un error cargando autorizaciones y permisos. Error: {e}')
+            return Response({'error':'Ocurrió un error cargando permisos'})
     @action(methods=['post'], detail=False)
     def crearPermisoUsuario(self, request):
         usuario_id = request.data.get('usuario_id')
