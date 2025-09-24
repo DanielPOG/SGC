@@ -60,5 +60,3 @@ def prContet(request):
     return render(request, 'pages/prContent.html')
 
 
-
-

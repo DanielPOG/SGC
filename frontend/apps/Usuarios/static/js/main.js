@@ -17,7 +17,7 @@ window.checkSessions = ()=>{
 }
 
     // Creación de un state para loginResponse
-window.LResponse = async(newVal)=>{
+window.Response = async(newVal)=>{
         responseNode.style.display = 'flex'
         paragraphNode.innerText = newVal.text
         if(newVal.valid){
@@ -46,3 +46,4 @@ window.setRecoverResponse = (recoverResponse ,text, valid)=>{
         recoverResponse.valid = valid
         recoverResponseNode.innerText = recoverResponse.text
     }
+    
