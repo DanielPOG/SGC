@@ -26,9 +26,15 @@ document.addEventListener("DOMContentLoaded", () => {
             data.forEach(item => {
                 const option = document.createElement("option");
                 option.value = item.id;
-                option.textContent = labelField ? item[labelField] : item.nombre;
+                if (selectId === "lider") {
+                    // Mostrar nombre completo para el select de líderes
+                    option.textContent = `${item.nombre} ${item.apellido}`;
+                } else {
+                    option.textContent = labelField ? item[labelField] : item.nombre;
+                }
                 select.appendChild(option);
             });
+
 
         } catch (err) {
             console.error(`Error cargando ${selectId}:`, err);

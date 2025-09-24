@@ -17,12 +17,10 @@ class NombreGrupo(models.Model):
 
 
 class GrupoSena(models.Model):
-    nombre_grupo = models.ForeignKey(# nombre
+    nombre = models.ForeignKey(
         NombreGrupo,
         on_delete=models.PROTECT,
         verbose_name="Nombre del Grupo",
-        null=True,
-        blank=True
     )
     area = models.ForeignKey(Area, on_delete=models.PROTECT, verbose_name="Área Funcional")
     capacidad = models.PositiveIntegerField(verbose_name="Capacidad Máxima")
@@ -41,13 +39,17 @@ class GrupoSena(models.Model):
         verbose_name="Nombre de Resolución"
     )
     resolucion2 = models.FileField(
-        upload_to='resoluciones/',
+        upload_to='resolucionesGrupoUsuario/',
         null=True,
         blank=True,
         verbose_name="Resolución 2"
     )
-    fecha_creacion = models.DateField(auto_now_add=True, verbose_name="Fecha de Creación")
-    fecha_fin = models.DateField(null=True, blank=True, verbose_name="Fecha de Finalización")
+    fecha_creacion = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name="Fecha de Creación"
+    )
+    
     observacion = models.TextField(blank=True, null=True, verbose_name="Observación")
     estado = models.ForeignKey(
         EstadoGrupo,
@@ -58,9 +60,8 @@ class GrupoSena(models.Model):
     )
 
     def __str__(self):
-        nombre = self.nombre_grupo.nombre if self.nombre_grupo else "Sin nombre"
+        nombre = self.nombre.nombre if self.nombre else "Sin nombre"
         return f"{nombre} - {self.area}"
-
 
 class UsuarioGrupo(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)

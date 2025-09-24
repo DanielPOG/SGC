@@ -19,7 +19,7 @@
     <!-- Nombre del Grupo -->
     <div>
       <label class="block font-medium mb-1">Nombre del Grupo:</label>
-      <select id="nombre" name="nombre" class="w-full border border-gray-600 rounded-2xl px-3 py-2" required>
+      <select id="nombre" name="nombre_id" class="w-full border border-gray-600 rounded-2xl px-3 py-2" required>
         <option value="">-- Selecciona --</option>
       </select>
     </div>
@@ -27,7 +27,7 @@
     <!-- Área Funcional -->
     <div>
       <label class="block font-medium mb-1">Área Funcional:</label>
-      <select id="area" name="area" class="w-full border border-gray-600 rounded-2xl px-3 py-2" required>
+      <select id="area" name="area_id" class="w-full border border-gray-600 rounded-2xl px-3 py-2" required>
         <option value="">-- Selecciona --</option>
       </select>
     </div>
@@ -42,9 +42,23 @@
     <!-- Líder -->
     <div>
       <label class="block font-medium mb-1">Líder:</label>
-      <select id="lider" name="lider" class="w-full border border-gray-600 rounded-2xl px-3 py-2" required>
+      <select id="lider" name="lider_id" class="w-full border border-gray-600 rounded-2xl px-3 py-2" required>
         <option value="">-- Selecciona --</option>
       </select>
+    </div>
+
+    <!-- Resolución 1 -->
+    <div>
+      <label class="block font-medium mb-1">Nombre de la Resolución:</label>
+      <input id="resolucion1" name="resolucion1" type="text" placeholder="Ej: Resolución 123"
+        class="w-full border border-gray-600 rounded-2xl px-3 py-2"/>
+    </div>
+
+    <!-- Resolución 2 -->
+    <div>
+      <label class="block font-medium mb-1">Archivo de Resolución:</label>
+      <input id="resolucion2" name="resolucion2" type="file"
+        class="w-full border border-gray-600 rounded-2xl px-3 py-2"/>
     </div>
 
     <!-- Fecha de creación -->
@@ -54,17 +68,10 @@
         class="w-full border border-gray-600 rounded-full px-4 py-2"/>
     </div>
 
-    <!-- Fecha de finalización -->
-    <div>
-      <label class="block font-medium mb-1">Fecha de finalización:</label>
-      <input id="fecha_finalizacion" name="fecha_finalizacion" type="date"
-        class="w-full border border-gray-600 rounded-full px-4 py-2"/>
-    </div>
-
     <!-- Estado del Grupo -->
     <div>
       <label class="block font-medium mb-1">Estado del Grupo:</label>
-      <select id="estado" name="estado" class="w-full border border-gray-600 rounded-2xl px-3 py-2" required>
+      <select id="estado" name="estado_id" class="w-full border border-gray-600 rounded-2xl px-3 py-2" required>
         <option value="">-- Selecciona --</option>
       </select>
     </div>
@@ -100,8 +107,6 @@
 
 <!-- Select2 CSS y JS -->
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" rel="stylesheet" />
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
 

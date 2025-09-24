@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (!resp.ok) throw new Error("No se pudo obtener el grupo");
       const data = await resp.json();
 
-      document.querySelector("input[type=text]").value = data.nombre_grupo?.nombre || "";
+      document.querySelector("input[type=text]").value = data.nombre?.nombre || "";
       document.querySelector("input#fechaIngreso").value = data.fecha_creacion || "";
       document.getElementById("opcion").value = data.centro?.id || "";
       document.getElementById("lider").value = data.lider?.id || "";

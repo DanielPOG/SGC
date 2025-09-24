@@ -40,16 +40,20 @@ class GrupoSenaSerializer(serializers.ModelSerializer):
         queryset=Usuario.objects.all(), source="lider", write_only=True, allow_null=True
     )
 
-    nombre_grupo = NombreGrupoSerializer(read_only=True, allow_null=True)
-    nombre_grupo_id = serializers.PrimaryKeyRelatedField(
-        queryset=NombreGrupo.objects.all(), source="nombre_grupo", write_only=True, allow_null=True
+    nombre = NombreGrupoSerializer(read_only=True)
+    nombre_id = serializers.PrimaryKeyRelatedField(
+        queryset=NombreGrupo.objects.all(), source="nombre", write_only=True
+    )
+
+    estado = EstadoGrupoSerializer(read_only=True)
+    estado_id = serializers.PrimaryKeyRelatedField(
+        queryset=EstadoGrupo.objects.all(), source="estado", write_only=True
     )
 
     class Meta:
         model = GrupoSena
         fields = "__all__"
         read_only_fields = ("fecha_creacion",)
-
 
 
 class UsuarioGrupoSerializer(serializers.ModelSerializer):

@@ -15,11 +15,11 @@ from rest_framework import status
 
 # -------------------- DRF ViewSets --------------------
 class GrupoSenaViewSet(viewsets.ModelViewSet):
-    queryset = GrupoSena.objects.select_related("area", "estado", "lider", "nombre_grupo")
+    queryset = GrupoSena.objects.select_related("area", "estado", "lider", "nombre")
     serializer_class = GrupoSenaSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = [
-        "nombre_grupo__nombre",  
+        "nombre__nombre",  
         "area__nombre",          
         "lider__nombre",         
         "lider__apellido",       
@@ -54,7 +54,7 @@ class NombreGrupoList(APIView):
 
 # -------------------- Vistas para HTML --------------------
 def grupo_sena(request):
-    grupos = GrupoSena.objects.select_related("nombre_grupo", "area", "lider").all()
+    grupos = GrupoSena.objects.select_related("nombre", "area", "lider").all()
     return render(request, "layout/grupo_sena.html", {"grupos": grupos})
 
 def new_grupo(request):
