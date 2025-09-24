@@ -19,8 +19,11 @@
     <!-- Nombre del Grupo (select) -->
     <div>
       <label class="block font-medium mb-1">Nombre del Grupo:</label>
-      <select id="nombre_grupo" name="nombre_grupo_id" class="w-full border border-gray-600 rounded-2xl px-3 py-2" required>
+      <select id="nombre" name="nombre" class="w-full border border-gray-600 rounded-2xl px-3 py-2" required>
         <option value="">-- Selecciona --</option>
+        {% for grupo in grupos %}
+          <option value="{{ grupo.id }}">{{ grupo.nombre }}</option>
+        {% endfor %}
       </select>
     </div>
 
@@ -29,6 +32,9 @@
       <label class="block font-medium mb-1">Área Funcional:</label>
       <select id="area" name="area_id" class="w-full border border-gray-600 rounded-2xl px-3 py-2" required>
         <option value="">-- Selecciona --</option>
+        {% for a in areas %}
+          <option value="{{ a.id }}">{{ a.nombre }}</option>
+        {% endfor %}
       </select>
     </div>
 
@@ -44,6 +50,9 @@
       <label class="block font-medium mb-1">Líder:</label>
       <select id="lider" name="lider_id" class="w-full border border-gray-600 rounded-2xl px-3 py-2" required>
         <option value="">-- Selecciona --</option>
+        {% for l in lideres %}
+          <option value="{{ l.id }}">{{ l.nombre }} - {{ l.numero_documento }}</option>
+        {% endfor %}
       </select>
     </div>
 
@@ -90,10 +99,29 @@
   </div>
 </form>
 
+<!-- Toggle Textarea -->
 <script>
   function toggleTextarea() {
     document.getElementById("textarea-observacion").classList.toggle("hidden");
   }
+</script>
+
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<!-- jQuery (obligatorio para Select2) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
+
+<!-- Activar Select2 en tus select -->
+<script>
+  $(document).ready(function() {
+      $('#nombre').select2({ placeholder: '-- Selecciona --', allowClear: true, width: '100%' });
+      $('#area').select2({ placeholder: '-- Selecciona --', allowClear: true, width: '100%' });
+      $('#lider').select2({ placeholder: '-- Selecciona --', allowClear: true, width: '100%' });
+  });
 </script>
 
 <script src="{% static 'js/eje/newGrupoSena.js' %}"></script>

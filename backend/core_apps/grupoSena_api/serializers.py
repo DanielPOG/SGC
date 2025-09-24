@@ -1,9 +1,7 @@
 from rest_framework import serializers
 from core_apps.general.models import Area
 from core_apps.usuarios_api.models import Usuario
-from .models import  GrupoSena, UsuarioGrupo
-
-
+from .models import  GrupoSena, UsuarioGrupo, NombreGrupo
 
 
 class AreaSerializer(serializers.ModelSerializer):
@@ -11,6 +9,10 @@ class AreaSerializer(serializers.ModelSerializer):
         model = Area
         fields = ["id", "nombre"]
 
+class NombreGrupoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NombreGrupo
+        fields = ['id', 'nombre']
 
 class UsuarioSimpleSerializer(serializers.ModelSerializer):
     nombre_completo = serializers.SerializerMethodField()
@@ -34,10 +36,16 @@ class GrupoSenaSerializer(serializers.ModelSerializer):
         queryset=Usuario.objects.all(), source="lider", write_only=True, allow_null=True
     )
 
+    nombre_grupo = NombreGrupoSerializer(read_only=True, allow_null=True)
+    nombre_grupo_id = serializers.PrimaryKeyRelatedField(
+        queryset=NombreGrupo.objects.all(), source="nombre_grupo", write_only=True, allow_null=True
+    )
+
     class Meta:
         model = GrupoSena
         fields = "__all__"
         read_only_fields = ("fecha_creacion",)
+
 
 
 class UsuarioGrupoSerializer(serializers.ModelSerializer):

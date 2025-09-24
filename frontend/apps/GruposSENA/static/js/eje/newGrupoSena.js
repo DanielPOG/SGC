@@ -29,7 +29,15 @@ document.addEventListener("DOMContentLoaded", () => {
             data.forEach(item => {
                 const option = document.createElement("option");
                 option.value = item.id;
-                option.textContent = labelField ? item[labelField] : `${item.nombre} ${item.apellido}`;
+                
+                // Para el select de lider combinamos nombre y apellido
+                if (selectId === "lider") {
+                    option.textContent = `${item.nombre} ${item.apellido}`;
+                } else {
+                    // Si se pasa un labelField se usa, si no, usamos item.nombre
+                    option.textContent = labelField ? item[labelField] : item.nombre;
+                }
+
                 select.appendChild(option);
             });
 
@@ -42,6 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Cargar selects al inicio
     cargarSelect("http://127.0.0.1:8001/api/general/areas/", "area", "nombre");
     cargarSelect("http://127.0.0.1:8001/api/usuarios/usuarios/", "lider", null);
+    cargarSelect("http://127.0.0.1:8001/api/gruposena/nombre-grupo/", "nombre", "nombre");
 
     // Validación simple
     const grupoForm = document.getElementById("grupoForm");
@@ -65,7 +74,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const formData = new FormData(grupoForm);
 
         try {
-            // URL apuntando al router de tu ViewSet
             const response = await fetch("http://127.0.0.1:8001/api/gruposena/grupo-sena/", {
                 method: "POST",
                 body: formData
@@ -73,7 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             let body;
             try {
-                body = await response.json(); // Leer JSON solo una vez
+                body = await response.json();
             } catch {
                 const textBody = await response.text();
                 console.error("❌ Respuesta no es JSON:", textBody);
@@ -93,8 +101,12 @@ document.addEventListener("DOMContentLoaded", () => {
             // Reiniciar selects
             document.getElementById("area").innerHTML = '<option value="">-- Selecciona --</option>';
             document.getElementById("lider").innerHTML = '<option value="">-- Selecciona --</option>';
+            document.getElementById("nombre").innerHTML = '<option value="">-- Selecciona --</option>';
+
+            // Recargar selects
             cargarSelect("http://127.0.0.1:8001/api/general/areas/", "area", "nombre");
             cargarSelect("http://127.0.0.1:8001/api/usuarios/usuarios/", "lider", null);
+            cargarSelect("http://127.0.0.1:8001/api/gruposena/nombre-grupo/", "nombre", "nombre");
 
         } catch (err) {
             console.error("❌ Error creando grupo:", err);
