@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', ()=>{
 
     // Validacion: Comprueba si ya hay una sesión iniciada

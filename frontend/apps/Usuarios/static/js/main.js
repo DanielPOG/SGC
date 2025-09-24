@@ -1,4 +1,3 @@
-
 // Nodos para insertar respuestas
     const responseNode = document.getElementById('response-node')
     const paragraphNode = document.querySelector('#response-node p')
