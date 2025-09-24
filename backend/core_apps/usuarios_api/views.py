@@ -18,13 +18,8 @@ from .serializers import (
 #   LOGIN CON CORREO
 # ==============================
 class CustomTokenObtainPairView(TokenObtainPairView):
-    """
-    Vista personalizada para el login.
-    Usa el serializador personalizado para autenticar con correo y password.
-    """
     permission_classes = [AllowAny]
     serializer_class = CustomTokenObtainPairSerializer
-
 
 # ==============================
 #   PERFIL DEL USUARIO

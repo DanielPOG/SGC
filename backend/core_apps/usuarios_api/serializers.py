@@ -1,38 +1,47 @@
-from rest_framework import serializers
 from .models import (
     Usuario, TipoCertificado, FormacionComplementaria,
     Bitacora, EstadoSolicitud, TipoSolicitud, Solicitud
 )
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from django.contrib.auth import authenticate
+from rest_framework import serializers
+from django.contrib.auth.hashers import check_password
+from rest_framework_simplejwt.tokens import RefreshToken
+
 
 
 # -------------------------
 # LOGIN PERSONALIZADO JWT
 # -------------------------
-class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-    """
-    Serializador de login personalizado.
-    Usa 'correo' como campo de autenticación.
-    """
-    username_field = "correo"
+class CustomTokenObtainPairSerializer(serializers.Serializer):
+    correo = serializers.EmailField()
+    password = serializers.CharField(write_only=True)
 
     def validate(self, attrs):
-        correo = attrs.get("username")  # viene como "username" desde el cliente
+        correo = attrs.get("correo")
         password = attrs.get("password")
 
-        user = authenticate(correo=correo, password=password)
-
-        if not user:
+        # 1️⃣ Buscar usuario en la base de datos
+        try:
+            user = Usuario.objects.get(correo=correo)
+        except Usuario.DoesNotExist:
             raise serializers.ValidationError("❌ Credenciales inválidas")
 
-        data = super().validate(attrs)
-        data["user_id"] = self.user.id
-        data["nombre"] = self.user.nombre
-        data["rol"] = self.user.rol
-        return data
+        # 2️⃣ Verificar contraseña
+        if not check_password(password, user.password):
+            raise serializers.ValidationError("❌ Credenciales inválidas")
 
+        # 3️⃣ Generar tokens JWT
+        refresh = RefreshToken.for_user(user)
+        access = refresh.access_token
 
+        # 4️⃣ Retornar datos y tokens
+        return {
+            "refresh": str(refresh),
+            "access": str(access),
+            "user_id": user.id,
+            "nombre": user.nombre,
+            "rol": user.rol.nombre,  # si quieres mostrar el nombre del rol
+        }
 # -------------------------
 # SERIALIZADORES MODELOS
 # -------------------------

@@ -5,10 +5,12 @@ from django.apps import apps
 from datetime import date
 from core_apps.cargos_api.models import Cargo, CargoNombre, EstadoCargo, Idp
 from core_apps.general.models import Dependencia, Centro
-
 from django.contrib.contenttypes.models import ContentType #PARA BITACORA
 from django.contrib.contenttypes.fields import GenericForeignKey #PARA BITACORA
 # Create your models here.
+
+
+
 class TipoDocumento(models.Model):
     nombre = models.CharField(max_length=100, unique=True)
     sigla = models.CharField(max_length=10, unique=True)
