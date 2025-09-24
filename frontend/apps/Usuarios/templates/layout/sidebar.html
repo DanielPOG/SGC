@@ -4,11 +4,10 @@
 <head>
     <title>{% block title %}sidebar{% endblock %}</title>
     <link href="{% static 'css/dist/styles.css' %}" rel="stylesheet" />
-       <script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+   <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
 
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-    <style>[x-cloak]{display:none !important}</style>
     
 </head>
 
@@ -163,17 +162,17 @@
        <span x-show="sidebarOpen" x-cloak class="text-xs sm:text-sm lg:text-base">Salir</span>
     </a>
 </nav>
-   </aside>
+   </aside class=" overflow-x-auto">
     
     <div class="flex flex-col flex-1 min-h-screen transition-all duration-300"
          :class="sidebarOpen ? 'ml-64 sm:ml-72 md:ml-80 lg:ml-80 xl:ml-80 2xl:ml-96' : 'ml-16 sm:ml-16 md:ml-20 lg:ml-20 xl:ml-20 2xl:ml-20'">
     
-        <main class="flex-1 py-6 px-4 md:px-6 bg-white">
+        <main class="flex-1 py-6 px-4 md:px-6 bg-white overflow-x">
             {% block content %}
             {% endblock %}
         </main>
     
-        <footer  class="mt-auto w-full py-4 bg-gray-300 flex flex-wrap justify-center items-center gap-6 px-4 z-40">
+        <footer  class="mt-auto w-full py-4 bg-gray-300 fixed bottom-0 flex flex-wrap justify-center items-center gap-6 px-4 z-40">
             <a href="https://www.facebook.com/SENACauca" target="_blank" title="Facebook SENA">
                 <img src="{% static 'img/facebook.png' %}" alt="Facebook SENA"
                      class="w-7 h-7 md:w-8 md:h-8 opacity-70 hover:opacity-100 hover:scale-110 transition duration-200">

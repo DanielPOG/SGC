@@ -1,6 +1,5 @@
   import toggleIdpState from "./acciones.js"
-  import Swal from 'sweetalert2'
-  
+
   const palette = {
     green: 'hover:bg-green-600/5 border-green-600/10 text-green-600/80',
     red: 'hover:bg-red-600/5 border-red-600/10 text-red-600/80',
@@ -90,6 +89,7 @@
   </button >
   ${cargosIDP > 0 || idp.estado == 0 ? `` : `
   <button 
+    @click="asignCyR()"
     data-action="abrir-modal" 
     data-idpmodal="${idp.numero}"
     class="añadir-cargo bg-blue-600 text-white px-5 py-[1px] rounded-[1rem]">

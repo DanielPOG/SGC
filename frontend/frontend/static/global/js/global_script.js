@@ -2,7 +2,8 @@
 document.addEventListener("DOMContentLoaded", () => {
   const access = localStorage.getItem("access")
   const refresh = localStorage.getItem("refresh")
-
+  
+  
   if (!access || !refresh) {
     localStorage.removeItem("access")
     localStorage.removeItem("refresh")
