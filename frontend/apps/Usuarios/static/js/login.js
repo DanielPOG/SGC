@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
             const correo = formNode.usuario.value
             const password = formNode.password.value
             if(!correo || !password){
-                LResponse({text:'Todos los campos son obligatorios', valid:false})
+                Response({text:'Todos los campos son obligatorios', valid:false})
                 return
             }
             const res = await fetch("http://127.0.0.1:8001/api/usuarios/login/", {
@@ -25,19 +25,19 @@ document.addEventListener('DOMContentLoaded', ()=>{
             })
             const data = await res.json()
             if(data.detail){
-                LResponse({text:'Credenciales inválidas', valid:false})
+                Response({text:'Credenciales inválidas', valid:false})
                 return
             }
             console.log("Respuesta del servidor:", data)
            
-            await LResponse({text:'Sesión iniciada correctamente', valid:true})
+            await Response({text:'Sesión iniciada correctamente', valid:true})
             localStorage.setItem('access', data.access)
             localStorage.setItem('refresh', data.refresh)
             localStorage.setItem('user', correo)
             formNode.reset()
         }catch(e){
             console.warn(`Hubo un error al procesar el formulario ${e}`)
-            LResponse({text:'Credenciales inválidas', valid:false})
+            Response({text:'Credenciales inválidas', valid:false})
         }
     })
 

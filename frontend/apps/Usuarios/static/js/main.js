@@ -1,6 +1,5 @@
 
 // Nodos para insertar respuestas
-    const recoverResponseNode = document.getElementById('olvideContraseñaResponse')
     const responseNode = document.getElementById('response-node')
     const paragraphNode = document.querySelector('#response-node p')
     const closeResponseNode = document.querySelector('#response-node button')
