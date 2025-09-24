@@ -3,6 +3,32 @@ from .models import (
     Usuario, TipoCertificado, FormacionComplementaria,
     Bitacora, EstadoSolicitud, TipoSolicitud, Solicitud
 )
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from django.contrib.auth import authenticate
+
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    """
+    Serializador de login personalizado.
+    Usa correo como campo de autenticación.
+    """
+    username_field = "correo"  # <- cambiamos el campo de login
+
+    def validate(self, attrs):
+        correo = attrs.get("username")  # viene como "username" desde el cliente
+        password = attrs.get("password")
+
+        user = authenticate(correo=correo, password=password)
+
+        if not user:
+            raise serializers.ValidationError("❌ Credenciales inválidas")
+
+        data = super().validate(attrs)
+        data["user_id"] = self.user.id
+        data["nombre"] = self.user.nombre
+        data["rol"] = self.user.rol
+        return data
+
 
 class UsuarioSerializer(serializers.ModelSerializer):
     class Meta:
@@ -15,16 +41,9 @@ class UsuarioSerializer(serializers.ModelSerializer):
             'software', 'is_active', 'is_staff', 'is_superuser'
         )
         extra_kwargs = {
-            'password': {'write_only': True}  # <- para que no aparezca en GET
+            'password': {'write_only': True}
         }
 
-    def create(self, validated_data):
-        password = validated_data.pop('password', None)
-        user = Usuario(**validated_data)
-        if password:
-            user.set_password(password)  # <- asegura que se encripte
-        user.save()
-        return user
 
 class FormacionComplementariaSerializer(serializers.ModelSerializer):
     tipo = serializers.PrimaryKeyRelatedField(queryset=TipoCertificado.objects.all()) 
