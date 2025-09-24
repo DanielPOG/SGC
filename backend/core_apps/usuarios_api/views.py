@@ -35,7 +35,9 @@ class UsuarioViewSet(viewsets.ModelViewSet):
     serializer_class = UsuarioSerializer
     @action(methods=['get'], detail=False)
     def cargarUsers(self, request):
-        return False
+        usuarios = Usuario.objects.all()
+        serializer = UsuarioSerializer(usuarios, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
         
     #permission_classes = [permissions.IsAuthenticated]
 
@@ -122,4 +124,7 @@ class PermisoUsuarioViewSet(viewsets.ModelViewSet):
             return Response({"error":"Hubo un error al dar permisos al usuario"})
         permiso = Permiso.objects.get(codigo=permiso_slug)
         if PermisosUsuario.objects.filter(usuario=usuario.id, permiso=permiso.id).exists():
-            return Response({"error":"Este usuario ya cuenta con "})
+            return Response({"error":f"Este usuario ya cuenta con este permiso"})
+        permiso = PermisosUsuario(usuario=usuario.id, permiso=permiso.id)
+        permiso.save()
+        return Response({'msg':'Permiso Asignado'})

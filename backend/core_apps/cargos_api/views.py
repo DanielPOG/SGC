@@ -107,12 +107,11 @@ class IdpViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['post'])
     def asignarCargo(self, request):
         regional_id = request.data.get("regional_id")
-        centro_id = request.data.get("centro_id")
         numero = request.data.get("numero")
         cargo_id = request.data.get("cargo_id")
 
         # Validar datos requeridos
-        if not (regional_id and centro_id and numero and cargo_id):
+        if not (regional_id and numero and cargo_id):
             return Response(
                 {"error": "Faltan parámetros obligatorios"},
                 status=status.HTTP_400_BAD_REQUEST
@@ -127,10 +126,11 @@ class IdpViewSet(viewsets.ModelViewSet):
             )
 
         try:
-            centro = Centro.objects.filter(id=centro_id, regional_id=regional_id).get()
+            centro = Centro.objects.filter(regional_id=regional_id).get()
         except Centro.DoesNotExist:
             return Response(
-                {"error": f"Centro con id {centro_id} no encontrado o no pertenece a la regional {regional_id}"},
+                {"error": f"No hay centros disponibles en la regional {regional_id}",
+                  },
                     status=status.HTTP_404_NOT_FOUND
             )
         try:
@@ -152,10 +152,12 @@ class IdpViewSet(viewsets.ModelViewSet):
         cargo.centro = centro
         cargo.idp = idp
         cargo.save()
+        cargos = Cargo.objects.all()
 
         return Response(
             {
-                "msg": f"Cargo {cargo.cargoNombre.nombre} asignado a IDP {idp.numero} en regional {regional.nombre}"
+                "msg": f"Cargo {cargo.cargoNombre.nombre} asignado a IDP {idp.numero} en regional {regional.nombre}",
+                "cargos": CargoNestedSerializer(cargos, many=True).data
             },
             status=status.HTTP_200_OK
         )
