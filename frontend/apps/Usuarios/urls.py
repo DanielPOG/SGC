@@ -21,4 +21,5 @@ urlpatterns = [
     path('editar_fun/', views.editar_fun, name='editar_fun'),
     path('pr/', views.pr, name='pr'),
     path('prContent/', views.prContet, name='prContent'),
+     path('logout/', views.logout_view, name='logout'),
 ]

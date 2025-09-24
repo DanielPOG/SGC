@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from django.contrib.auth import logout
+from django.shortcuts import redirect
 
 # Create your views here.
 def index(request):
@@ -60,3 +62,7 @@ def prContet(request):
     return render(request, 'pages/prContent.html')
 
 
+
+def logout_view(request):
+    logout(request)
+    return redirect('login') # o la URL de tu página de login
