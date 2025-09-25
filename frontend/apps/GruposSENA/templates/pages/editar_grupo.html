@@ -1,5 +1,5 @@
 {% extends "layout/sidebar.html" %}
-
+{% load static %}
 {% block title %}Editar Grupo SENA{% endblock %}
 
 {% block content %}
@@ -14,7 +14,12 @@
 </form>
 
 <!-- Formulario -->
-<form id="grupoForm" data-mode="edit" data-id="{{ grupo.id }}" class="w-full max-w-4xl bg-gray-100 p-8 rounded-md shadow ml-10">
+<form id="grupoForm" method="post" enctype="multipart/form-data"
+      action="{% url 'editar_grupo' grupo_id %}"
+      class="w-full max-w-4xl bg-gray-100 p-8 rounded-md shadow ml-10"
+      data-mode="edit"
+      data-id="{{ grupo_id }}">
+  {% csrf_token %}
   <div class="grid grid-cols-2 gap-6 mb-6">
 
     <!-- Nombre (solo lectura) -->
@@ -22,6 +27,7 @@
       <label class="block font-medium mb-1">Nombre:</label>
       <input type="text" value="{{ grupo.nombre.nombre }}" readonly
              class="w-full border border-gray-400 rounded-2xl px-3 py-2 bg-gray-200 cursor-not-allowed"/>
+      <input type="hidden" name="nombre_id" value="{{ grupo.nombre.id }}">
     </div>
 
     <!-- Área Funcional (solo lectura) -->
@@ -29,23 +35,24 @@
       <label class="block font-medium mb-1">Área Funcional:</label>
       <input type="text" value="{{ grupo.area.nombre }}" readonly
              class="w-full border border-gray-400 rounded-2xl px-3 py-2 bg-gray-200 cursor-not-allowed"/>
-    </div>
-
-    <!-- Centro -->
-    <div>
-      <label class="block font-medium mb-1">Centro:</label>
-      <select id="opcion" class="w-full border border-gray-500 rounded-2xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-        <option value="">-- Selecciona --</option>
-      </select>
+      <input type="hidden" name="area_id" value="{{ grupo.area.id }}">
     </div>
 
     <!-- Líder -->
     <div>
       <label class="block font-medium mb-1">Líder:</label>
-      <select id="lider" class="w-full border border-gray-500 rounded-2xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+      <select id="lider" name="lider_id" class="w-full border border-gray-500 rounded-2xl px-3 py-2">
         <option value="">-- Selecciona --</option>
+        {% for lider in lideres %}
+          <option value="{{ lider.id }}" {% if grupo.lider and grupo.lider.id == lider.id %}selected{% endif %}>
+            {{ lider.nombre }} {{ lider.apellido }}
+          </option>
+        {% endfor %}
       </select>
     </div>
+
+    <!-- Estado (oculto) -->
+    <input type="hidden" name="estado_id" value="{{ grupo.estado.id|default:1 }}">
 
     <!-- Fecha de Creación -->
     <div>
@@ -54,16 +61,25 @@
              class="w-full border border-gray-400 rounded-2xl px-3 py-2 bg-gray-200 cursor-not-allowed"/>
     </div>
 
+    <!-- Fecha de Cierre (editable) -->
+    <div>
+      <label class="block font-medium mb-1">Fecha de Cierre:</label>
+      <input type="date" id="fechaCierre" name="fecha_cierre" value="{{ grupo.fecha_cierre|default:'' }}"
+             class="w-full border border-gray-500 rounded-2xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"/>
+    </div>
+
     <!-- Resolución 1 -->
     <div>
       <label for="resolucion_1" class="block font-medium mb-1">Resolución 1:</label>
-      <input type="file" id="resolucion_1" class="w-full border border-gray-600 rounded-full px-4 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/>
+      <input type="file" id="resolucion_1" name="resolucion1"
+             class="w-full border border-gray-600 rounded-full px-4 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/>
     </div>
 
     <!-- Resolución 2 -->
     <div>
       <label for="resolucion_2" class="block font-medium mb-1">Resolución 2:</label>
-      <input type="file" id="resolucion_2" class="w-full border border-gray-600 rounded-full px-4 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/>
+      <input type="file" id="resolucion_2" name="resolucion2"
+             class="w-full border border-gray-600 rounded-full px-4 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/>
     </div>
 
     <!-- Observación -->
@@ -71,7 +87,7 @@
       <button type="button" onclick="toggleTextarea()" class="flex items-center text-lg font-medium text-black hover:text-green-600 transition mb-2">
         <span class="text-green-600 text-3xl mr-2 font-bold">+</span> Observación
       </button>
-      <div id="textarea-observacion" class="mt-2 hidden">
+      <div id="textarea-observacion" class="mt-2 {% if grupo.observacion %}{% else %}hidden{% endif %}">
         <textarea id="observacion" name="observacion" rows="4" class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring focus:border-green-500">{{ grupo.observacion }}</textarea>
       </div>
     </div>
@@ -86,7 +102,8 @@
   </div>
 </form>
 
-<!-- Script toggle -->
+<script src="{% static 'js/GrupoSena_form.js' %}"></script>
+
 <script>
   function toggleTextarea() {
     const textareaDiv = document.getElementById("textarea-observacion");

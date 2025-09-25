@@ -47,7 +47,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // Cargar grupos desde la API
   async function cargarGrupos(search = "") {
     try {
-      mostrarAlerta('Cargando grupos...', 'info');
       
       let url = "http://127.0.0.1:8001/api/gruposena/grupo-sena/";
       if (search) url += `?search=${encodeURIComponent(search)}`;
@@ -92,7 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
                   <a href="#" data-id="${grupo.id}" class="open-nuevo-modal block px-4 py-2 hover:bg-gray-100">Añadir Funcionario</a>
                 </li>
                 <li>
-                  <a href="/gruposena/gruposena/editar_grupo/${grupo.id}/" class="block px-4 py-2 hover:bg-gray-100">Editar</a>
+                  <a href="/gruposena/editar_grupo/${grupo.id}/" class="block px-4 py-2 hover:bg-gray-100">Editar</a>
                 </li>
               </ul>
             </div>
@@ -100,8 +99,6 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
         tbody.appendChild(row);
       });
-
-        mostrarAlerta(`Se cargaron ${grupos.length} grupos correctamente`, 'success');
       }
 
       activarDropdowns();

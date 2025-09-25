@@ -1,101 +1,130 @@
 document.addEventListener("DOMContentLoaded", async () => {
-  const form = document.querySelector("form") || document.createElement("form"); // tu div no tiene form
-  const modo = form.dataset.mode || "create";  // "create" o "edit"
-  const grupoId = form.dataset.id;            // solo en edit
+  // 🔹 Toggle del textarea de observación
+  function toggleTextarea() {
+    document.getElementById("textarea-observacion").classList.toggle("hidden");
+  }
+  window.toggleTextarea = toggleTextarea;
 
-  // 🔹 Función para cargar selects desde API
-  async function cargarSelect(url, selectId, labelField = "nombre") {
-    const select = document.getElementById(selectId);
-    if (!select) return;
-    select.innerHTML = '<option value="">-- Selecciona --</option>';
+  const grupoForm = document.getElementById("grupoForm");
+  const modo = grupoForm.dataset.mode || "create";
+  const grupoId = grupoForm.dataset.id;
+
+  let grupoData = {};
+
+  // 🔹 Cargar usuarios para el select de líder
+  async function cargarUsuarios() {
+    const select = document.getElementById("lider");
+    select.innerHTML = '<option value="">Cargando...</option>';
     try {
-      const resp = await fetch(url);
-      if (!resp.ok) throw new Error("Error en la API");
-      const data = await resp.json();
-      data.forEach(item => {
+      // URL CORRECTA con puerto 8001
+      const res = await fetch("http://127.0.0.1:8001/api/gruposena/usuarios/usuarios/");
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      
+      select.innerHTML = '<option value="">-- Selecciona --</option>';
+      data.forEach(u => {
         const option = document.createElement("option");
-        option.value = item.id;
-        option.textContent = item[labelField];
+        option.value = u.id;
+        option.textContent = u.nombre_completo || `${u.nombre} ${u.apellido}`;
         select.appendChild(option);
       });
     } catch (err) {
-      console.error(`⚠️ Error cargando ${selectId}:`, err);
+      console.error("Error cargando usuarios:", err);
+      // Fallback: usar datos del template
+      select.innerHTML = `
+        <option value="">-- Selecciona --</option>
+        {% for lider in lideres %}
+          <option value="{{ lider.id }}" {% if grupo.lider and grupo.lider.id == lider.id %}selected{% endif %}>
+            {{ lider.nombre }} {{ lider.apellido }}
+          </option>
+        {% endfor %}
+      `;
     }
   }
 
-  // 🔹 Cargar selects
-  await cargarSelect("http://127.0.0.1:8001/api/general/centros/", "opcion", "nombre");
-  await cargarSelect("http://127.0.0.1:8001/api/usuarios/usuarios/", "lider", "get_full_name");
-
-  // 🔹 Si estamos en modo EDITAR → precargar datos
-  if (modo === "edit" && grupoId) {
-    try {
-      const resp = await fetch(`http://127.0.0.1:8001/api/gruposena/grupo-sena/${grupoId}/`);
-      if (!resp.ok) throw new Error("No se pudo obtener el grupo");
-      const data = await resp.json();
-
-      document.querySelector("input[type=text]").value = data.nombre?.nombre || "";
-      document.querySelector("input#fechaIngreso").value = data.fecha_creacion || "";
-      document.getElementById("opcion").value = data.centro?.id || "";
-      document.getElementById("lider").value = data.lider?.id || "";
-      document.getElementById("observacion").value = data.observacion || "";
-
-    } catch (err) {
-      console.error("❌ Error precargando grupo:", err);
-    }
-  }
-
-  // 🔹 Validación simple
-  function validarFormulario() {
-    const campos = ["opcion", "lider"];
-    for (let id of campos) {
-      const val = document.getElementById(id)?.value;
-      if (!val) {
-        alert(`❌ Por favor selecciona: ${id}`);
-        return false;
-      }
-    }
-    return true;
-  }
-
-  // 🔹 Submit → POST o PUT
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    if (!validarFormulario()) return;
-
-    const formData = new FormData();
-    formData.append("centro", document.getElementById("opcion").value);
-    formData.append("lider", document.getElementById("lider").value);
-    formData.append("observacion", document.getElementById("observacion").value);
-
-    // Archivos
-    const archivos = document.querySelectorAll("input[type=file]");
-    archivos.forEach((fileInput, idx) => {
-      if (fileInput.files[0]) {
-        formData.append(`resolucion_${idx + 1}`, fileInput.files[0]);
-      }
-    });
-
-    let url = "http://127.0.0.1:8001/api/gruposena/grupo-sena/";
-    let method = "POST";
+  // 🔹 Precargar datos del grupo
+  async function cargarGrupo() {
     if (modo === "edit" && grupoId) {
-      url += `${grupoId}/`;
-      method = "PUT";
-    }
+      try {
+        const res = await fetch(`http://127.0.0.1:8001/api/gruposena/grupo-sena/${grupoId}/`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const grupo = await res.json();
 
-    try {
-      const resp = await fetch(url, { method, body: formData });
-      const body = await resp.json();
-      if (!resp.ok) {
-        console.error("❌ Errores backend:", body);
-        alert("❌ Error guardando grupo, revisa consola");
-        return;
+        grupoData = grupo;
+
+        // Llenar campos del formulario
+        document.getElementById("fechaIngreso").value = grupo.fecha_creacion || "";
+        document.getElementById("fechaCierre").value = grupo.fecha_cierre || "";
+        document.getElementById("observacion").value = grupo.observacion || "";
+
+        // Llenar nombre y área (solo lectura)
+        if (grupo.nombre && grupo.nombre.nombre) {
+          const nombreInput = document.querySelector("input[name='nombre_id']").previousElementSibling;
+          if (nombreInput) nombreInput.value = grupo.nombre.nombre;
+        }
+        if (grupo.area && grupo.area.nombre) {
+          const areaInput = document.querySelector("input[name='area_id']").previousElementSibling;
+          if (areaInput) areaInput.value = grupo.area.nombre;
+        }
+
+        // Líder (esperar a que se carguen los usuarios)
+        setTimeout(() => {
+          if (grupo.lider) {
+            const liderSelect = document.getElementById("lider");
+            liderSelect.value = grupo.lider.id;
+          }
+        }, 500);
+
+        // Mostrar links de resoluciones si existen
+        if (grupo.resolucion1) {
+          const cont1 = document.getElementById("link_resolucion1");
+          if (cont1) {
+            cont1.innerHTML = `<a href="http://127.0.0.1:8001${grupo.resolucion1}" target="_blank" class="text-blue-600 hover:underline">Ver Resolución 1</a>`;
+          }
+        }
+
+        if (grupo.resolucion2) {
+          const cont2 = document.getElementById("link_resolucion2");
+          if (cont2) {
+            cont2.innerHTML = `<a href="http://127.0.0.1:8001${grupo.resolucion2}" target="_blank" class="text-blue-600 hover:underline">Ver Resolución 2</a>`;
+          }
+        }
+
+      } catch (err) {
+        console.error("Error cargando grupo:", err);
       }
-      alert(modo === "edit" ? "✅ Grupo actualizado" : "✅ Grupo creado");
-      window.location.href = "/gruposena/grupo_sena"; // redirigir
-    } catch (err) {
-      console.error("❌ Error:", err);
-      alert("❌ Error guardando grupo");
     }
+  }
+
+
+  // Cargar datos
+  await cargarUsuarios();
+  await cargarGrupo();
+
+  // 🔹 Enviar formulario - USANDO EL MÉTODO TRADICIONAL DE DJANGO
+  // Para evitar problemas CORS y de archivos, es mejor usar el método tradicional
+  grupoForm.addEventListener("submit", function(e) {
+    // Para edición, usar el método POST tradicional de Django
+    if (modo === "edit") {
+      // Agregar un campo hidden para indicar que es una actualización
+      const methodInput = document.createElement('input');
+      methodInput.type = 'hidden';
+      methodInput.name = '_method';
+      methodInput.value = 'PUT';
+      grupoForm.appendChild(methodInput);
+    }
+    
+    // Validación básica de fechas
+    const fechaCierre = document.getElementById("fechaCierre").value;
+    const fechaIngreso = document.getElementById("fechaIngreso").value;
+    
+    if (fechaCierre && fechaIngreso && fechaCierre < fechaIngreso) {
+      e.preventDefault();
+      alert("La fecha de cierre no puede ser anterior a la fecha de creación");
+      return false;
+    }
+    
+    console.log("Formulario enviado tradicionalmente a Django");
   });
+
 });

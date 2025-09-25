@@ -11,7 +11,5 @@ def historial_grupo(request):
     return render(request, 'pages/historial_grupo.html')
  
 def editar_grupo(request, id):
-    return render(request, 'pages/editar_grupo.html', {"mode": "edit", "grupo": id})
+    return render(request, 'pages/editar_grupo.html', {"grupo_id": id})
 
-def grupo_update(request, id):
-    return render(request, 'pages/editar_grupo.html', {"mode": "edit", "grupo": id})

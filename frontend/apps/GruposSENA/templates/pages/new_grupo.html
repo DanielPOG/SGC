@@ -42,8 +42,13 @@
     <!-- Líder -->
     <div>
       <label class="block font-medium mb-1">Líder:</label>
-      <select id="lider" name="lider_id" class="w-full border border-gray-600 rounded-2xl px-3 py-2" required>
+      <select id="lider" name="lider" class="w-full border border-gray-500 rounded-2xl px-3 py-2">
         <option value="">-- Selecciona --</option>
+        {% for lider in lideres %}
+          <option value="{{ lider.id }}" {% if grupo.lider and grupo.lider.id == lider.id %}selected{% endif %}>
+            {{ lider.nombre }} {{ lider.apellido }}
+          </option>
+        {% endfor %}
       </select>
     </div>
 
@@ -63,10 +68,15 @@
 
     <!-- Fecha de creación -->
     <div>
-      <label class="block font-medium mb-1">Fecha de creación:</label>
-      <input id="fecha_creacion" name="fecha_creacion" type="date"
-        class="w-full border border-gray-600 rounded-full px-4 py-2"/>
+      <label for="fecha_inicio">Fecha Inicio:</label>
+      <input type="date" 
+       name="fecha_creacion" 
+       id="fecha_creacion"
+       class="w-full border border-gray-600 rounded-full px-4 py-2 bg-gray-200"
+       value="{{ today|date:'Y-m-d' }}">
+
     </div>
+
 
     <!-- Estado del Grupo -->
     <div>

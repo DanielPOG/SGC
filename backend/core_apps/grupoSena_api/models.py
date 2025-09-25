@@ -1,6 +1,9 @@
 from django.db import models
 from core_apps.usuarios_api.models import Usuario
 from core_apps.general.models import Area
+from django.utils import timezone
+
+
 
 class EstadoGrupo(models.Model):
     estado = models.CharField(max_length=100, unique=True)
@@ -45,10 +48,11 @@ class GrupoSena(models.Model):
         verbose_name="Resolución 2"
     )
     fecha_creacion = models.DateField(
-        null=True,
-        blank=True,
-        verbose_name="Fecha de Creación"
-    )
+            auto_now_add=True,
+            verbose_name="Fecha de Creación"
+        )
+
+
     
     observacion = models.TextField(blank=True, null=True, verbose_name="Observación")
     estado = models.ForeignKey(

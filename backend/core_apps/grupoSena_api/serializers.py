@@ -53,7 +53,7 @@ class GrupoSenaSerializer(serializers.ModelSerializer):
     class Meta:
         model = GrupoSena
         fields = "__all__"
-        read_only_fields = ("fecha_creacion",)
+
 
 
 class UsuarioGrupoSerializer(serializers.ModelSerializer):
