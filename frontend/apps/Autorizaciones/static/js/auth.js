@@ -56,13 +56,14 @@ const loadUsersRows = (users, auths) => {
                         name="${slug}-permisos"
                         class="principal w-5 h-5 text-green-600" 
                         data-target="submenu-${slug}"
+                        data-slug="${slug}"
                       />
                       <span>${auth.nombre}</span>
                     </label>
                     <!-- Submenu dinámico -->
                     <div 
                       id="submenu-${slug}" 
-                      class="ml-6 mt-2 space-y-2 max-h-0 overflow-hidden opacity-0 transition-all duration-300"
+                      class="submenu ml-6 mt-2 space-y-2 max-h-0 overflow-hidden opacity-0 transition-all duration-300"
                     >
                       <label class="flex items-center space-x-2">
                         <input 
@@ -93,7 +94,7 @@ const loadUsersRows = (users, auths) => {
                   return $auths;
                 })
                 .join("")}
-                <button type="submit" class="grid mx-auto my-4 px-3 py-1 rounded-md text-center font-semibold bg-green-400">
+                <button type="submit" class="text-white grid mx-auto my-4 px-3 py-1 rounded-md text-center font-semibold bg-green-400">
                   Autorizar
                 </button>
             </form>
@@ -112,96 +113,59 @@ const loadUsersRows = (users, auths) => {
       const $close = document.getElementById("closeAuths");
 
       $$modal.classList.toggle("hidden");
-      $$modal.querySelectorAll(".principal").forEach((principal) => {
-        principal.addEventListener("change", function () {
-          const target = document.getElementById(this.dataset.target);
-
-          const checkIfAnyChild = () => {
-            const anyChecked = target.querySelector(".submenu:checked");
-            if (!anyChecked) {
-              principal.checked = false; // se apaga el padre
-              target.style.maxHeight = null;
-              target.style.opacity = 0;
-            } else {
-              principal.checked = true; // mantiene el padre activo
-            }
-          };
-
-          // Mostrar/ocultar submenu al clicar el padre
-          if (this.checked) {
-            target.style.transition = "all 0.3s ease";
-            target.style.maxHeight = target.scrollHeight + "px";
-            target.style.opacity = 1;
-          } else {
-            const all = target.querySelector(".select-all");
-            if (all) {
-              all.checked = false;
-              const group = all.dataset.group;
-              document.querySelectorAll(`.submenu.${group}`).forEach((sub) => {
-                sub.checked = false;
-              });
-            }
-            target.style.maxHeight = null;
-            target.style.opacity = 0;
-          }
-
-          // 👇 Aquí va la clave: escuchar a los hijos
-          target.querySelectorAll(".submenu").forEach((child) => {
-            child.addEventListener("change", checkIfAnyChild);
-          });
-        });
-      });
-
       $close.addEventListener("click", () => {
         document.body.removeChild($$modal);
       });
 
       //Menú y submenus functs
-      function selectAll(bool, group) {
-        document.querySelectorAll(`.submenu.${group}`).forEach((sub) => {
+      function selectAllInGroup(modal, group, bool) {
+        modal.querySelectorAll(`input.submenu.${group}`).forEach((sub) => {
           sub.checked = bool;
         });
+        syncPrincipal(modal, group);
+        syncSelectAll(modal, group);
       }
+
+      function syncSelectAll(modal, group) {
+        const items = [...modal.querySelectorAll(`input.submenu.${group}`)];
+        const all = modal.querySelector(
+          `input.select-all[data-group="${group}"]`
+        );
+        if (!all) return;
+
+        const checked = items.filter((i) => i.checked).length;
+        if (checked === 0) {
+          all.checked = false;
+          all.indeterminate = false;
+        } else if (checked === items.length) {
+          all.checked = true;
+          all.indeterminate = false;
+        } else {
+          all.checked = false;
+          all.indeterminate = true; // estado parcial
+        }
+      }
+
+      function syncPrincipal(modal, group) {
+        // Marca el "principal" como activo si hay alguno del grupo marcado
+        const anyChecked =
+          modal.querySelector(`input.submenu.${group}:checked`) !== null;
+        const principal = modal.querySelector(
+          `input.principal[data-slug="${group}"]`
+        );
+        if (principal) principal.checked = anyChecked;
+      }
+
       $$modal.querySelectorAll(".principal").forEach((principal) => {
         principal.addEventListener("change", function () {
-          const hasChecked = () => {
-            const $inps = this.querySelectorAll("input");
-            let algunoMarcado = false;
-            console.log('antes del for each', $inps)
-            $inps.forEach((i) => {
-              console.log(i.value) 
-              if (i.checked) {
-                algunoMarcado = true;
-              }
-            });
+          const target = $$modal.querySelector(`#${this.dataset.target}`);
 
-            if (!algunoMarcado) {
-              // si ningún hijo está marcado
-                principal.checked = false;
-                
-            } else {
-              principal.checked = true
-            }
-          };
-          const othersCheck = () => {
-            const others = $$modal.querySelectorAll(`.principal`);
-            others.forEach((other) =>
-              other.addEventListener("change", () => {
-                if (other !== principal) hasChecked();
-                else other.checked = true
-              })
-            );
-          };
-          const target = document.getElementById(this.dataset.target);
-          // Cierra todos los submenús excepto el actual
-          document.querySelectorAll("[id^='submenu-']").forEach((sub) => {
+          // Cierra todos los submenús excepto el actual (no toca checks)
+          $$modal.querySelectorAll("[id^='submenu-']").forEach((sub) => {
             if (sub !== target) {
-              
               sub.style.maxHeight = null;
               sub.style.opacity = 0;
             }
-              othersCheck();
-
           });
 
           // Mostrar / ocultar el actual
@@ -210,26 +174,72 @@ const loadUsersRows = (users, auths) => {
             target.style.maxHeight = target.scrollHeight + "px";
             target.style.opacity = 1;
           } else {
-            const all = target.querySelector(".select-all");
-            all.checked = false;
-            const group = all.dataset.group;
-            selectAll(false, group);
+            // Si desmarcas el principal, no borro lo ya marcado automáticamente;
+            // si quieres “vaciar” el grupo al desmarcar el principal, descomenta estas líneas:
+            // const all = target.querySelector(".select-all");
+            // if (all) selectAllInGroup($$modal, all.dataset.group, false);
             target.style.maxHeight = null;
             target.style.opacity = 0;
           }
         });
       });
 
-      document.querySelectorAll(".select-all").forEach((all) => {
+      $$modal.querySelectorAll(".select-all").forEach((all) => {
         all.addEventListener("change", function () {
-          const group = all.dataset.group;
+          const group = this.dataset.group;
           const isChecked = this.checked;
-          selectAll(isChecked, group);
-          console.log(`Des/Autorizando todos los permisos`, group);
+          selectAllInGroup($$modal, group, isChecked);
+          // Quita indeterminate si el usuario clicó el “todos”
+          this.indeterminate = false;
         });
       });
-      $$modal.querySelector("form").addEventListener("submit", () => {
-        const formData = new FormData();
+
+      // Cuando se marca/unmarca un permiso individual, actualizar "Seleccionar todos" y "principal"
+      $$modal.querySelectorAll("input.submenu").forEach((item) => {
+        const classes = [...item.classList];
+        // la segunda clase es el slug (p.ej. "usuarios", "cargos", etc.)
+        const group = classes.find(
+          (c) =>
+            c !== "submenu" &&
+            !c.startsWith("w-") &&
+            !c.startsWith("h-") &&
+            c !== "text-green-600"
+        );
+        if (!group) return;
+
+        item.addEventListener("change", function () {
+          syncSelectAll($$modal, group);
+          syncPrincipal($$modal, group);
+        });
+
+        // Inicializa estado de “todos” e “indeterminate” al cargar
+        syncSelectAll($$modal, group);
+        syncPrincipal($$modal, group);
+      });
+
+      $$modal.querySelector("form").addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        // Recoger permisos marcados (de cualquier grupo)
+        const checkedPerms = $$modal.querySelectorAll("input.submenu:checked");
+        const payload = [...checkedPerms].map((i) => i.value);
+
+        console.log("Permisos seleccionados:", payload);
+
+        // Si prefieres FormData:
+        // const formData = new FormData();
+        // payload.forEach(code => formData.append(code, 'True'));
+
+        // TODO: Envía al backend. Ejemplo JSON:
+        // await apiFetch(`http://127.0.0.1:8001/api/usuarios/asignar-permisos/`, {
+        //   method: 'POST',
+        //   headers: { 'Content-Type': 'application/json' },
+        //   body: JSON.stringify({ user_id: user.id, permisos: payload })
+        // });
+
+        // Feedback rápido:
+        // alert('Permisos actualizados');
+        // document.body.removeChild($$modal);
       });
     });
   });
