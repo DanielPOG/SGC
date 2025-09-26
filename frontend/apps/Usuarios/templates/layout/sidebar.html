@@ -456,7 +456,18 @@
             </a>
         </footer>
     </div>
-    
+
+    <script>
+    document.getElementById("btn-logout").addEventListener("click", e => {
+        e.preventDefault();
+        // Limpiar el localStorage
+        localStorage.clear();
+        // Redirigir al logout de Django
+        window.location.href = "{% url 'logout' %}";
+    });
+</script>
+
+
     <script>
     function layout() {
         return {
@@ -485,6 +496,5 @@
         }
     }
 </script>
-
 </body>
 </html>

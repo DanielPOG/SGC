@@ -1,19 +1,27 @@
 from django.shortcuts import render
 from django.contrib.auth import logout
 from django.shortcuts import redirect
-
 # Create your views here.
+
+
 def index(request):
-    return render(request, 'layout/index.html')
+    return render(request, 'layout/index.html', {
+        'usuario': request.user
+    })
+
 def login_view(request):
     return render(request, 'pages/login.html')
+
 def sidebar(request):
     return render(request, 'layout/sidebar.html')
+
 def pr(request):
     return render(request, 'layout/pr.html')
+
 # DEF usuario paginas
 def funcionario(request):
     return render(request, 'pages/funcionario.html')
+
 
 def cargo(request):
     return render(request, 'layout/cargo.html')
@@ -61,8 +69,25 @@ def pr(request):
 def prContet(request):
     return render(request, 'pages/prContent.html')
 
-
-
+#  cierra sesion 
 def logout_view(request):
     logout(request)
     return redirect('login') # o la URL de tu página de login
+
+
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+
+
+from rest_framework.decorators import api_view, permission_classes
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def usuario_actual(request):
+    user = request.user
+    return Response({
+        "id": user.id,
+        "nombre": user.first_name or user.username,
+        "correo": user.email,
+        "rol": getattr(user, "rol", None)  # Si tienes un campo rol
+    })
+

@@ -73,25 +73,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // ----------------------
-    // Mostrar usuario en principal
-    // ----------------------
-    if (window.location.pathname.includes('principal')) {
-        const userData = localStorage.getItem('user');
-        if (!userData) {
-            console.log("No hay usuario logueado. Redirigiendo a login...");
-            window.location.href = "/login.html";
-        } else {
-            const user = JSON.parse(userData);
-            console.log("Usuario actual en principal:", user);
-
-            // Ejemplo: mostrar en pantalla si tienes un elemento con id 'usuario-nombre'
-            const nombreNode = document.getElementById('usuario-nombre');
-            if (nombreNode) nombreNode.innerText = user.nombre;
-        }
-    }
-
-
-
-
+  
+    
 });

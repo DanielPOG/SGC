@@ -1,8 +1,9 @@
 from django.urls import path
 from . import views
+from .views import usuario_actual
 
 urlpatterns = [
-    path('', views.login_view, name='login_view'),
+    path('', views.login_view, name='login'),
     path('principal/', views.index, name='index'),
     path('funcionario/', views.funcionario, name='funcionario'),
     path('cargo/', views.cargo, name='cargo'),
@@ -21,5 +22,6 @@ urlpatterns = [
     path('editar_fun/', views.editar_fun, name='editar_fun'),
     path('pr/', views.pr, name='pr'),
     path('prContent/', views.prContet, name='prContent'),
-     path('logout/', views.logout_view, name='logout'),
+    path('logout/', views.logout_view, name='logout'),
+    path("usuarios/me/", usuario_actual, name="usuario_actual"),
 ]
