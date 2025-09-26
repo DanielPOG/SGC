@@ -48,12 +48,15 @@ class GrupoSena(models.Model):
         verbose_name="Resolución 2"
     )
     fecha_creacion = models.DateField(
-            auto_now_add=True,
-            verbose_name="Fecha de Creación"
-        )
+        auto_now_add=True,
+        verbose_name="Fecha de Creación"
+    )
+    fecha_cierre = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name="Fecha de Cierre"
+    )  # <-- NUEVO CAMPO
 
-
-    
     observacion = models.TextField(blank=True, null=True, verbose_name="Observación")
     estado = models.ForeignKey(
         EstadoGrupo,

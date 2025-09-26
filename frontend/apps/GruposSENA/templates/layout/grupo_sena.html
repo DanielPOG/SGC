@@ -17,9 +17,9 @@
 
       <!-- Input -->
       <input 
-        id="buscarCargo" 
+        id="buscarGrupo" 
         type="text" 
-        placeholder="Ingrese IDP" 
+        placeholder="Ingrese Nombre del Grupo" 
         class="flex-1 px-2 ml-2 text-sm text-gray-700 placeholder-gray-400 bg-transparent focus:outline-none" 
       />
     </div>
@@ -84,8 +84,8 @@
   </div>
 
   <!-- Modal para agregar funcionario -->
-  <div id="nuevoModal" class="fixed inset-0 bg-black/50 hidden justify-center items-center z-50">
-    <div class="bg-white rounded-lg w-76 p-6 relative h-104"> 
+  <div id="nuevoModal" class="fixed inset-0 bg-black/50 hidden flex justify-center items-center z-50">
+    <div class="bg-white rounded-lg w-96 p-6 relative">
       <button id="closeNuevoModal" class="absolute top-2 right-3 text-gray-600 hover:text-black text-xl font-bold">×</button>
       <form action="#" method="post">
         <div class="mb-4">
@@ -107,6 +107,7 @@
       </form>
     </div>
   </div>
+
 
 <script src="{% static 'js/buscarGrupoSena.js' %}"></script>
 

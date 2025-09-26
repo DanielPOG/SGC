@@ -125,8 +125,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         try {
             const url = modo === "edit"
-                ? `http://127.0.0.1:8001/api/gruposena/grupo-sena/${grupoId}/`
-                : "http://127.0.0.1:8001/api/gruposena/grupo-sena/";
+                ? `http://127.0.0.1:8001/api/gruposena/${grupoId}/`
+                : "http://127.0.0.1:8001/api/gruposena/";
+
 
             const method = modo === "edit" ? "PUT" : "POST";
 
